@@ -1,0 +1,5 @@
+This is a test file for word count program
+line 2
+line 3
+line 4
+line 5
