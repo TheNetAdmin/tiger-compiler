@@ -1,0 +1,8 @@
+let
+	function mod(m: int, n: int)
+	:int = m + n/*(
+	while (m < n) do m = m - n;
+	n
+	)*/
+in
+end

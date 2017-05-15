@@ -19,7 +19,7 @@ int yywrap(void)
 void adjust(void)
 {
 	/*write current position in the file*/
-
+	
 	EM_tokPos=charPos;
     charPos+=yyleng;
 }
@@ -71,7 +71,7 @@ void end_string() {
 id [A-Za-z][_A-Za-z0-9]*
 digits [0-9]+
 ws [ \t]+
-
+ 
 %%
 {ws}	 {adjust(); continue;}
 \n	     {adjust(); /*printf("fuck\n");*/ EM_newline(); continue;}
@@ -115,7 +115,7 @@ to		 {adjust(); return TO;}
 type	 {adjust(); return TYPE;}
 var		 {adjust(); return VAR;}
 while    {adjust(); return WHILE;}
-{id}	 {adjust(); yylval.sval = yytext; return ID;}
+{id}	 {adjust(); yylval.sval = yytext; return ID;}	
 {digits} {adjust(); yylval.ival=atoi(yytext); return INT;}
 
 "/*"                 {adjust(); comment_nest++; BEGIN comment;}
@@ -125,16 +125,16 @@ while    {adjust(); return WHILE;}
 
 \"      {adjust(); init_string(); BEGIN string;}
 <string>{
-	\\			    {adjust(); append_char_to_string(0x5c);}
-	"\\\""			{adjust(); append_char_to_string(0x22);}
-	\\n				{adjust(); append_char_to_string(0x0A);}
-	\\t				{adjust(); append_char_to_string(0x09);}
-
-	\\[0-9]{3}		{adjust(); append_char_to_string(atoi(yytext));}
-	\"				{adjust(); end_string(); yylval.sval = strdup(str); BEGIN (0); return STRING;}
-	\n				{adjust();}
-	{ws}	        {adjust(); append_str_to_string(yytext);}
-	[^\\" \t\n]+    {adjust(); append_str_to_string(yytext);}
+\\			    {adjust(); append_char_to_string(0x5c);}
+"\\\""			{adjust(); append_char_to_string(0x22);}
+\\n				{adjust(); append_char_to_string(0x0A);}
+\\t				{adjust(); append_char_to_string(0x09);}
+		
+\\[0-9]{3}		{adjust(); append_char_to_string(atoi(yytext));}
+\"				{adjust(); end_string(); /*printf("%s fuck off", str);*/ yylval.sval = strdup(str); BEGIN (0); return STRING;}
+\n				{adjust(); /*printf("fuck");*/}
+{ws}	        {adjust(); append_str_to_string(yytext);}
+[^\\" \t\n]+    {adjust(); /*printf("fuck (.)* %s \n", yytext);*/ append_str_to_string(yytext);}
 }
 
 .	     {adjust(); EM_error(EM_tokPos,"illegal token");}

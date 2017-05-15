@@ -1,0 +1,88 @@
+cc -g -c semant.c
+In file included from semant.c:9:0:
+env.h:6:10: error: unknown type name ‘Tr_access’
+env.h:7:10: error: unknown type name ‘Tr_level’
+env.h:11:23: error: unknown type name ‘Tr_access’
+env.h:12:23: error: unknown type name ‘Tr_level’
+semant.c: In function ‘SEM_transProg’:
+semant.c:24:15: error: storage size of ‘et’ isn’t known
+semant.c:28:2: error: invalid use of undefined type ‘struct expty’
+semant.c: At top level:
+semant.c:32:21: error: return type is an incomplete type
+semant.c:32:21: error: conflicting types for ‘transVar’
+semant.c:12:21: note: previous declaration of ‘transVar’ was here
+semant.c: In function ‘transVar’:
+semant.c:34:15: error: storage size of ‘et’ isn’t known
+semant.c:34:18: error: storage size of ‘et2’ isn’t known
+semant.c:41:4: warning: ‘return’ with a value, in function returning void [enabled by default]
+semant.c:44:4: warning: ‘return’ with a value, in function returning void [enabled by default]
+semant.c:51:4: warning: ‘return’ with a value, in function returning void [enabled by default]
+semant.c:55:6: warning: ‘return’ with a value, in function returning void [enabled by default]
+semant.c:60:3: warning: ‘return’ with a value, in function returning void [enabled by default]
+semant.c:67:4: error: invalid use of undefined type ‘struct expty’
+semant.c:71:5: warning: ‘return’ with a value, in function returning void [enabled by default]
+semant.c:74:3: warning: ‘return’ with a value, in function returning void [enabled by default]
+semant.c: At top level:
+semant.c:80:21: error: return type is an incomplete type
+semant.c:80:21: error: conflicting types for ‘transExp’
+semant.c:13:21: note: previous declaration of ‘transExp’ was here
+semant.c: In function ‘transExp’:
+semant.c:82:15: error: storage size of ‘left’ isn’t known
+semant.c:82:21: error: storage size of ‘right’ isn’t known
+semant.c:82:28: error: storage size of ‘final’ isn’t known
+semant.c:82:35: error: storage size of ‘final2’ isn’t known
+semant.c:82:43: error: storage size of ‘final3’ isn’t known
+semant.c:82:51: error: storage size of ‘final4’ isn’t known
+semant.c:82:59: error: storage size of ‘final5’ isn’t known
+semant.c:82:67: error: storage size of ‘lo’ isn’t known
+semant.c:82:71: error: storage size of ‘hi’ isn’t known
+semant.c:92:3: warning: ‘return’ with a value, in function returning void [enabled by default]
+semant.c:98:6: warning: ‘return’ with a value, in function returning void [enabled by default]
+semant.c:100:6: warning: ‘return’ with a value, in function returning void [enabled by default]
+semant.c:106:3: warning: ‘return’ with a value, in function returning void [enabled by default]
+semant.c:114:5: warning: ‘return’ with a value, in function returning void [enabled by default]
+semant.c:117:5: warning: ‘return’ with a value, in function returning void [enabled by default]
+semant.c:120:3: warning: ‘return’ with a value, in function returning void [enabled by default]
+semant.c:125:4: warning: ‘return’ with a value, in function returning void [enabled by default]
+semant.c:129:4: warning: ‘return’ with a value, in function returning void [enabled by default]
+semant.c:138:4: warning: ‘return’ with a value, in function returning void [enabled by default]
+semant.c:140:3: warning: ‘return’ with a value, in function returning void [enabled by default]
+semant.c:144:4: warning: ‘return’ with a value, in function returning void [enabled by default]
+semant.c:157:3: warning: ‘return’ with a value, in function returning void [enabled by default]
+semant.c:164:3: warning: ‘return’ with a value, in function returning void [enabled by default]
+semant.c:166:3: warning: ‘return’ with a value, in function returning void [enabled by default]
+semant.c:169:10: error: variable ‘lo’ has initializer but incomplete type
+semant.c:169:16: error: storage size of ‘lo’ isn’t known
+semant.c:170:10: error: variable ‘hi’ has initializer but incomplete type
+semant.c:170:16: error: storage size of ‘hi’ isn’t known
+semant.c:171:16: error: storage size of ‘body’ isn’t known
+semant.c:181:3: warning: ‘return’ with a value, in function returning void [enabled by default]
+semant.c:192:3: warning: ‘return’ with a value, in function returning void [enabled by default]
+semant.c:205:5: warning: ‘return’ with a value, in function returning void [enabled by default]
+semant.c:211:5: warning: ‘return’ with a value, in function returning void [enabled by default]
+semant.c:216:6: warning: ‘return’ with a value, in function returning void [enabled by default]
+semant.c:219:6: warning: ‘return’ with a value, in function returning void [enabled by default]
+semant.c:228:4: warning: ‘return’ with a value, in function returning void [enabled by default]
+semant.c:243:3: warning: ‘return’ with a value, in function returning void [enabled by default]
+semant.c:245:3: warning: ‘return’ with a value, in function returning void [enabled by default]
+semant.c:247:3: warning: ‘return’ with a value, in function returning void [enabled by default]
+semant.c:249:3: warning: ‘return’ with a value, in function returning void [enabled by default]
+semant.c: In function ‘transDec’:
+semant.c:256:15: error: storage size of ‘final’ isn’t known
+semant.c:273:5: warning: passing argument 3 of ‘S_enter’ makes pointer from integer without a cast [enabled by default]
+symbol.h:25:6: note: expected ‘void *’ but argument is of type ‘int’
+semant.c:284:6: warning: passing argument 3 of ‘S_enter’ makes pointer from integer without a cast [enabled by default]
+symbol.h:25:6: note: expected ‘void *’ but argument is of type ‘int’
+semant.c:286:6: warning: passing argument 3 of ‘S_enter’ makes pointer from integer without a cast [enabled by default]
+symbol.h:25:6: note: expected ‘void *’ but argument is of type ‘int’
+semant.c:304:4: warning: passing argument 3 of ‘S_enter’ makes pointer from integer without a cast [enabled by default]
+symbol.h:25:6: note: expected ‘void *’ but argument is of type ‘int’
+semant.c:312:5: warning: passing argument 3 of ‘S_enter’ makes pointer from integer without a cast [enabled by default]
+symbol.h:25:6: note: expected ‘void *’ but argument is of type ‘int’
+semant.c: In function ‘args_match’:
+semant.c:426:15: error: storage size of ‘t’ isn’t known
+semant.c: In function ‘efields_match’:
+semant.c:463:15: error: storage size of ‘et’ isn’t known
+semant.c: At top level:
+semant.c:13:21: warning: ‘transExp’ used but never defined [enabled by default]
+make: *** [semant.o] Error 1

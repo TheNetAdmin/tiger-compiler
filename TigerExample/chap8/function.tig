@@ -1,0 +1,8 @@
+let
+	function 
+	mod(m: int, n: int)
+	: int = (
+		while (9 < 7) do 9 + 9;
+		n)
+in
+end

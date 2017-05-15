@@ -1,0 +1,14 @@
+ EXP(
+  ESEQ(
+   SEQ(
+    CJUMP(LT,
+     CONST 0,
+     CONST 9,
+     L12,L13),
+    SEQ(
+     LABEL L12,
+     SEQ(
+      EXP(
+       CONST 100),
+      LABEL L13))),
+   CONST 0))
