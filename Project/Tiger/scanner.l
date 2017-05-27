@@ -7,6 +7,11 @@
 #include "error.h"
 using namespace std;
 
+#undef YY_DECL
+#define YY_DECL int Tiger::Scanner::yylex(Tiger::Parser::semantic_type * const lval, Tiger::Parser::location_type *loc)
+
+using token = Tiger::Parser::token;
+
 ParserError PE;
 
 int yywrap(void)
@@ -33,6 +38,11 @@ digits [0-9]+
 white_space [ \t]+
  
 %%
+
+%{
+    yylval = lval;
+%}
+
 {white_space}	{adjust(); continue;}
 \n	            {adjust(); PE.newline(); continue;}
 ","	            {adjust(); return COMMA;}
