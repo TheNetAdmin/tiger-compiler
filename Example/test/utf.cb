@@ -1,3 +1,0 @@
-import stdio;
-
-int main(int argc, char **argv) { puts("こんにちは世界"); }
