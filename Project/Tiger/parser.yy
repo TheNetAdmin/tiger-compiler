@@ -1,45 +1,39 @@
+%skeleton "lalr1.cc"
+%require "3.0.4"
+%defines
+%define api.namespace {Tiger}
+%define parser_class_name {Parser}
+%define api.value.type variant
+%define parse.assert
+%locations
+
+%code requires{
+    namespace Tiger{
+        class Driver;
+        class Scanner;
+    }
+}
+
+%parse-param {Driver & driver}
+
+
 %{
+#include <iostream>
+#include <string>
+#include "error.h"
+#include "driver.h"
 
-#include <stdio.h>
-#include "util.h"
-#include "symbol.h"
-#include "absyn.h"
-#include "errormsg.h"
-
-int yylex(void); /* function prototype */
-
-A_exp absyn_root;
-
+ParserError PE;
 void yyerror(char *s)
 {
-	EM_error(EM_tokPos, "%s", s);
+    PE.print({s});
 }
 
 %}
 
-
-%union {
-	int pos;
-	int ival;
-	double dval;
-	string sval;
-	S_symbol sym;
-	A_var var;
-	A_exp exp;
-    A_dec dec;
-	A_decList declist;
-	A_expList explist;
-	A_efieldList efieldlist;
-	A_ty ty;
-	A_fieldList fieldlist;
-	A_fundec fundec;
-	A_namety namety;
-	/* et cetera */
-}
-
-%token <sval> ID STRING
-%token <ival> INT
-%token <dval> DOUBLE
+%token <std::string> ID
+%token <std::string> STRING
+%token <int> INT
 
 /*%nonassoc LOW*/
 %right ASSIGN
@@ -59,17 +53,17 @@ void yyerror(char *s)
   BREAK NIL
   FUNCTION VAR TYPE 
 
-%type <exp> exp program funcall seq record array
-%type <var> lvalue
-%type <declist> decs
-%type <dec> dec tydecs fundecs vardec
-%type <fundec> fundec
-%type <namety> tydec
-%type <explist> explist args
-%type <sym> id
-%type <efieldlist> refields
-%type <ty> ty
-%type <fieldlist> typefields
+%type <A_exp> exp program funcall seq record array
+%type <A_var> lvalue
+%type <A_decList> decs
+%type <A_dec> dec tydecs fundecs vardec
+%type <A_fundec> fundec
+%type <A_namety> tydec
+%type <A_expList> explist args
+%type <S_symbol> id
+%type <A_efieldList> refields
+%type <A_ty> ty
+%type <A_fieldList> typefields
 /* et cetera */
 
 %start program
@@ -164,3 +158,5 @@ args: exp COMMA args
 	|
 
 id: ID
+
+%%

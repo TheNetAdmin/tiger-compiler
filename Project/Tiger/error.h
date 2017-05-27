@@ -7,8 +7,10 @@
 
 #include <initializer_list>
 #include <string>
+#include "location.hh"
 
 void error(std::initializer_list<std::string> err_msg_list);
+void error(const location_type & loc, const std::string & msg);
 
 class Error{
 public:
