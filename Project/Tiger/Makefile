@@ -3,8 +3,12 @@ CXXSTD = -std=c++14
 
 CLEANLIST = $(addsuffix .o, $(OBJ)) \
 			scanner.cc \
-			stack.hh *.output \
-			*.tab.* *.hh
+			stack.hh location.hh position.hh *.output \
+			*.tab.* stack.hh
+
+parser: parser.yy
+	bison -d -v parser.yy
+	# $(CXX) $(CXXSTD) -c -o parser.o parser.tab.cc
 
 scanner: scanner.l error.h
 	flex -o scanner.cc $<

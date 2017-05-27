@@ -41,7 +41,7 @@ void yyerror(char *s)
 %nonassoc EQ NEQ LT LE GT GE
 %left PLUS MINUS
 %left TIMES DIVIDE
-/*%right DO OF ELSE optional*/
+%right DO OF ELSE
 %left UMINUS
 
 %token 
@@ -53,17 +53,17 @@ void yyerror(char *s)
   BREAK NIL
   FUNCTION VAR TYPE 
 
-%type <A_exp> exp program funcall seq record array
-%type <A_var> lvalue
-%type <A_decList> decs
-%type <A_dec> dec tydecs fundecs vardec
-%type <A_fundec> fundec
-%type <A_namety> tydec
-%type <A_expList> explist args
-%type <S_symbol> id
-%type <A_efieldList> refields
-%type <A_ty> ty
-%type <A_fieldList> typefields
+// %type <A_exp> exp program funcall seq record array
+// %type <A_var> lvalue
+// %type <A_decList> decs
+// %type <A_dec> dec tydecs fundecs vardec
+// %type <A_fundec> fundec
+// %type <A_namety> tydec
+// %type <A_expList> explist args
+// %type <S_symbol> id
+// %type <A_efieldList> refields
+// %type <A_ty> ty
+// %type <A_fieldList> typefields
 /* et cetera */
 
 %start program
@@ -74,17 +74,14 @@ program:  exp
 
 exp: lvalue
    | funcall
-   | lvalue ASSIGN exp 
+   | lvalue ASSIGN exp
    | NIL
    | seq
    | INT
-   | DOUBLE
    | STRING
    | LET decs IN explist END
-   | IF exp THEN exp ELSE exp
-   | IF exp THEN exp
-   | exp PLUS exp 
-   | exp MINUS exp 
+   | exp PLUS exp
+   | exp MINUS exp
    | exp TIMES exp
    | exp DIVIDE exp
    | exp EQ exp
@@ -98,11 +95,13 @@ exp: lvalue
    | exp OR exp
    | record
    | array
-   | WHILE exp DO exp 
+   | IF exp THEN exp ELSE exp
+   | WHILE exp DO exp
    | FOR id ASSIGN exp TO exp DO exp
-   | BREAK 
+   | BREAK
+   /*| LPAREN exp RPAREN*/
 
-seq: LPAREN explist RPAREN 
+seq: LPAREN explist RPAREN
 
 record: id LBRACE refields RBRACE
 
@@ -110,34 +109,29 @@ refields: id EQ exp COMMA refields
         | id EQ exp
         |
 
-array: id LBRACK exp RBRACK OF exp 
+array: id LBRACK exp RBRACK OF exp
 
 
 decs: dec decs
     | 
 
-dec: tydecs
+dec: tydec
    | vardec
-   | fundecs
+   | fundec
 
-tydecs: tydec tydecs
-      | tydec
    
 tydec: TYPE id EQ ty
 
-ty:	id 
+ty:	id
   | LBRACE typefields RBRACE
   | ARRAY OF id
 
 typefields: id COLON id COMMA typefields
           | id COLON id
-		  |
+		  | 
 
-vardec: VAR id ASSIGN exp 
+vardec: VAR id ASSIGN exp
       | VAR id COLON id ASSIGN exp
-
-fundecs: fundec fundecs
-	   | fundec
 
 fundec: FUNCTION id LPAREN typefields RPAREN EQ exp
       | FUNCTION id LPAREN typefields RPAREN COLON id EQ exp
@@ -146,17 +140,14 @@ explist: exp SEMICOLON explist
 	   | exp
 	   |
 
-lvalue: id	
+lvalue: id
       | lvalue DOT id
-	  | id LBRACK exp RBRACK
 	  | lvalue LBRACK exp RBRACK
 
-funcall: id LPAREN args RPAREN 
+funcall: id LPAREN args RPAREN
 
 args: exp COMMA args
     | exp
 	|
 
 id: ID
-
-%%

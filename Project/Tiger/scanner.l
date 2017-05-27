@@ -6,6 +6,8 @@
 %{
     #include <string>
     #include "error.h"
+    #include "driver.h"
+    #include ""
     using namespace std;
 
     #undef yywrap
