@@ -15,6 +15,8 @@
 }
 
 %code requires{
+    #include "driver.h"
+    #include "absyntree.h"
     namespace Tiger{
         class Driver;
         class Scanner;
@@ -25,13 +27,13 @@
 
 %code
 {
-    #include "driver.h"
-    #include "absyntree.h"
+    shared_ptr<ExpAST> absyn_root;
+    int EM_tokPos = 0;
 }
 
 %token ENDFILE 0 "END OF FILE"
-%token <std::string> ID
-%token <std::string> STRING
+%token <string> ID
+%token <string> STRING
 %token <int> INT
 
 /*%nonassoc LOW*/
@@ -56,11 +58,11 @@
 %type <shared_ptr<VarAST>> lvalue
 %type <shared_ptr<DecListAST>> decs
 %type <shared_ptr<DecAST>> dec tydecs fundecs vardec
-%type <shared_ptr<FundecAST>> fundec
+%type <shared_ptr<FunDecAST>> fundec
 %type <shared_ptr<TypeTyAST>> tydec
 %type <shared_ptr<ExpListAST>> explist args
 %type <string> id
-%type <shared_ptr<EfieldListAST>> refields
+%type <shared_ptr<EFieldListAST>> refields
 %type <shared_ptr<TyAST>> ty
 %type <shared_ptr<FieldListAST>> typefields
 /* et cetera */
@@ -69,91 +71,96 @@
 
 %%
 
-program:  exp
+program:  exp {absyn_root = $1;}
 
-exp: lvalue
-   | funcall
-   | lvalue ASSIGN exp
-   | NIL
-   | seq
-   | INT
-   | STRING
-   | LET decs IN explist END
-   | exp PLUS exp
-   | exp MINUS exp
-   | exp TIMES exp
-   | exp DIVIDE exp
-   | exp EQ exp
-   | MINUS exp %prec UMINUS
-   | exp NEQ exp
-   | exp GT exp
-   | exp LT exp
-   | exp GE exp
-   | exp LE exp
-   | exp AND exp
-   | exp OR exp
-   | record
-   | array
-   | IF exp THEN exp ELSE exp
-   | IF exp THEN exp
-   | WHILE exp DO exp
-   | FOR id ASSIGN exp TO exp DO exp
-   | BREAK
+exp: lvalue {$$ = MakeVarExpAST(EM_tokPos, $1);}
+   | funcall {$$ = $1;}
+   | lvalue ASSIGN exp {$$ = MakeAssignExpAST(EM_tokPos, $1, $3);} 
+   | NIL {$$ = MakeNilExpAST(EM_tokPos);}
+   | seq {$$ = $1;}
+   | INT {$$ = MakeIntExpAST(EM_tokPos, $1);}
+   | STRING {$$ = MakeStringExpAST(EM_tokPos, $1);}
+   | LET decs IN explist END {$$ = MakeLetExpAST(EM_tokPos, $2, MakeSeqExpAST(EM_tokPos, $4));}
+   | IF exp THEN exp ELSE exp {$$ = MakeIfExpAST(EM_tokPos, $2, $4, $6);}
+   | IF exp THEN exp {$$ = MakeIfExpAST(EM_tokPos, $2, $4, nullptr);}
+   | exp PLUS exp {$$ = MakeOpExpAST(EM_tokPos, PLUSOP, $1, $3);} 
+   | exp MINUS exp {$$ = MakeOpExpAST(EM_tokPos, MINUSOP, $1, $3);} 
+   | exp TIMES exp {$$ = MakeOpExpAST(EM_tokPos, TIMESOP, $1, $3);}
+   | exp DIVIDE exp {$$ = MakeOpExpAST(EM_tokPos, DIVIDEOP, $1, $3);}
+   | exp EQ exp {$$ = MakeOpExpAST(EM_tokPos, EQOP, $1, $3);}
+   | MINUS exp %prec UMINUS {$$ = MakeOpExpAST(EM_tokPos, MINUSOP, MakeIntExpAST(EM_tokPos, 0), $2);}
+   | exp NEQ exp {$$ = MakeOpExpAST(EM_tokPos, NEQOP, $1, $3);}
+   | exp GT exp {$$ = MakeOpExpAST(EM_tokPos, GTOP, $1, $3);}
+   | exp LT exp {$$ = MakeOpExpAST(EM_tokPos, LTOP, $1, $3);}
+   | exp GE exp {$$ = MakeOpExpAST(EM_tokPos, GEOP, $1, $3);}
+   | exp LE exp {$$ = MakeOpExpAST(EM_tokPos, LEOP, $1, $3);}
+   | exp AND exp {$$ = MakeIfExpAST(EM_tokPos, $1, $3, MakeIntExpAST(EM_tokPos, 0));}
+   | exp OR exp {$$ = MakeIfExpAST(EM_tokPos, $1, MakeIntExpAST(EM_tokPos,1), $3);}
+   | record {$$ = $1;}
+   | array {$$ = $1;}
+   | WHILE exp DO exp {$$ = MakeWhileExpAST(EM_tokPos, $2, $4);} 
+   | FOR id ASSIGN exp TO exp DO exp {$$ = MakeForExpAST(EM_tokPos, $2, $4, $6, $8);}
+   | BREAK {$$ = MakeBreakExpAST(EM_tokPos);} 
 
-seq: LPAREN explist RPAREN
+seq: LPAREN explist RPAREN {$$ = MakeSeqExpAST(EM_tokPos, $2);} 
 
-record: id LBRACE refields RBRACE
+record: id LBRACE refields RBRACE {$$ = MakeRecordExpAST(EM_tokPos, $1, $3);}
 
-refields: id EQ exp COMMA refields
-        | id EQ exp
-        |
+refields: id EQ exp COMMA refields {$$ = MakeEFieldListAST(MakeEFieldAST($1, $3), $5);}
+        | id EQ exp {$$ = MakeEFieldListAST(MakeEFieldAST($1, $3), nullptr);}
+        | {$$ = nullptr;}
 
-array: id LBRACK exp RBRACK OF exp
+array: id LBRACK exp RBRACK OF exp {$$ = MakeArrayExpAST(EM_tokPos, $1, $3, $6);} 
 
 
-decs: dec decs
-    | 
+decs: dec decs {$$ = MakeDecListAST($1, $2);}
+    | {$$ = nullptr;} 
 
-dec: tydec
-   | vardec
-   | fundec
+dec: tydecs {$$ = $1;}
+   | vardec {$$ = $1;}
+   | fundecs {$$ = $1;}
 
+tydecs: tydec tydecs {$$ = MakeTypeDecAST(EM_tokPos, MakeTypeTyListAST($1, $2));}
+      | tydec {$$ = MakeTypeDecAST(EM_tokPos, MakeTypeTyListAST($1, nullptr));}
    
-tydec: TYPE id EQ ty
+tydec: TYPE id EQ ty {$$ = MakeTypeTyAST($2, $4);}
 
-ty:	id
-  | LBRACE typefields RBRACE
-  | ARRAY OF id
+ty:	id {$$ = MakeNameTyAST(EM_tokPos, $1);} 
+  | LBRACE typefields RBRACE {$$ = MakeRecordTyAST(EM_tokPos, $2);}
+  | ARRAY OF id {$$ = MakeArrayTyAST(EM_tokPos, $3);}
 
-typefields: id COLON id COMMA typefields
-          | id COLON id
-		  | 
+typefields: id COLON id COMMA typefields {$$ = MakeFieldListAST(MakeFieldAST(EM_tokPos, $1, $3), $5);}
+          | id COLON id {$$ = MakeFieldListAST(MakeFieldAST(EM_tokPos, $1, $3), nullptr);}
+		  | {$$ = nullptr;}
 
-vardec: VAR id ASSIGN exp
-      | VAR id COLON id ASSIGN exp
+vardec: VAR id ASSIGN exp {$$ = MakeVarDecAST(EM_tokPos, $2, "", $4);} 
+      | VAR id COLON id ASSIGN exp {$$ = MakeVarDecAST(EM_tokPos, $2, $4, $6);}
 
-fundec: FUNCTION id LPAREN typefields RPAREN EQ exp
-      | FUNCTION id LPAREN typefields RPAREN COLON id EQ exp
+fundecs: fundec fundecs {$$ = MakeFunctionDecAST(EM_tokPos, MakeFunDecListAST($1, $2));}
+	   | fundec {$$ = MakeFunctionDecAST(EM_tokPos, MakeFunDecListAST($1, nullptr));}
 
-explist: exp SEMICOLON explist
-	   | exp
-	   |
+fundec: FUNCTION id LPAREN typefields RPAREN EQ exp {$$ = MakeFunDecAST(EM_tokPos, $2, $4, nullptr, $7);}
+      | FUNCTION id LPAREN typefields RPAREN COLON id EQ exp {$$ = MakeFunDecAST(EM_tokPos, $2, $4, $7, $9);}
 
-lvalue: id
-      | lvalue DOT id
-      | id LBRACK exp RBRACK
-	  | lvalue LBRACK exp RBRACK
+explist: exp SEMICOLON explist {$$ = MakeExpListAST($1, $3);}
+	   | exp {$$ = MakeExpListAST($1, nullptr);}
+	   | {$$ = nullptr;}
 
-funcall: id LPAREN args RPAREN
+lvalue: id {$$ = MakeSimpleVarAST(EM_tokPos, $1);}	
+      | lvalue DOT id {$$ = MakeFieldVarAST(EM_tokPos, $1, $3);}
+	  | id LBRACK exp RBRACK {$$ = MakeSubscriptVarAST(EM_tokPos, MakeSimpleVarAST(EM_tokPos, $1), $3);}
+	  | lvalue LBRACK exp RBRACK {$$ = MakeSubscriptVarAST(EM_tokPos, $1, $3);}
 
-args: exp COMMA args
-    | exp
-	|
+funcall: id LPAREN args RPAREN {$$ = MakeCallExpAST(EM_tokPos, $1, $3);} 
 
-id: ID
+args: exp COMMA args {$$ = MakeExpListAST($1, $3);}
+    | exp {$$ = MakeExpListAST($1, nullptr);}
+	| {$$ = nullptr;}
+
+id: ID {$$ =$1;}
 
 %%
-void Tiger::Parser::error (const location_type & l, const std::string & m)
+void Tiger::Parser::error (const location_type & l, const string & m)
 {
     driver.error(l, m);
 }

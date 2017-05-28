@@ -563,11 +563,11 @@ shared_ptr<TypeTyListAST> MakeTypeTyListAST(shared_ptr<TypeTyAST> head, shared_p
     return tail;
 }
 
-shared_ptr<EFieldAST> MakeEfieldAST(string &name, shared_ptr<ExpAST> exp) {
+shared_ptr<EFieldAST> MakeEFieldAST(string &name, shared_ptr<ExpAST> exp) {
     return make_shared<EFieldAST>(name, exp);
 }
 
-shared_ptr<EFieldListAST> MakeEfieldListAST(shared_ptr<EFieldAST> head, shared_ptr<EFieldListAST> tail) {
+shared_ptr<EFieldListAST> MakeEFieldListAST(shared_ptr<EFieldAST> head, shared_ptr<EFieldListAST> tail) {
     if (tail == nullptr)
         tail = make_shared<EFieldListAST>();
     tail->push_front(head);

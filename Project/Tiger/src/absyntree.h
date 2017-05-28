@@ -560,9 +560,9 @@ shared_ptr<TypeTyAST> MakeTypeTyAST(string &name, shared_ptr<TyAST> ty);
 
 shared_ptr<TypeTyListAST> MakeTypeTyListAST(shared_ptr<TypeTyAST> head, shared_ptr<TypeTyListAST> tail);
 
-shared_ptr<EFieldAST> MakeEfieldAST(string &name, shared_ptr<ExpAST> exp);
+shared_ptr<EFieldAST> MakeEFieldAST(string &name, shared_ptr<ExpAST> exp);
 
-shared_ptr<EFieldListAST> MakeEfieldListAST(shared_ptr<EFieldAST> head, shared_ptr<EFieldListAST> tail);
+shared_ptr<EFieldListAST> MakeEFieldListAST(shared_ptr<EFieldAST> head, shared_ptr<EFieldListAST> tail);
 
 
 #endif //MYCOMPILER_ABSYNTREE_H

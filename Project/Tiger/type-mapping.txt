@@ -1,0 +1,12 @@
+exp         shared_ptr<ExpAST>
+var         shared_ptr<VarAST>
+declist     shared_ptr<DecListAST>
+dec         shared_ptr<DecAST>
+fundec      shared_ptr<FundecAST>
+namety      shared_ptr<TypeTyAST>
+explist     shared_ptr<ExpListAST>
+sym         string
+efieldlist  shared_ptr<EfieldListAST>
+ty          shared_ptr<TyAST>
+fieldlist   shared_ptr<FieldListAST>
+
