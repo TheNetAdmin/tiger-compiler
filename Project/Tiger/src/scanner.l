@@ -28,7 +28,7 @@ white_space [ \t\r]+
 %%
 
 %{
-    loc.step();
+    // loc.step();
 %}
 
 {white_space}	{loc.step(); continue;}

@@ -1,5 +1,5 @@
 #include <iostream>
-#include "driver.h"
+#include "../src/driver.h"
 
 int main(int argc, char * argv[]){
     std::cout << "Tiger Compiler" << std::endl;

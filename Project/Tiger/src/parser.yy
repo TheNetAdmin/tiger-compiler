@@ -95,6 +95,7 @@ exp: lvalue
    | record
    | array
    | IF exp THEN exp ELSE exp
+   | IF exp THEN exp
    | WHILE exp DO exp
    | FOR id ASSIGN exp TO exp DO exp
    | BREAK
@@ -140,6 +141,7 @@ explist: exp SEMICOLON explist
 
 lvalue: id
       | lvalue DOT id
+      | id LBRACK exp RBRACK
 	  | lvalue LBRACK exp RBRACK
 
 funcall: id LPAREN args RPAREN

@@ -3,6 +3,7 @@
         "initializer_list": "cpp",
         "cerrno": "cpp",
         "xstring": "cpp",
-        "string": "cpp"
+        "string": "cpp",
+        "iostream": "cpp"
     }
 }

@@ -1,25 +1,54 @@
 CXX = g++
 CXXSTD = -std=c++14
+CXXFLAG = $(CXXSTD)
+CXXOBJFLAG = -c
 
-CLEANLIST = *.o \
-			scanner.cpp parser.h parser.cpp \
-			stack.hh location.hh position.hh *.output \
-			*.tab.* stack.hh
+CLEANLIST = $(OBJ_PATH)/* \
+			$(SRC_PATH)/scanner.cpp \
+			$(SRC_PATH)/parser.h \
+			$(SRC_PATH)/parser.cpp \
+			$(SRC_PATH)/parser.output
 
-test: test.cpp driver
-	$(CXX) $(CXXSTD) -o test test.cpp driver.o parser.o scanner.o
+AUXCLEANLIST = 	$(SRC_PATH)/stack.hh \
+				$(SRC_PATH)/location.hh \
+				$(SRC_PATH)/position.hh
 
-driver: driver.h parser scanner
-	$(CXX) $(CXXSTD) -c -o driver.o driver.cpp
+BIN_PATH = bin
+OBJ_PATH = obj
+SRC_PATH = src
+TEST_PATH = test
 
-parser: parser.yy
-	bison -d -v --defines=parser.h --output=parser.cpp parser.yy
-	$(CXX) $(CXXSTD) -c -o parser.o parser.cpp
+SRC = $(foreach x, $(SRC_PATH), $(wildcard $(addprefix $(x)/*,.cpp)))
+OBJ = $(addprefix $(OBJ_PATH)/, $(addsuffix .o, $(notdir $(basename $(SRC)))))
 
-scanner: scanner.l parser
-	flex -o scanner.cpp scanner.l
-	$(CXX) $(CXXSTD) -c -o scanner.o scanner.cpp
+unit_test:
+	cd test && ./unit_test.sh	
+
+test: $(OBJ)
+	$(CXX) $(CXXSTD) -o $(TEST_PATH)/test $(TEST_PATH)/test.cpp $?
+	cd test && ./unit_test.sh
+
+objs: bison flex $(OBJ)
+	@echo $?
+
+$(OBJ_PATH)/%.o: $(SRC_PATH)/%.cpp bison flex
+	$(CXX) $(CXXFLAG) $(CXXOBJFLAG) -o $@ $<
+
+.PHONY: bison flex
+bison: $(SRC_PATH)/parser.yy
+	bison -d -v \
+	--defines=$(SRC_PATH)/parser.h \
+	--output=$(SRC_PATH)/parser.cpp \
+	$<
+
+flex: $(SRC_PATH)/scanner.l
+	flex -o $(SRC_PATH)/scanner.cpp $<
+
 
 .PHONY: clean
 clean:
-	rm -rf $(CLEANLIST)
+	-rm -f $(CLEANLIST)
+
+.PHONY: cleanall
+cleanall:
+	-rm -f $(CLEANLIST) $(AUXCLEANLIST)
