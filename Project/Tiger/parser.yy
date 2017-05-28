@@ -3,9 +3,16 @@
 %defines
 %define api.namespace {Tiger}
 %define parser_class_name {Parser}
+%define api.token.constructor
 %define api.value.type variant
 %define parse.assert
+%define parse.trace
+%define parse.error verbose
 %locations
+%initial-action
+{
+    @$.begin.filename = @$.end.filename = &driver.filename;
+}
 
 %code requires{
     namespace Tiger{
@@ -14,23 +21,15 @@
     }
 }
 
-%parse-param {Driver & driver}
+%param{Tiger::Driver & driver}
 
-
-%{
-#include <iostream>
-#include <string>
-#include "error.h"
-#include "driver.h"
-
-ParserError PE;
-void yyerror(char *s)
+%code
 {
-    PE.print({s});
+#include "driver.h"
+#include <iostream>
 }
 
-%}
-
+%token ENDFILE 0 "END OF FILE"
 %token <std::string> ID
 %token <std::string> STRING
 %token <int> INT
@@ -79,7 +78,7 @@ exp: lvalue
    | seq
    | INT
    | STRING
-   | LET decs IN explist END
+   | LET decs IN explist END {std::cout << "LET ... IN ... END" << std::endl;}
    | exp PLUS exp
    | exp MINUS exp
    | exp TIMES exp
@@ -99,7 +98,6 @@ exp: lvalue
    | WHILE exp DO exp
    | FOR id ASSIGN exp TO exp DO exp
    | BREAK
-   /*| LPAREN exp RPAREN*/
 
 seq: LPAREN explist RPAREN
 
@@ -151,3 +149,9 @@ args: exp COMMA args
 	|
 
 id: ID
+
+%%
+void Tiger::Parser::error (const location_type & l, const std::string & m)
+{
+    driver.error(l, m);
+}

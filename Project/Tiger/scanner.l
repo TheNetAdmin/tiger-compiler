@@ -1,23 +1,17 @@
-%option yyclass="Tiger::Scanner"
-%option c++
-%option noyywrap
-%option nodefault
-%option debug
+%option noyywrap nounput batch debug noinput
 %{
     #include <string>
-    #include "error.h"
     #include "driver.h"
-    #include ""
+    #include "parser.h"
     using namespace std;
 
     #undef yywrap
     #define yywrap() 1
+    #define YY_NUMMPTR nullptr
 
-    using token = Tiger::Parser::token;
     static Tiger::location loc;
     static int comment_level = 0;
     string current_string;
-}
 
 %}
 
@@ -25,10 +19,10 @@
 %x IN_STRING
 id [A-Za-z][_A-Za-z0-9]*
 digits [0-9]+
-white_space [ \t]+
+white_space [ \t\r]+
  
 %{
-    #define YY_USER_ACTION loc.columns(yyleng)
+    #define YY_USER_ACTION loc.columns(yyleng);
 %}
 
 %%
@@ -37,50 +31,50 @@ white_space [ \t]+
     loc.step();
 %}
 
-{white_space}	{continue;}
-\n	            {PE.newline(); continue;}
-","	            {return token::COMMA;}
-":="            {return token::ASSIGN;}
-":"             {return token::COLON;}
-";"             {return token::SEMICOLON;}
-"("             {return token::LPAREN;}
-")"	            {return token::RPAREN;}
-"{"             {return token::LBRACE;}
-"}"             {return token::RBRACE;}
-"["             {return token::LBRACK;}
-"]"             {return token::RBRACK;}
-"."	            {return token::DOT;}
-"+"             {return token::PLUS;}
-"-"		        {return token::MINUS;}
-"*"	            {return token::TIMES;}
-"/"	            {return token::DIVIDE;}
-"="	            {return token::EQ;}
-"<>"	        {return token::NEQ;}
-"<="            {return token::LE;}
-"<"             {return token::LT;}
-">="	        {return token::GE;}
-">"	            {return token::GT;}
-"&"             {return token::AND;}
-"|"             {return token::OR;}
-array           {return token::ARRAY;}
-break           {return token::BREAK;}
-do		        {return token::DO;}
-end             {return token::END;}
-else            {return token::ELSE;}
-function        {return token::FUNCTION;}
-for             {return token::FOR;}
-if		        {return token::IF;}
-in	            {return token::IN;}
-let             {return token::LET;}
-of              {return token::OF;}
-nil             {return token::NIL;}
-then            {return token::THEN;}
-to		        {return token::TO;}
-type	        {return token::TYPE;}
-var		        {return token::VAR;}
-while           {return token::WHILE;}
-{id}	        {yylval.build<std::string> = yytext; return token::ID;}	
-{digits}        {yylval.build<int>() = text_to_int(yytext); return token::INT;}
+{white_space}	{loc.step(); continue;}
+\n	            {loc.step(); loc.lines(yyleng); continue;}
+","	            {return Tiger::Parser::make_COMMA(loc);}
+":="            {return Tiger::Parser::make_ASSIGN(loc);}
+":"             {return Tiger::Parser::make_COLON(loc);}
+";"             {return Tiger::Parser::make_SEMICOLON(loc);}
+"("             {return Tiger::Parser::make_LPAREN(loc);}
+")"	            {return Tiger::Parser::make_RPAREN(loc);}
+"{"             {return Tiger::Parser::make_LBRACE(loc);}
+"}"             {return Tiger::Parser::make_RBRACE(loc);}
+"["             {return Tiger::Parser::make_LBRACK(loc);}
+"]"             {return Tiger::Parser::make_RBRACK(loc);}
+"."	            {return Tiger::Parser::make_DOT(loc);}
+"+"             {return Tiger::Parser::make_PLUS(loc);}
+"-"		        {return Tiger::Parser::make_MINUS(loc);}
+"*"	            {return Tiger::Parser::make_TIMES(loc);}
+"/"	            {return Tiger::Parser::make_DIVIDE(loc);}
+"="	            {return Tiger::Parser::make_EQ(loc);}
+"<>"	        {return Tiger::Parser::make_NEQ(loc);}
+"<="            {return Tiger::Parser::make_LE(loc);}
+"<"             {return Tiger::Parser::make_LT(loc);}
+">="	        {return Tiger::Parser::make_GE(loc);}
+">"	            {return Tiger::Parser::make_GT(loc);}
+"&"             {return Tiger::Parser::make_AND(loc);}
+"|"             {return Tiger::Parser::make_OR(loc);}
+array           {return Tiger::Parser::make_ARRAY(loc);}
+break           {return Tiger::Parser::make_BREAK(loc);}
+do		        {return Tiger::Parser::make_DO(loc);}
+end             {return Tiger::Parser::make_END(loc);}
+else            {return Tiger::Parser::make_ELSE(loc);}
+function        {return Tiger::Parser::make_FUNCTION(loc);}
+for             {return Tiger::Parser::make_FOR(loc);}
+if		        {return Tiger::Parser::make_IF(loc);}
+in	            {return Tiger::Parser::make_IN(loc);}
+let             {return Tiger::Parser::make_LET(loc);}
+of              {return Tiger::Parser::make_OF(loc);}
+nil             {return Tiger::Parser::make_NIL(loc);}
+then            {return Tiger::Parser::make_THEN(loc);}
+to		        {return Tiger::Parser::make_TO(loc);}
+type	        {return Tiger::Parser::make_TYPE(loc);}
+var		        {return Tiger::Parser::make_VAR(loc);}
+while           {return Tiger::Parser::make_WHILE(loc);}
+{id}	        {return Tiger::Parser::make_ID(yytext, loc);}	
+{digits}        {long n = strtol(yytext, NULL, 10); return Tiger::Parser::make_INT(n, loc);}
 
 "/*"                        {comment_level++; BEGIN IN_COMMENT;}
 <IN_COMMENT>"/*"            {comment_level++; BEGIN IN_COMMENT;}
@@ -94,10 +88,11 @@ while           {return token::WHILE;}
 <IN_STRING>\\n				{current_string += 0x0A;}
 <IN_STRING>\\t				{current_string += 0x09;}
 <IN_STRING>\\[0-9]{3}		{current_string += atoi(yytext);}
-<IN_STRING>\"				{yylval.sval = current_string; BEGIN (0); return token::STRING;}
+<IN_STRING>\"				{BEGIN (0); return Tiger::Parser::make_STRING(current_string, loc);}
 <IN_STRING>\n				{loc.lines(yyleng);}
 <IN_STRING>{white_space}	{current_string += yytext;}	
 <IN_STRING>[^\\" \t\n]+     {current_string += yytext;}
 
-.	                        {error(loc, "Illegal Token!")}
+.	                        {driver.error(loc, "Illegal Token!");}
+<<EOF>>                     return Tiger::Parser::make_ENDFILE(loc);
 %%

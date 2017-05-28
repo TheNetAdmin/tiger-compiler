@@ -15,10 +15,6 @@ void error(initializer_list<string> err_msg_list)
     cerr << endl;
 }
 
-void error(const location_type &loc, const std::string &msg)
-{
-    std::cerr << "Error at " << loc << " : " << msg << std::endl;
-}
 
 Error::Error() {}
 

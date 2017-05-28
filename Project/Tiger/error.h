@@ -8,24 +8,27 @@
 #include <initializer_list>
 #include <string>
 #include "location.hh"
+#include "position.hh"
 
 void error(std::initializer_list<std::string> err_msg_list);
-void error(const location_type & loc, const std::string & msg);
 
-class Error{
-public:
+class Error
+{
+  public:
     Error();
     virtual ~Error();
 
     virtual void print(std::initializer_list<std::string> err_msg_list);
 };
 
-class ParserError : public Error{
-private:
+class ParserError : public Error
+{
+  private:
     int tokenPos;
     int linePos;
     int inLinePos;
-public:
+
+  public:
     ParserError();
     void adjustTokenPos(int offset);
     void newLine();
