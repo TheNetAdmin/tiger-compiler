@@ -25,8 +25,8 @@
 
 %code
 {
-#include "driver.h"
-#include <iostream>
+    #include "driver.h"
+    #include "absyntree.h"
 }
 
 %token ENDFILE 0 "END OF FILE"
@@ -52,17 +52,17 @@
   BREAK NIL
   FUNCTION VAR TYPE 
 
-// %type <A_exp> exp program funcall seq record array
-// %type <A_var> lvalue
-// %type <A_decList> decs
-// %type <A_dec> dec tydecs fundecs vardec
-// %type <A_fundec> fundec
-// %type <A_namety> tydec
-// %type <A_expList> explist args
-// %type <S_symbol> id
-// %type <A_efieldList> refields
-// %type <A_ty> ty
-// %type <A_fieldList> typefields
+%type <shared_ptr<ExpAST>> exp program funcall seq record array
+%type <shared_ptr<VarAST>> lvalue
+%type <shared_ptr<DecListAST>> decs
+%type <shared_ptr<DecAST>> dec tydecs fundecs vardec
+%type <shared_ptr<FundecAST>> fundec
+%type <shared_ptr<TypeTyAST>> tydec
+%type <shared_ptr<ExpListAST>> explist args
+%type <string> id
+%type <shared_ptr<EfieldListAST>> refields
+%type <shared_ptr<TyAST>> ty
+%type <shared_ptr<FieldListAST>> typefields
 /* et cetera */
 
 %start program
@@ -78,7 +78,7 @@ exp: lvalue
    | seq
    | INT
    | STRING
-   | LET decs IN explist END {std::cout << "LET ... IN ... END" << std::endl;}
+   | LET decs IN explist END
    | exp PLUS exp
    | exp MINUS exp
    | exp TIMES exp
