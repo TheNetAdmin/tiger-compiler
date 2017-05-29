@@ -40,7 +40,7 @@
 
 # include "position.hh"
 
-#line 4 "src/parser.yy" // location.cc:296
+#line 4 "src/bison/parser.yy" // location.cc:296
 namespace Tiger {
 #line 46 "src/location.hh" // location.cc:296
   /// Abstract a location.
@@ -186,7 +186,7 @@ namespace Tiger {
     return ostr;
   }
 
-#line 4 "src/parser.yy" // location.cc:296
+#line 4 "src/bison/parser.yy" // location.cc:296
 } // Tiger
 #line 192 "src/location.hh" // location.cc:296
 #endif // !YY_YY_SRC_LOCATION_HH_INCLUDED

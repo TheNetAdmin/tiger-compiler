@@ -40,7 +40,7 @@
 #ifndef YY_YY_SRC_PARSER_H_INCLUDED
 # define YY_YY_SRC_PARSER_H_INCLUDED
 // //                    "%code requires" blocks.
-#line 17 "src/parser.yy" // lalr1.cc:377
+#line 17 "src/bison/parser.yy" // lalr1.cc:377
 
     #include "absyntree.h"
     namespace Tiger{
@@ -123,7 +123,7 @@
 # define YYDEBUG 1
 #endif
 
-#line 4 "src/parser.yy" // lalr1.cc:377
+#line 4 "src/bison/parser.yy" // lalr1.cc:377
 namespace Tiger {
 #line 129 "src/parser.h" // lalr1.cc:377
 
@@ -1741,7 +1741,7 @@ namespace Tiger {
   }
 
 
-#line 4 "src/parser.yy" // lalr1.cc:377
+#line 4 "src/bison/parser.yy" // lalr1.cc:377
 } // Tiger
 #line 1747 "src/parser.h" // lalr1.cc:377
 

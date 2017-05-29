@@ -7,7 +7,7 @@ TEST_BIN=$PWD/test
 function test(){
     filename=$PWD/testcase/$1
     # echo -ne "Test for "$filename"\t"
-    cat $filename | $TEST_BIN - 1>/dev/zero 2>test.err
+    cat "$filename" | $TEST_BIN - 1>/dev/zero 2>test.err
     if [ -s test.err ];
     then
         # echo " FAILED"

@@ -11,27 +11,46 @@
 #include <list>
 #include <memory>
 #include <iostream>
+#include "location.hh"
 
 using namespace std;
 
 // some class predefine
 class FieldAST;
+
 class ExpAST;
+
 class EFieldAST;
+
 class DecAST;
+
 class FunDecAST;
+
 class NameTyAST;
+
 class TypeTyAST;
 
 // some type definition
 
-typedef list<shared_ptr<FieldAST>> FieldListAST;
-typedef list<shared_ptr<ExpAST>> ExpListAST;
-typedef list<shared_ptr<EFieldAST>> EFieldListAST;
-typedef list<shared_ptr<DecAST>> DecListAST;
-typedef list<shared_ptr<FunDecAST>> FunDecListAST;
-typedef list<shared_ptr<TypeTyAST>> TypeTyListAST;
+typedef list <shared_ptr<FieldAST>> FieldListAST;
+typedef list <shared_ptr<ExpAST>> ExpListAST;
+typedef list <shared_ptr<EFieldAST>> EFieldListAST;
+typedef list <shared_ptr<DecAST>> DecListAST;
+typedef list <shared_ptr<FunDecAST>> FunDecListAST;
+typedef list <shared_ptr<TypeTyAST>> TypeTyListAST;
 
+// Base class
+class AST {
+    Tiger::location loc;
+public:
+    AST(Tiger::location loc) {
+        this->loc = loc;
+    }
+
+    void printLoc() const{
+        cout << this->loc;
+    }
+};
 
 // Base class definition
 
@@ -40,20 +59,16 @@ enum VaribleType {
     SIMPLE_VAR, FIELD_VAR, SUBSCRIPT_VAR
 };
 
-class VarAST {
-    int pos;
+class VarAST : public AST {
     VaribleType classType;
 
 public:
-    VarAST(int pos, VaribleType classType);
+    VarAST(Tiger::location loc, VaribleType classType);
 
     virtual ~VarAST() {
-
     };
 
     VaribleType getClassType() const;
-
-    int getPos() const;
 };
 
 
@@ -64,16 +79,14 @@ enum ExpressionType {
     IF_EXP, WHILE_EXP, FOR_EXP, BREAK_EXP, LET_EXP, ARRAY_EXP
 };
 
-class ExpAST {
-    int pos;
+class ExpAST: public AST {
     ExpressionType classType;
 
 public:
-    ExpAST(int pos, ExpressionType classType);
+    ExpAST(Tiger::location loc, ExpressionType classType);
 
     virtual ~ExpAST() {};
 
-    int getPos() const;
 
     ExpressionType getClassType();
 };
@@ -84,16 +97,14 @@ enum DeclarationType {
     FUNCTION_DEC, VAR_DEC, TYPE_DEC
 };
 
-class DecAST {
-    int pos;
+class DecAST: public AST {
     DeclarationType classType;
 
 public:
-    DecAST(int pos, DeclarationType classType);
+    DecAST(Tiger::location loc, DeclarationType classType);
 
     virtual ~DecAST() {};
 
-    int getPos() const;
 
     DeclarationType getClassType();
 };
@@ -103,16 +114,14 @@ enum TypeType {
     NAME_TYPE, RECORD_TYPE, ARRAY_TYPE
 };
 
-class TyAST {
-    int pos;
+class TyAST: public AST {
     TypeType classType;
 
 public:
-    TyAST(int pos, TypeType classType);
+    TyAST(Tiger::location loc, TypeType classType);
 
     virtual ~TyAST() {};
 
-    int getPos() const;
 
     TypeType getClassType();
 };
@@ -122,15 +131,13 @@ public:
 // Some class used in extend class
 
 // FieldAST - Class used in RecordTyAST
-class FieldAST {
-    int pos;
+class FieldAST: public AST {
     string name, typ;
     bool escape;
 
 public:
-    FieldAST(int pos, const string &name, const string &typ, bool escape);
+    FieldAST(Tiger::location loc, const string &name, const string &typ, bool escape);
 
-    int getPos() const;
 
     const string &getName() const;
 
@@ -156,17 +163,14 @@ public:
 };
 
 // FunDecAST - Class used in FunctionDecAST
-class FunDecAST {
-    int pos;
+class FunDecAST: public AST {
     string name, result;
     shared_ptr<FieldListAST> params;
     shared_ptr<ExpAST> body;
 
 public:
-    FunDecAST(int pos, const string &name, const string &result, const shared_ptr<FieldListAST> &params,
+    FunDecAST(Tiger::location loc, const string &name, const string &result, const shared_ptr<FieldListAST> &params,
               const shared_ptr<ExpAST> &body);
-
-    int getPos() const;
 
     const string &getName() const;
 
@@ -200,7 +204,7 @@ public:
 class SimpleVarAST : public VarAST {
     string simple;
 public:
-    SimpleVarAST(int pos, const string &simple);
+    SimpleVarAST(Tiger::location loc, const string &simple);
 
     const string &getSimple() const;
 };
@@ -210,7 +214,7 @@ class FieldVarAST : public VarAST {
     shared_ptr<VarAST> var;
     string sym;
 public:
-    FieldVarAST(int pos, const shared_ptr<VarAST> &var, const string &sym);
+    FieldVarAST(Tiger::location loc, const shared_ptr<VarAST> &var, const string &sym);
 
     const shared_ptr<VarAST> &getVar() const;
 
@@ -222,7 +226,7 @@ class SubscriptVarAST : public VarAST {
     shared_ptr<VarAST> var;
     shared_ptr<ExpAST> exp;
 public:
-    SubscriptVarAST(int pos, const shared_ptr<VarAST> &var, const shared_ptr<ExpAST> &exp);
+    SubscriptVarAST(Tiger::location loc, const shared_ptr<VarAST> &var, const shared_ptr<ExpAST> &exp);
 
     const shared_ptr<VarAST> &getVar() const;
 
@@ -235,7 +239,7 @@ public:
 class VarExpAST : public ExpAST {
     shared_ptr<VarAST> var;
 public:
-    VarExpAST(int pos, const shared_ptr<VarAST> &var);
+    VarExpAST(Tiger::location loc, const shared_ptr<VarAST> &var);
 
     const shared_ptr<VarAST> &getVar() const;
 };
@@ -243,14 +247,14 @@ public:
 // NilExpAST - Extend class for all nil expression nodes
 class NilExpAST : public ExpAST {
 public:
-    NilExpAST(int pos);
+    NilExpAST(Tiger::location loc);
 };
 
 // IntExpAST - Extend class for all int expression nodes
 class IntExpAST : public ExpAST {
     int intt;
 public:
-    IntExpAST(int pos, int intt);
+    IntExpAST(Tiger::location loc, int intt);
 
     int getIntt() const;
 };
@@ -260,7 +264,7 @@ class StringExpAST : public ExpAST {
     string stringg;
 
 public:
-    StringExpAST(int pos, const string &stringg);
+    StringExpAST(Tiger::location loc, const string &stringg);
 
     const string &getStringg() const;
 };
@@ -271,7 +275,7 @@ class CallExpAST : public ExpAST {
     shared_ptr<ExpListAST> args;
 
 public:
-    CallExpAST(int pos, const string &func, const shared_ptr<ExpListAST> &args);
+    CallExpAST(Tiger::location loc, const string &func, const shared_ptr<ExpListAST> &args);
 
     const string &getFunc() const;
 
@@ -289,7 +293,7 @@ class OpExpAST : public ExpAST {
     shared_ptr<ExpAST> left;
     shared_ptr<ExpAST> right;
 public:
-    OpExpAST(int pos, Operator op, const shared_ptr<ExpAST> &left,
+    OpExpAST(Tiger::location loc, Operator op, const shared_ptr<ExpAST> &left,
              const shared_ptr<ExpAST> &right);
 
     Operator getOp() const;
@@ -305,7 +309,7 @@ class RecordExpAST : public ExpAST {
     shared_ptr<EFieldListAST> fields;
 
 public:
-    RecordExpAST(int pos, const string &typ, const shared_ptr<EFieldListAST> &fields);
+    RecordExpAST(Tiger::location loc, const string &typ, const shared_ptr<EFieldListAST> &fields);
 
     const string &getTyp() const;
 
@@ -316,7 +320,7 @@ public:
 class SeqExpAST : public ExpAST {
     shared_ptr<ExpListAST> seq;
 public:
-    SeqExpAST(int pos, const shared_ptr<ExpListAST> &seq);
+    SeqExpAST(Tiger::location loc, const shared_ptr<ExpListAST> &seq);
 
     const shared_ptr<ExpListAST> &getSeq() const;
 };
@@ -326,7 +330,7 @@ class AssignExpAST : public ExpAST {
     shared_ptr<VarAST> var;
     shared_ptr<ExpAST> exp;
 public:
-    AssignExpAST(int pos, const shared_ptr<VarAST> &var, const shared_ptr<ExpAST> &exp);
+    AssignExpAST(Tiger::location loc, const shared_ptr<VarAST> &var, const shared_ptr<ExpAST> &exp);
 
     const shared_ptr<VarAST> &getVar() const;
 
@@ -337,7 +341,7 @@ public:
 class IfExpAST : public ExpAST {
     shared_ptr<ExpAST> test, then, elsee;
 public:
-    IfExpAST(int pos, const shared_ptr<ExpAST> &test, const shared_ptr<ExpAST> &then,
+    IfExpAST(Tiger::location loc, const shared_ptr<ExpAST> &test, const shared_ptr<ExpAST> &then,
              const shared_ptr<ExpAST> &elsee);
 
     const shared_ptr<ExpAST> &getTest() const;
@@ -351,7 +355,7 @@ public:
 class WhileExpAST : public ExpAST {
     shared_ptr<ExpAST> test, body;
 public:
-    WhileExpAST(int pos, const shared_ptr<ExpAST> &test, const shared_ptr<ExpAST> &body);
+    WhileExpAST(Tiger::location loc, const shared_ptr<ExpAST> &test, const shared_ptr<ExpAST> &body);
 
     const shared_ptr<ExpAST> &getTest() const;
 
@@ -361,7 +365,7 @@ public:
 // BreakExpAST - Extend class for all break expression
 class BreakExpAST : public ExpAST {
 public:
-    BreakExpAST(int pos);
+    BreakExpAST(Tiger::location loc);
 };
 
 // ForExpAST - Extend class for all for expression
@@ -370,7 +374,7 @@ class ForExpAST : public ExpAST {
     shared_ptr<ExpAST> lo, hi, body;
     bool escape;
 public:
-    ForExpAST(int pos, const string &var, const shared_ptr<ExpAST> &lo,
+    ForExpAST(Tiger::location loc, const string &var, const shared_ptr<ExpAST> &lo,
               const shared_ptr<ExpAST> &hi, const shared_ptr<ExpAST> &body, bool escape);
 
     const string &getVar() const;
@@ -391,7 +395,7 @@ class LetExpAST : public ExpAST {
     shared_ptr<DecListAST> decs;
     shared_ptr<ExpAST> body;
 public:
-    LetExpAST(int pos, const shared_ptr<DecListAST> &decs, const shared_ptr<ExpAST> &body);
+    LetExpAST(Tiger::location loc, const shared_ptr<DecListAST> &decs, const shared_ptr<ExpAST> &body);
 
     const shared_ptr<DecListAST> &getDecs() const;
 
@@ -403,7 +407,7 @@ class ArrayExpAST : public ExpAST {
     string typ;
     shared_ptr<ExpAST> size, init;
 public:
-    ArrayExpAST(int pos, const string &typ, const shared_ptr<ExpAST> &size,
+    ArrayExpAST(Tiger::location loc, const string &typ, const shared_ptr<ExpAST> &size,
                 const shared_ptr<ExpAST> &init);
 
     const string &getTyp() const;
@@ -419,7 +423,7 @@ public:
 class FunctionDecAST : public DecAST {
     shared_ptr<FunDecListAST> function;
 public:
-    FunctionDecAST(int pos, const shared_ptr<FunDecListAST> &function);
+    FunctionDecAST(Tiger::location loc, const shared_ptr<FunDecListAST> &function);
 
     const shared_ptr<FunDecListAST> &getFunction() const;
 };
@@ -430,7 +434,7 @@ class VarDecAST : public DecAST {
     shared_ptr<ExpAST> init;
     bool escape;
 public:
-    VarDecAST(int pos, const string &var, const string &typ, const shared_ptr<ExpAST> &init,
+    VarDecAST(Tiger::location loc, const string &var, const string &typ, const shared_ptr<ExpAST> &init,
               bool escape);
 
     const string &getVar() const;
@@ -448,7 +452,7 @@ public:
 class TypeDecAST : public DecAST {
     shared_ptr<TypeTyListAST> type;
 public:
-    TypeDecAST(int pos, const shared_ptr<TypeTyListAST> &type);
+    TypeDecAST(Tiger::location loc, const shared_ptr<TypeTyListAST> &type);
 
     const shared_ptr<TypeTyListAST> &getType() const;
 };
@@ -459,7 +463,7 @@ public:
 class NameTyAST : public TyAST {
     string name;
 public:
-    NameTyAST(int pos, const string &name);
+    NameTyAST(Tiger::location loc, const string &name);
 
     const string &getName() const;
 };
@@ -468,7 +472,7 @@ public:
 class RecordTyAST : public TyAST {
     shared_ptr<FieldListAST> record;
 public:
-    RecordTyAST(int pos, const shared_ptr<FieldListAST> &record);
+    RecordTyAST(Tiger::location loc, const shared_ptr<FieldListAST> &record);
 
     const shared_ptr<FieldListAST> &getRecord() const;
 };
@@ -477,7 +481,7 @@ public:
 class ArrayTyAST : public TyAST {
     string array;
 public:
-    ArrayTyAST(int pos, const string &array);
+    ArrayTyAST(Tiger::location loc, const string &array);
 
     const string &getArray() const;
 };
@@ -486,71 +490,73 @@ public:
 //===----------------------------------------------------------------------===//
 // Function used in parser(bison)
 // VarAST::
-shared_ptr<VarAST> MakeSimpleVarAST(int pos, string &sym);
+shared_ptr<VarAST> MakeSimpleVarAST(Tiger::location loc, string &sym);
 
-shared_ptr<VarAST> MakeFieldVarAST(int pos, shared_ptr<VarAST> var, string &sym);
+shared_ptr<VarAST> MakeFieldVarAST(Tiger::location loc, shared_ptr<VarAST> var, string &sym);
 
-shared_ptr<VarAST> MakeSubscriptVarAST(int pos, shared_ptr<VarAST> var, shared_ptr<ExpAST> exp);
+shared_ptr<VarAST> MakeSubscriptVarAST(Tiger::location loc, shared_ptr<VarAST> var, shared_ptr<ExpAST> exp);
 
 
 // ExpAST::
-shared_ptr<ExpAST> MakeVarExpAST(int pos, shared_ptr<VarAST> sym);
+shared_ptr<ExpAST> MakeVarExpAST(Tiger::location loc, shared_ptr<VarAST> sym);
 
-shared_ptr<ExpAST> MakeNilExpAST(int pos);
+shared_ptr<ExpAST> MakeNilExpAST(Tiger::location loc);
 
-shared_ptr<ExpAST> MakeIntExpAST(int pos, int i);
+shared_ptr<ExpAST> MakeIntExpAST(Tiger::location loc, int i);
 
-shared_ptr<ExpAST> MakeStringExpAST(int pos, string &s);
+shared_ptr<ExpAST> MakeStringExpAST(Tiger::location loc, string &s);
 
-shared_ptr<ExpAST> MakeCallExpAST(int pos, string &func, shared_ptr<ExpListAST> args);
+shared_ptr<ExpAST> MakeCallExpAST(Tiger::location loc, string &func, shared_ptr<ExpListAST> args);
 
-shared_ptr<ExpAST> MakeOpExpAST(int pos, Operator oper, shared_ptr<ExpAST> left, shared_ptr<ExpAST> right);
+shared_ptr<ExpAST> MakeOpExpAST(Tiger::location loc, Operator oper, shared_ptr<ExpAST> left, shared_ptr<ExpAST> right);
 
-shared_ptr<ExpAST> MakeRecordExpAST(int pos, string &typ, shared_ptr<EFieldListAST> fields);
+shared_ptr<ExpAST> MakeRecordExpAST(Tiger::location loc, string &typ, shared_ptr<EFieldListAST> fields);
 
-shared_ptr<ExpAST> MakeSeqExpAST(int pos, shared_ptr<ExpListAST> seq);
+shared_ptr<ExpAST> MakeSeqExpAST(Tiger::location loc, shared_ptr<ExpListAST> seq);
 
-shared_ptr<ExpAST> MakeAssignExpAST(int pos, shared_ptr<VarAST> var, shared_ptr<ExpAST> exp);
-
-shared_ptr<ExpAST> MakeIfExpAST(int pos, shared_ptr<ExpAST> test, shared_ptr<ExpAST> then, shared_ptr<ExpAST> elsee);
-
-shared_ptr<ExpAST> MakeWhileExpAST(int pos, shared_ptr<ExpAST> test, shared_ptr<ExpAST> body);
+shared_ptr<ExpAST> MakeAssignExpAST(Tiger::location loc, shared_ptr<VarAST> var, shared_ptr<ExpAST> exp);
 
 shared_ptr<ExpAST>
-MakeForExpAST(int pos, string &var, shared_ptr<ExpAST> lo, shared_ptr<ExpAST> hi, shared_ptr<ExpAST> body);
+MakeIfExpAST(Tiger::location loc, shared_ptr<ExpAST> test, shared_ptr<ExpAST> then, shared_ptr<ExpAST> elsee);
 
-shared_ptr<ExpAST> MakeBreakExpAST(int pos);
+shared_ptr<ExpAST> MakeWhileExpAST(Tiger::location loc, shared_ptr<ExpAST> test, shared_ptr<ExpAST> body);
 
-shared_ptr<ExpAST> MakeLetExpAST(int pos, shared_ptr<DecListAST> decs, shared_ptr<ExpAST> body);
+shared_ptr<ExpAST>
+MakeForExpAST(Tiger::location loc, string &var, shared_ptr<ExpAST> lo, shared_ptr<ExpAST> hi, shared_ptr<ExpAST> body);
 
-shared_ptr<ExpAST> MakeArrayExpAST(int pos, string &typ, shared_ptr<ExpAST> size, shared_ptr<ExpAST> init);
+shared_ptr<ExpAST> MakeBreakExpAST(Tiger::location loc);
+
+shared_ptr<ExpAST> MakeLetExpAST(Tiger::location loc, shared_ptr<DecListAST> decs, shared_ptr<ExpAST> body);
+
+shared_ptr<ExpAST> MakeArrayExpAST(Tiger::location loc, string &typ, shared_ptr<ExpAST> size, shared_ptr<ExpAST> init);
 
 
 // DecAST::
-shared_ptr<DecAST> MakeFunctionDecAST(int pos, shared_ptr<FunDecListAST> function);
+shared_ptr<DecAST> MakeFunctionDecAST(Tiger::location loc, shared_ptr<FunDecListAST> function);
 
-shared_ptr<DecAST> MakeVarDecAST(int pos, string &var, string &typ, shared_ptr<ExpAST> init);
+shared_ptr<DecAST> MakeVarDecAST(Tiger::location loc, string &var, string &typ, shared_ptr<ExpAST> init);
 
-shared_ptr<DecAST> MakeTypeDecAST(int pos, shared_ptr<TypeTyListAST> type);
+shared_ptr<DecAST> MakeTypeDecAST(Tiger::location loc, shared_ptr<TypeTyListAST> type);
 
 
 // TyAST::
-shared_ptr<TyAST> MakeNameTyAST(int pos, string &name);
+shared_ptr<TyAST> MakeNameTyAST(Tiger::location loc, string &name);
 
-shared_ptr<TyAST> MakeRecordTyAST(int pos, shared_ptr<FieldListAST> record);
+shared_ptr<TyAST> MakeRecordTyAST(Tiger::location loc, shared_ptr<FieldListAST> record);
 
-shared_ptr<TyAST> MakeArrayTyAST(int pos, string &array);
+shared_ptr<TyAST> MakeArrayTyAST(Tiger::location loc, string &array);
 
 
 // Make some struct used above
-shared_ptr<FieldAST> MakeFieldAST(int pos, string &name, string &typ);
+shared_ptr<FieldAST> MakeFieldAST(Tiger::location loc, string &name, string &typ);
 
 shared_ptr<FieldListAST> MakeFieldListAST(shared_ptr<FieldAST> head, shared_ptr<FieldListAST> tail);
 
 shared_ptr<ExpListAST> MakeExpListAST(shared_ptr<ExpAST> head, shared_ptr<ExpListAST> tail);
 
 shared_ptr<FunDecAST>
-MakeFunDecAST(int pos, string &name, string &result, shared_ptr<FieldListAST> params, shared_ptr<ExpAST> body);
+MakeFunDecAST(Tiger::location loc, string &name, string &result, shared_ptr<FieldListAST> params,
+              shared_ptr<ExpAST> body);
 
 shared_ptr<FunDecListAST> MakeFunDecListAST(shared_ptr<FunDecAST> head, shared_ptr<FunDecListAST> tail);
 

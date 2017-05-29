@@ -17,6 +17,8 @@ BIN_PATH = bin
 OBJ_PATH = obj
 SRC_PATH = src
 TEST_PATH = test
+BISON_SUB_PATH = bison
+FLEX_SUB_PATH = flex
 
 SRC = $(foreach x, $(SRC_PATH), $(wildcard $(addprefix $(x)/*,.cpp)))
 OBJ = $(addprefix $(OBJ_PATH)/, $(addsuffix .o, $(notdir $(basename $(SRC)))))
@@ -31,17 +33,17 @@ test: $(OBJ)
 objs: bison flex $(OBJ)
 	@echo $?
 
-$(OBJ_PATH)/%.o: $(SRC_PATH)/%.cpp bison flex
+$(OBJ_PATH)/%.o: $(SRC_PATH)/%.cpp
 	$(CXX) $(CXXFLAG) $(CXXOBJFLAG) -o $@ $<
 
 .PHONY: bison flex
-bison: $(SRC_PATH)/parser.yy
+bison: $(SRC_PATH)/$(BISON_SUB_PATH)/parser.yy
 	bison -d -v \
 	--defines=$(SRC_PATH)/parser.h \
 	--output=$(SRC_PATH)/parser.cpp \
 	$<
 
-flex: $(SRC_PATH)/scanner.l
+flex: $(SRC_PATH)/$(FLEX_SUB_PATH)/scanner.l
 	flex -o $(SRC_PATH)/scanner.cpp $<
 
 

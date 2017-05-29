@@ -627,12 +627,12 @@ int yy_flex_debug = 1;
 
 static yyconst flex_int16_t yy_rule_linenum[61] =
     {   0,
-       34,   35,   36,   37,   38,   39,   40,   41,   42,   43,
-       44,   45,   46,   47,   48,   49,   50,   51,   52,   53,
-       54,   55,   56,   57,   58,   59,   60,   61,   62,   63,
-       64,   65,   66,   67,   68,   69,   70,   71,   72,   73,
-       74,   75,   76,   77,   79,   80,   81,   82,   83,   85,
-       86,   87,   88,   89,   90,   91,   92,   93,   94,   96
+       35,   36,   37,   38,   39,   40,   41,   42,   43,   44,
+       45,   46,   47,   48,   49,   50,   51,   52,   53,   54,
+       55,   56,   57,   58,   59,   60,   61,   62,   63,   64,
+       65,   66,   67,   68,   69,   70,   71,   72,   73,   74,
+       75,   76,   77,   78,   80,   81,   82,   83,   84,   86,
+       87,   88,   89,   90,   91,   92,   93,   94,   95,   97
     } ;
 
 /* The intent behind this definition is that it'll catch
@@ -643,27 +643,28 @@ static yyconst flex_int16_t yy_rule_linenum[61] =
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "src/scanner.l"
+#line 1 "src/flex/scanner.l"
 #define YY_NO_INPUT 1
-#line 3 "src/scanner.l"
+#line 3 "src/flex/scanner.l"
     #include <string>
     #include "driver.h"
     #include "parser.h"
+    #include "location.hh"
     using namespace std;
+
 
     #undef yywrap
     #define yywrap() 1
     #define YY_NUMMPTR nullptr
 
-    static Tiger::location loc;
     static int comment_level = 0;
     string current_string;
+    Tiger::location loc;
 
 
-
-#line 25 "src/scanner.l"
+#line 26 "src/flex/scanner.l"
     #define YY_USER_ACTION loc.columns(yyleng);
-#line 667 "src/scanner.cpp"
+#line 668 "src/scanner.cpp"
 
 #define INITIAL 0
 #define IN_COMMENT 1
@@ -948,14 +949,14 @@ YY_DECL
 
 	{
 /* %% [7.0] user's declarations go here */
-#line 28 "src/scanner.l"
+#line 29 "src/flex/scanner.l"
 
 
 
     // loc.step();
 
 
-#line 959 "src/scanner.cpp"
+#line 960 "src/scanner.cpp"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1033,319 +1034,319 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 34 "src/scanner.l"
+#line 35 "src/flex/scanner.l"
 {loc.step(); continue;}
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 35 "src/scanner.l"
+#line 36 "src/flex/scanner.l"
 {loc.step(); loc.lines(yyleng); continue;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 36 "src/scanner.l"
+#line 37 "src/flex/scanner.l"
 {return Tiger::Parser::make_COMMA(loc);}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 37 "src/scanner.l"
+#line 38 "src/flex/scanner.l"
 {return Tiger::Parser::make_ASSIGN(loc);}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 38 "src/scanner.l"
+#line 39 "src/flex/scanner.l"
 {return Tiger::Parser::make_COLON(loc);}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 39 "src/scanner.l"
+#line 40 "src/flex/scanner.l"
 {return Tiger::Parser::make_SEMICOLON(loc);}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 40 "src/scanner.l"
+#line 41 "src/flex/scanner.l"
 {return Tiger::Parser::make_LPAREN(loc);}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 41 "src/scanner.l"
+#line 42 "src/flex/scanner.l"
 {return Tiger::Parser::make_RPAREN(loc);}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 42 "src/scanner.l"
+#line 43 "src/flex/scanner.l"
 {return Tiger::Parser::make_LBRACE(loc);}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 43 "src/scanner.l"
+#line 44 "src/flex/scanner.l"
 {return Tiger::Parser::make_RBRACE(loc);}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 44 "src/scanner.l"
+#line 45 "src/flex/scanner.l"
 {return Tiger::Parser::make_LBRACK(loc);}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 45 "src/scanner.l"
+#line 46 "src/flex/scanner.l"
 {return Tiger::Parser::make_RBRACK(loc);}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 46 "src/scanner.l"
+#line 47 "src/flex/scanner.l"
 {return Tiger::Parser::make_DOT(loc);}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 47 "src/scanner.l"
+#line 48 "src/flex/scanner.l"
 {return Tiger::Parser::make_PLUS(loc);}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 48 "src/scanner.l"
+#line 49 "src/flex/scanner.l"
 {return Tiger::Parser::make_MINUS(loc);}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 49 "src/scanner.l"
+#line 50 "src/flex/scanner.l"
 {return Tiger::Parser::make_TIMES(loc);}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 50 "src/scanner.l"
+#line 51 "src/flex/scanner.l"
 {return Tiger::Parser::make_DIVIDE(loc);}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 51 "src/scanner.l"
+#line 52 "src/flex/scanner.l"
 {return Tiger::Parser::make_EQ(loc);}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 52 "src/scanner.l"
+#line 53 "src/flex/scanner.l"
 {return Tiger::Parser::make_NEQ(loc);}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 53 "src/scanner.l"
+#line 54 "src/flex/scanner.l"
 {return Tiger::Parser::make_LE(loc);}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 54 "src/scanner.l"
+#line 55 "src/flex/scanner.l"
 {return Tiger::Parser::make_LT(loc);}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 55 "src/scanner.l"
+#line 56 "src/flex/scanner.l"
 {return Tiger::Parser::make_GE(loc);}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 56 "src/scanner.l"
+#line 57 "src/flex/scanner.l"
 {return Tiger::Parser::make_GT(loc);}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 57 "src/scanner.l"
+#line 58 "src/flex/scanner.l"
 {return Tiger::Parser::make_AND(loc);}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 58 "src/scanner.l"
+#line 59 "src/flex/scanner.l"
 {return Tiger::Parser::make_OR(loc);}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 59 "src/scanner.l"
+#line 60 "src/flex/scanner.l"
 {return Tiger::Parser::make_ARRAY(loc);}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 60 "src/scanner.l"
+#line 61 "src/flex/scanner.l"
 {return Tiger::Parser::make_BREAK(loc);}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 61 "src/scanner.l"
+#line 62 "src/flex/scanner.l"
 {return Tiger::Parser::make_DO(loc);}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 62 "src/scanner.l"
+#line 63 "src/flex/scanner.l"
 {return Tiger::Parser::make_END(loc);}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 63 "src/scanner.l"
+#line 64 "src/flex/scanner.l"
 {return Tiger::Parser::make_ELSE(loc);}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 64 "src/scanner.l"
+#line 65 "src/flex/scanner.l"
 {return Tiger::Parser::make_FUNCTION(loc);}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 65 "src/scanner.l"
+#line 66 "src/flex/scanner.l"
 {return Tiger::Parser::make_FOR(loc);}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 66 "src/scanner.l"
+#line 67 "src/flex/scanner.l"
 {return Tiger::Parser::make_IF(loc);}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 67 "src/scanner.l"
+#line 68 "src/flex/scanner.l"
 {return Tiger::Parser::make_IN(loc);}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 68 "src/scanner.l"
+#line 69 "src/flex/scanner.l"
 {return Tiger::Parser::make_LET(loc);}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 69 "src/scanner.l"
+#line 70 "src/flex/scanner.l"
 {return Tiger::Parser::make_OF(loc);}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 70 "src/scanner.l"
+#line 71 "src/flex/scanner.l"
 {return Tiger::Parser::make_NIL(loc);}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 71 "src/scanner.l"
+#line 72 "src/flex/scanner.l"
 {return Tiger::Parser::make_THEN(loc);}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 72 "src/scanner.l"
+#line 73 "src/flex/scanner.l"
 {return Tiger::Parser::make_TO(loc);}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 73 "src/scanner.l"
+#line 74 "src/flex/scanner.l"
 {return Tiger::Parser::make_TYPE(loc);}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 74 "src/scanner.l"
+#line 75 "src/flex/scanner.l"
 {return Tiger::Parser::make_VAR(loc);}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 75 "src/scanner.l"
+#line 76 "src/flex/scanner.l"
 {return Tiger::Parser::make_WHILE(loc);}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 76 "src/scanner.l"
+#line 77 "src/flex/scanner.l"
 {return Tiger::Parser::make_ID(yytext, loc);}	
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 77 "src/scanner.l"
+#line 78 "src/flex/scanner.l"
 {long n = strtol(yytext, NULL, 10); return Tiger::Parser::make_INT(n, loc);}
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 79 "src/scanner.l"
+#line 80 "src/flex/scanner.l"
 {comment_level++; BEGIN IN_COMMENT;}
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 80 "src/scanner.l"
+#line 81 "src/flex/scanner.l"
 {comment_level++; BEGIN IN_COMMENT;}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 81 "src/scanner.l"
+#line 82 "src/flex/scanner.l"
 {comment_level--; if (!comment_level) BEGIN (0);}
 	YY_BREAK
 case 48:
 /* rule 48 can match eol */
 YY_RULE_SETUP
-#line 82 "src/scanner.l"
+#line 83 "src/flex/scanner.l"
 {loc.lines(yyleng);}	
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 83 "src/scanner.l"
+#line 84 "src/flex/scanner.l"
 {continue;}
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 85 "src/scanner.l"
+#line 86 "src/flex/scanner.l"
 {BEGIN IN_STRING;}
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 86 "src/scanner.l"
+#line 87 "src/flex/scanner.l"
 {current_string += 0x5c;}
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 87 "src/scanner.l"
+#line 88 "src/flex/scanner.l"
 {current_string += 0x22;}
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 88 "src/scanner.l"
+#line 89 "src/flex/scanner.l"
 {current_string += 0x0A;}
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 89 "src/scanner.l"
+#line 90 "src/flex/scanner.l"
 {current_string += 0x09;}
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 90 "src/scanner.l"
+#line 91 "src/flex/scanner.l"
 {current_string += atoi(yytext);}
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 91 "src/scanner.l"
+#line 92 "src/flex/scanner.l"
 {BEGIN (0); return Tiger::Parser::make_STRING(current_string, loc);}
 	YY_BREAK
 case 57:
 /* rule 57 can match eol */
 YY_RULE_SETUP
-#line 92 "src/scanner.l"
+#line 93 "src/flex/scanner.l"
 {loc.lines(yyleng);}
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 93 "src/scanner.l"
+#line 94 "src/flex/scanner.l"
 {current_string += yytext;}	
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 94 "src/scanner.l"
+#line 95 "src/flex/scanner.l"
 {current_string += yytext;}
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 96 "src/scanner.l"
+#line 97 "src/flex/scanner.l"
 {driver.error(loc, "Illegal Token!");}
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(IN_COMMENT):
 case YY_STATE_EOF(IN_STRING):
-#line 97 "src/scanner.l"
+#line 98 "src/flex/scanner.l"
 return Tiger::Parser::make_ENDFILE(loc);
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 98 "src/scanner.l"
+#line 99 "src/flex/scanner.l"
 ECHO;
 	YY_BREAK
-#line 1349 "src/scanner.cpp"
+#line 1350 "src/scanner.cpp"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2448,7 +2449,7 @@ void yyfree (void * ptr )
 
 /* %ok-for-header */
 
-#line 98 "src/scanner.l"
+#line 99 "src/flex/scanner.l"
 
 
 

@@ -50,7 +50,7 @@
 #  endif
 # endif
 
-#line 4 "src/parser.yy" // location.cc:296
+#line 4 "src/bison/parser.yy" // location.cc:296
 namespace Tiger {
 #line 56 "src/position.hh" // location.cc:296
   /// Abstract a position.
@@ -174,7 +174,7 @@ namespace Tiger {
     return ostr << pos.line << '.' << pos.column;
   }
 
-#line 4 "src/parser.yy" // location.cc:296
+#line 4 "src/bison/parser.yy" // location.cc:296
 } // Tiger
 #line 180 "src/position.hh" // location.cc:296
 #endif // !YY_YY_SRC_POSITION_HH_INCLUDED

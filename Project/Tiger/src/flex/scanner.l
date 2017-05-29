@@ -3,16 +3,17 @@
     #include <string>
     #include "driver.h"
     #include "parser.h"
+    #include "location.hh"
     using namespace std;
+
 
     #undef yywrap
     #define yywrap() 1
     #define YY_NUMMPTR nullptr
 
-    static Tiger::location loc;
     static int comment_level = 0;
     string current_string;
-
+    Tiger::location loc;
 %}
 
 %x IN_COMMENT

@@ -40,7 +40,7 @@
 
 # include <vector>
 
-#line 4 "src/parser.yy" // stack.hh:132
+#line 4 "src/bison/parser.yy" // stack.hh:132
 namespace Tiger {
 #line 46 "src/stack.hh" // stack.hh:132
   template <class T, class S = std::vector<T> >
@@ -150,7 +150,7 @@ namespace Tiger {
     unsigned int range_;
   };
 
-#line 4 "src/parser.yy" // stack.hh:132
+#line 4 "src/bison/parser.yy" // stack.hh:132
 } // Tiger
 #line 156 "src/stack.hh" // stack.hh:132
 
