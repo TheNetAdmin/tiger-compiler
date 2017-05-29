@@ -49,12 +49,13 @@
 
 #line 51 "src/parser.cpp" // lalr1.cc:412
 // Unqualified %code blocks.
-#line 29 "src/parser.yy" // lalr1.cc:413
+#line 28 "src/parser.yy" // lalr1.cc:413
 
+    #include "driver.h"
     shared_ptr<ExpAST> absyn_root;
     int EM_tokPos = 0;
 
-#line 58 "src/parser.cpp" // lalr1.cc:413
+#line 59 "src/parser.cpp" // lalr1.cc:413
 
 
 #ifndef YY_
@@ -140,7 +141,7 @@
 
 #line 4 "src/parser.yy" // lalr1.cc:479
 namespace Tiger {
-#line 144 "src/parser.cpp" // lalr1.cc:479
+#line 145 "src/parser.cpp" // lalr1.cc:479
 
   /* Return YYSTR after stripping away unnecessary quotes and
      backslashes, so that it's suitable for yyerror.  The heuristic is
@@ -531,7 +532,7 @@ namespace Tiger {
     yyla.location.begin.filename = yyla.location.end.filename = &driver.filename;
 }
 
-#line 535 "src/parser.cpp" // lalr1.cc:741
+#line 536 "src/parser.cpp" // lalr1.cc:741
 
     /* Initialize the stack.  The initial state will be set in
        yynewstate, since the latter expects the semantical and the
@@ -700,407 +701,407 @@ namespace Tiger {
   case 2:
 #line 74 "src/parser.yy" // lalr1.cc:859
     {absyn_root = yystack_[0].value.as< shared_ptr<ExpAST> > ();}
-#line 704 "src/parser.cpp" // lalr1.cc:859
+#line 705 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 3:
 #line 76 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<ExpAST> > () = MakeVarExpAST(EM_tokPos, yystack_[0].value.as< shared_ptr<VarAST> > ());}
-#line 710 "src/parser.cpp" // lalr1.cc:859
+#line 711 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 4:
 #line 77 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<ExpAST> > () = yystack_[0].value.as< shared_ptr<ExpAST> > ();}
-#line 716 "src/parser.cpp" // lalr1.cc:859
+#line 717 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 5:
 #line 78 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<ExpAST> > () = MakeAssignExpAST(EM_tokPos, yystack_[2].value.as< shared_ptr<VarAST> > (), yystack_[0].value.as< shared_ptr<ExpAST> > ());}
-#line 722 "src/parser.cpp" // lalr1.cc:859
+#line 723 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 6:
 #line 79 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<ExpAST> > () = MakeNilExpAST(EM_tokPos);}
-#line 728 "src/parser.cpp" // lalr1.cc:859
+#line 729 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 7:
 #line 80 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<ExpAST> > () = yystack_[0].value.as< shared_ptr<ExpAST> > ();}
-#line 734 "src/parser.cpp" // lalr1.cc:859
+#line 735 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 8:
 #line 81 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<ExpAST> > () = MakeIntExpAST(EM_tokPos, yystack_[0].value.as< int > ());}
-#line 740 "src/parser.cpp" // lalr1.cc:859
+#line 741 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 9:
 #line 82 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<ExpAST> > () = MakeStringExpAST(EM_tokPos, yystack_[0].value.as< string > ());}
-#line 746 "src/parser.cpp" // lalr1.cc:859
+#line 747 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 10:
 #line 83 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<ExpAST> > () = MakeLetExpAST(EM_tokPos, yystack_[3].value.as< shared_ptr<DecListAST> > (), MakeSeqExpAST(EM_tokPos, yystack_[1].value.as< shared_ptr<ExpListAST> > ()));}
-#line 752 "src/parser.cpp" // lalr1.cc:859
+#line 753 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 11:
 #line 84 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<ExpAST> > () = MakeIfExpAST(EM_tokPos, yystack_[4].value.as< shared_ptr<ExpAST> > (), yystack_[2].value.as< shared_ptr<ExpAST> > (), yystack_[0].value.as< shared_ptr<ExpAST> > ());}
-#line 758 "src/parser.cpp" // lalr1.cc:859
+#line 759 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 12:
 #line 85 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<ExpAST> > () = MakeIfExpAST(EM_tokPos, yystack_[2].value.as< shared_ptr<ExpAST> > (), yystack_[0].value.as< shared_ptr<ExpAST> > (), nullptr);}
-#line 764 "src/parser.cpp" // lalr1.cc:859
+#line 765 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 13:
 #line 86 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<ExpAST> > () = MakeOpExpAST(EM_tokPos, PLUSOP, yystack_[2].value.as< shared_ptr<ExpAST> > (), yystack_[0].value.as< shared_ptr<ExpAST> > ());}
-#line 770 "src/parser.cpp" // lalr1.cc:859
+#line 771 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 14:
 #line 87 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<ExpAST> > () = MakeOpExpAST(EM_tokPos, MINUSOP, yystack_[2].value.as< shared_ptr<ExpAST> > (), yystack_[0].value.as< shared_ptr<ExpAST> > ());}
-#line 776 "src/parser.cpp" // lalr1.cc:859
+#line 777 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 15:
 #line 88 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<ExpAST> > () = MakeOpExpAST(EM_tokPos, TIMESOP, yystack_[2].value.as< shared_ptr<ExpAST> > (), yystack_[0].value.as< shared_ptr<ExpAST> > ());}
-#line 782 "src/parser.cpp" // lalr1.cc:859
+#line 783 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 16:
 #line 89 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<ExpAST> > () = MakeOpExpAST(EM_tokPos, DIVIDEOP, yystack_[2].value.as< shared_ptr<ExpAST> > (), yystack_[0].value.as< shared_ptr<ExpAST> > ());}
-#line 788 "src/parser.cpp" // lalr1.cc:859
+#line 789 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 17:
 #line 90 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<ExpAST> > () = MakeOpExpAST(EM_tokPos, EQOP, yystack_[2].value.as< shared_ptr<ExpAST> > (), yystack_[0].value.as< shared_ptr<ExpAST> > ());}
-#line 794 "src/parser.cpp" // lalr1.cc:859
+#line 795 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 18:
 #line 91 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<ExpAST> > () = MakeOpExpAST(EM_tokPos, MINUSOP, MakeIntExpAST(EM_tokPos, 0), yystack_[0].value.as< shared_ptr<ExpAST> > ());}
-#line 800 "src/parser.cpp" // lalr1.cc:859
+#line 801 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 19:
 #line 92 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<ExpAST> > () = MakeOpExpAST(EM_tokPos, NEQOP, yystack_[2].value.as< shared_ptr<ExpAST> > (), yystack_[0].value.as< shared_ptr<ExpAST> > ());}
-#line 806 "src/parser.cpp" // lalr1.cc:859
+#line 807 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 20:
 #line 93 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<ExpAST> > () = MakeOpExpAST(EM_tokPos, GTOP, yystack_[2].value.as< shared_ptr<ExpAST> > (), yystack_[0].value.as< shared_ptr<ExpAST> > ());}
-#line 812 "src/parser.cpp" // lalr1.cc:859
+#line 813 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 21:
 #line 94 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<ExpAST> > () = MakeOpExpAST(EM_tokPos, LTOP, yystack_[2].value.as< shared_ptr<ExpAST> > (), yystack_[0].value.as< shared_ptr<ExpAST> > ());}
-#line 818 "src/parser.cpp" // lalr1.cc:859
+#line 819 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 22:
 #line 95 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<ExpAST> > () = MakeOpExpAST(EM_tokPos, GEOP, yystack_[2].value.as< shared_ptr<ExpAST> > (), yystack_[0].value.as< shared_ptr<ExpAST> > ());}
-#line 824 "src/parser.cpp" // lalr1.cc:859
+#line 825 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 23:
 #line 96 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<ExpAST> > () = MakeOpExpAST(EM_tokPos, LEOP, yystack_[2].value.as< shared_ptr<ExpAST> > (), yystack_[0].value.as< shared_ptr<ExpAST> > ());}
-#line 830 "src/parser.cpp" // lalr1.cc:859
+#line 831 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 24:
 #line 97 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<ExpAST> > () = MakeIfExpAST(EM_tokPos, yystack_[2].value.as< shared_ptr<ExpAST> > (), yystack_[0].value.as< shared_ptr<ExpAST> > (), MakeIntExpAST(EM_tokPos, 0));}
-#line 836 "src/parser.cpp" // lalr1.cc:859
+#line 837 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 25:
 #line 98 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<ExpAST> > () = MakeIfExpAST(EM_tokPos, yystack_[2].value.as< shared_ptr<ExpAST> > (), MakeIntExpAST(EM_tokPos,1), yystack_[0].value.as< shared_ptr<ExpAST> > ());}
-#line 842 "src/parser.cpp" // lalr1.cc:859
+#line 843 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 26:
 #line 99 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<ExpAST> > () = yystack_[0].value.as< shared_ptr<ExpAST> > ();}
-#line 848 "src/parser.cpp" // lalr1.cc:859
+#line 849 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 27:
 #line 100 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<ExpAST> > () = yystack_[0].value.as< shared_ptr<ExpAST> > ();}
-#line 854 "src/parser.cpp" // lalr1.cc:859
+#line 855 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 28:
 #line 101 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<ExpAST> > () = MakeWhileExpAST(EM_tokPos, yystack_[2].value.as< shared_ptr<ExpAST> > (), yystack_[0].value.as< shared_ptr<ExpAST> > ());}
-#line 860 "src/parser.cpp" // lalr1.cc:859
+#line 861 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 29:
 #line 102 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<ExpAST> > () = MakeForExpAST(EM_tokPos, yystack_[6].value.as< string > (), yystack_[4].value.as< shared_ptr<ExpAST> > (), yystack_[2].value.as< shared_ptr<ExpAST> > (), yystack_[0].value.as< shared_ptr<ExpAST> > ());}
-#line 866 "src/parser.cpp" // lalr1.cc:859
+#line 867 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 30:
 #line 103 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<ExpAST> > () = MakeBreakExpAST(EM_tokPos);}
-#line 872 "src/parser.cpp" // lalr1.cc:859
+#line 873 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 31:
 #line 105 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<ExpAST> > () = MakeSeqExpAST(EM_tokPos, yystack_[1].value.as< shared_ptr<ExpListAST> > ());}
-#line 878 "src/parser.cpp" // lalr1.cc:859
+#line 879 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 32:
 #line 107 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<ExpAST> > () = MakeRecordExpAST(EM_tokPos, yystack_[3].value.as< string > (), yystack_[1].value.as< shared_ptr<EFieldListAST> > ());}
-#line 884 "src/parser.cpp" // lalr1.cc:859
+#line 885 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 33:
 #line 109 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<EFieldListAST> > () = MakeEFieldListAST(MakeEFieldAST(yystack_[4].value.as< string > (), yystack_[2].value.as< shared_ptr<ExpAST> > ()), yystack_[0].value.as< shared_ptr<EFieldListAST> > ());}
-#line 890 "src/parser.cpp" // lalr1.cc:859
+#line 891 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 34:
 #line 110 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<EFieldListAST> > () = MakeEFieldListAST(MakeEFieldAST(yystack_[2].value.as< string > (), yystack_[0].value.as< shared_ptr<ExpAST> > ()), nullptr);}
-#line 896 "src/parser.cpp" // lalr1.cc:859
+#line 897 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 35:
 #line 111 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<EFieldListAST> > () = nullptr;}
-#line 902 "src/parser.cpp" // lalr1.cc:859
+#line 903 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 36:
 #line 113 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<ExpAST> > () = MakeArrayExpAST(EM_tokPos, yystack_[5].value.as< string > (), yystack_[3].value.as< shared_ptr<ExpAST> > (), yystack_[0].value.as< shared_ptr<ExpAST> > ());}
-#line 908 "src/parser.cpp" // lalr1.cc:859
+#line 909 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 37:
 #line 116 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<DecListAST> > () = MakeDecListAST(yystack_[1].value.as< shared_ptr<DecAST> > (), yystack_[0].value.as< shared_ptr<DecListAST> > ());}
-#line 914 "src/parser.cpp" // lalr1.cc:859
+#line 915 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 38:
 #line 117 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<DecListAST> > () = nullptr;}
-#line 920 "src/parser.cpp" // lalr1.cc:859
+#line 921 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 39:
 #line 119 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<DecAST> > () = yystack_[0].value.as< shared_ptr<DecAST> > ();}
-#line 926 "src/parser.cpp" // lalr1.cc:859
+#line 927 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 40:
 #line 120 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<DecAST> > () = yystack_[0].value.as< shared_ptr<DecAST> > ();}
-#line 932 "src/parser.cpp" // lalr1.cc:859
+#line 933 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 41:
 #line 121 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<DecAST> > () = yystack_[0].value.as< shared_ptr<DecAST> > ();}
-#line 938 "src/parser.cpp" // lalr1.cc:859
+#line 939 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 42:
 #line 123 "src/parser.yy" // lalr1.cc:859
-    {yylhs.value.as< shared_ptr<DecAST> > () = MakeTypeDecAST(EM_tokPos, MakeTypeTyListAST(yystack_[1].value.as< shared_ptr<TypeTyAST> > (), yystack_[0].value.as< shared_ptr<DecAST> > ()));}
-#line 944 "src/parser.cpp" // lalr1.cc:859
+    {yylhs.value.as< shared_ptr<DecAST> > () = MakeTypeDecAST(EM_tokPos, MakeTypeTyListAST(yystack_[1].value.as< shared_ptr<TypeTyAST> > (), dynamic_pointer_cast<TypeDecAST>(yystack_[0].value.as< shared_ptr<DecAST> > ())->getType()));}
+#line 945 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 43:
 #line 124 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<DecAST> > () = MakeTypeDecAST(EM_tokPos, MakeTypeTyListAST(yystack_[0].value.as< shared_ptr<TypeTyAST> > (), nullptr));}
-#line 950 "src/parser.cpp" // lalr1.cc:859
+#line 951 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 44:
 #line 126 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<TypeTyAST> > () = MakeTypeTyAST(yystack_[2].value.as< string > (), yystack_[0].value.as< shared_ptr<TyAST> > ());}
-#line 956 "src/parser.cpp" // lalr1.cc:859
+#line 957 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 45:
 #line 128 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<TyAST> > () = MakeNameTyAST(EM_tokPos, yystack_[0].value.as< string > ());}
-#line 962 "src/parser.cpp" // lalr1.cc:859
+#line 963 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 46:
 #line 129 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<TyAST> > () = MakeRecordTyAST(EM_tokPos, yystack_[1].value.as< shared_ptr<FieldListAST> > ());}
-#line 968 "src/parser.cpp" // lalr1.cc:859
+#line 969 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 47:
 #line 130 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<TyAST> > () = MakeArrayTyAST(EM_tokPos, yystack_[0].value.as< string > ());}
-#line 974 "src/parser.cpp" // lalr1.cc:859
+#line 975 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 48:
 #line 132 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<FieldListAST> > () = MakeFieldListAST(MakeFieldAST(EM_tokPos, yystack_[4].value.as< string > (), yystack_[2].value.as< string > ()), yystack_[0].value.as< shared_ptr<FieldListAST> > ());}
-#line 980 "src/parser.cpp" // lalr1.cc:859
+#line 981 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 49:
 #line 133 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<FieldListAST> > () = MakeFieldListAST(MakeFieldAST(EM_tokPos, yystack_[2].value.as< string > (), yystack_[0].value.as< string > ()), nullptr);}
-#line 986 "src/parser.cpp" // lalr1.cc:859
+#line 987 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 50:
 #line 134 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<FieldListAST> > () = nullptr;}
-#line 992 "src/parser.cpp" // lalr1.cc:859
+#line 993 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 51:
 #line 136 "src/parser.yy" // lalr1.cc:859
-    {yylhs.value.as< shared_ptr<DecAST> > () = MakeVarDecAST(EM_tokPos, yystack_[2].value.as< string > (), "", yystack_[0].value.as< shared_ptr<ExpAST> > ());}
-#line 998 "src/parser.cpp" // lalr1.cc:859
+    {string s = "DEBUG"; yylhs.value.as< shared_ptr<DecAST> > () = MakeVarDecAST(EM_tokPos, yystack_[2].value.as< string > (), s, yystack_[0].value.as< shared_ptr<ExpAST> > ());}
+#line 999 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 52:
 #line 137 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<DecAST> > () = MakeVarDecAST(EM_tokPos, yystack_[4].value.as< string > (), yystack_[2].value.as< string > (), yystack_[0].value.as< shared_ptr<ExpAST> > ());}
-#line 1004 "src/parser.cpp" // lalr1.cc:859
+#line 1005 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 53:
 #line 139 "src/parser.yy" // lalr1.cc:859
-    {yylhs.value.as< shared_ptr<DecAST> > () = MakeFunctionDecAST(EM_tokPos, MakeFunDecListAST(yystack_[1].value.as< shared_ptr<FunDecAST> > (), yystack_[0].value.as< shared_ptr<DecAST> > ()));}
-#line 1010 "src/parser.cpp" // lalr1.cc:859
+    {yylhs.value.as< shared_ptr<DecAST> > () = MakeFunctionDecAST(EM_tokPos, MakeFunDecListAST(yystack_[1].value.as< shared_ptr<FunDecAST> > (), dynamic_pointer_cast<FunctionDecAST>(yystack_[0].value.as< shared_ptr<DecAST> > ())->getFunction()));}
+#line 1011 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 54:
 #line 140 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<DecAST> > () = MakeFunctionDecAST(EM_tokPos, MakeFunDecListAST(yystack_[0].value.as< shared_ptr<FunDecAST> > (), nullptr));}
-#line 1016 "src/parser.cpp" // lalr1.cc:859
+#line 1017 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 55:
 #line 142 "src/parser.yy" // lalr1.cc:859
-    {yylhs.value.as< shared_ptr<FunDecAST> > () = MakeFunDecAST(EM_tokPos, yystack_[5].value.as< string > (), yystack_[3].value.as< shared_ptr<FieldListAST> > (), nullptr, yystack_[0].value.as< shared_ptr<ExpAST> > ());}
-#line 1022 "src/parser.cpp" // lalr1.cc:859
+    {string v = "void"; yylhs.value.as< shared_ptr<FunDecAST> > () = MakeFunDecAST(EM_tokPos, yystack_[5].value.as< string > (), v, yystack_[3].value.as< shared_ptr<FieldListAST> > (), yystack_[0].value.as< shared_ptr<ExpAST> > ());}
+#line 1023 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 56:
 #line 143 "src/parser.yy" // lalr1.cc:859
-    {yylhs.value.as< shared_ptr<FunDecAST> > () = MakeFunDecAST(EM_tokPos, yystack_[7].value.as< string > (), yystack_[5].value.as< shared_ptr<FieldListAST> > (), yystack_[2].value.as< string > (), yystack_[0].value.as< shared_ptr<ExpAST> > ());}
-#line 1028 "src/parser.cpp" // lalr1.cc:859
+    {yylhs.value.as< shared_ptr<FunDecAST> > () = MakeFunDecAST(EM_tokPos, yystack_[7].value.as< string > (), yystack_[2].value.as< string > (), yystack_[5].value.as< shared_ptr<FieldListAST> > (), yystack_[0].value.as< shared_ptr<ExpAST> > ());}
+#line 1029 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 57:
 #line 145 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<ExpListAST> > () = MakeExpListAST(yystack_[2].value.as< shared_ptr<ExpAST> > (), yystack_[0].value.as< shared_ptr<ExpListAST> > ());}
-#line 1034 "src/parser.cpp" // lalr1.cc:859
+#line 1035 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 58:
 #line 146 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<ExpListAST> > () = MakeExpListAST(yystack_[0].value.as< shared_ptr<ExpAST> > (), nullptr);}
-#line 1040 "src/parser.cpp" // lalr1.cc:859
+#line 1041 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 59:
 #line 147 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<ExpListAST> > () = nullptr;}
-#line 1046 "src/parser.cpp" // lalr1.cc:859
+#line 1047 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 60:
 #line 149 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<VarAST> > () = MakeSimpleVarAST(EM_tokPos, yystack_[0].value.as< string > ());}
-#line 1052 "src/parser.cpp" // lalr1.cc:859
+#line 1053 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 61:
 #line 150 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<VarAST> > () = MakeFieldVarAST(EM_tokPos, yystack_[2].value.as< shared_ptr<VarAST> > (), yystack_[0].value.as< string > ());}
-#line 1058 "src/parser.cpp" // lalr1.cc:859
+#line 1059 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 62:
 #line 151 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<VarAST> > () = MakeSubscriptVarAST(EM_tokPos, MakeSimpleVarAST(EM_tokPos, yystack_[3].value.as< string > ()), yystack_[1].value.as< shared_ptr<ExpAST> > ());}
-#line 1064 "src/parser.cpp" // lalr1.cc:859
+#line 1065 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 63:
 #line 152 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<VarAST> > () = MakeSubscriptVarAST(EM_tokPos, yystack_[3].value.as< shared_ptr<VarAST> > (), yystack_[1].value.as< shared_ptr<ExpAST> > ());}
-#line 1070 "src/parser.cpp" // lalr1.cc:859
+#line 1071 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 64:
 #line 154 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<ExpAST> > () = MakeCallExpAST(EM_tokPos, yystack_[3].value.as< string > (), yystack_[1].value.as< shared_ptr<ExpListAST> > ());}
-#line 1076 "src/parser.cpp" // lalr1.cc:859
+#line 1077 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 65:
 #line 156 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<ExpListAST> > () = MakeExpListAST(yystack_[2].value.as< shared_ptr<ExpAST> > (), yystack_[0].value.as< shared_ptr<ExpListAST> > ());}
-#line 1082 "src/parser.cpp" // lalr1.cc:859
+#line 1083 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 66:
 #line 157 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<ExpListAST> > () = MakeExpListAST(yystack_[0].value.as< shared_ptr<ExpAST> > (), nullptr);}
-#line 1088 "src/parser.cpp" // lalr1.cc:859
+#line 1089 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 67:
 #line 158 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<ExpListAST> > () = nullptr;}
-#line 1094 "src/parser.cpp" // lalr1.cc:859
+#line 1095 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 68:
 #line 160 "src/parser.yy" // lalr1.cc:859
     {yylhs.value.as< string > () =yystack_[0].value.as< string > ();}
-#line 1100 "src/parser.cpp" // lalr1.cc:859
+#line 1101 "src/parser.cpp" // lalr1.cc:859
     break;
 
 
-#line 1104 "src/parser.cpp" // lalr1.cc:859
+#line 1105 "src/parser.cpp" // lalr1.cc:859
             default:
               break;
             }
@@ -1595,7 +1596,7 @@ namespace Tiger {
 
 #line 4 "src/parser.yy" // lalr1.cc:1167
 } // Tiger
-#line 1599 "src/parser.cpp" // lalr1.cc:1167
+#line 1600 "src/parser.cpp" // lalr1.cc:1167
 #line 162 "src/parser.yy" // lalr1.cc:1168
 
 void Tiger::Parser::error (const location_type & l, const string & m)

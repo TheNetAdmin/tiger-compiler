@@ -42,14 +42,13 @@
 // //                    "%code requires" blocks.
 #line 17 "src/parser.yy" // lalr1.cc:377
 
-    #include "driver.h"
     #include "absyntree.h"
     namespace Tiger{
         class Driver;
         class Scanner;
     }
 
-#line 53 "src/parser.h" // lalr1.cc:377
+#line 52 "src/parser.h" // lalr1.cc:377
 
 # include <cassert>
 # include <cstdlib> // std::abort
@@ -126,7 +125,7 @@
 
 #line 4 "src/parser.yy" // lalr1.cc:377
 namespace Tiger {
-#line 130 "src/parser.h" // lalr1.cc:377
+#line 129 "src/parser.h" // lalr1.cc:377
 
 
 
@@ -1744,7 +1743,7 @@ namespace Tiger {
 
 #line 4 "src/parser.yy" // lalr1.cc:377
 } // Tiger
-#line 1748 "src/parser.h" // lalr1.cc:377
+#line 1747 "src/parser.h" // lalr1.cc:377
 
 
 

@@ -15,7 +15,6 @@
 }
 
 %code requires{
-    #include "driver.h"
     #include "absyntree.h"
     namespace Tiger{
         class Driver;
@@ -27,6 +26,7 @@
 
 %code
 {
+    #include "driver.h"
     shared_ptr<ExpAST> absyn_root;
     int EM_tokPos = 0;
 }
@@ -120,7 +120,7 @@ dec: tydecs {$$ = $1;}
    | vardec {$$ = $1;}
    | fundecs {$$ = $1;}
 
-tydecs: tydec tydecs {$$ = MakeTypeDecAST(EM_tokPos, MakeTypeTyListAST($1, $2));}
+tydecs: tydec tydecs {$$ = MakeTypeDecAST(EM_tokPos, MakeTypeTyListAST($1, dynamic_pointer_cast<TypeDecAST>($2)->getType()));}
       | tydec {$$ = MakeTypeDecAST(EM_tokPos, MakeTypeTyListAST($1, nullptr));}
    
 tydec: TYPE id EQ ty {$$ = MakeTypeTyAST($2, $4);}
@@ -133,14 +133,14 @@ typefields: id COLON id COMMA typefields {$$ = MakeFieldListAST(MakeFieldAST(EM_
           | id COLON id {$$ = MakeFieldListAST(MakeFieldAST(EM_tokPos, $1, $3), nullptr);}
 		  | {$$ = nullptr;}
 
-vardec: VAR id ASSIGN exp {$$ = MakeVarDecAST(EM_tokPos, $2, "", $4);} 
+vardec: VAR id ASSIGN exp {string s = "DEBUG"; $$ = MakeVarDecAST(EM_tokPos, $2, s, $4);} 
       | VAR id COLON id ASSIGN exp {$$ = MakeVarDecAST(EM_tokPos, $2, $4, $6);}
 
-fundecs: fundec fundecs {$$ = MakeFunctionDecAST(EM_tokPos, MakeFunDecListAST($1, $2));}
+fundecs: fundec fundecs {$$ = MakeFunctionDecAST(EM_tokPos, MakeFunDecListAST($1, dynamic_pointer_cast<FunctionDecAST>($2)->getFunction()));}
 	   | fundec {$$ = MakeFunctionDecAST(EM_tokPos, MakeFunDecListAST($1, nullptr));}
 
-fundec: FUNCTION id LPAREN typefields RPAREN EQ exp {$$ = MakeFunDecAST(EM_tokPos, $2, $4, nullptr, $7);}
-      | FUNCTION id LPAREN typefields RPAREN COLON id EQ exp {$$ = MakeFunDecAST(EM_tokPos, $2, $4, $7, $9);}
+fundec: FUNCTION id LPAREN typefields RPAREN EQ exp {string v = "void"; $$ = MakeFunDecAST(EM_tokPos, $2, v, $4, $7);}
+      | FUNCTION id LPAREN typefields RPAREN COLON id EQ exp {$$ = MakeFunDecAST(EM_tokPos, $2, $7, $4, $9);}
 
 explist: exp SEMICOLON explist {$$ = MakeExpListAST($1, $3);}
 	   | exp {$$ = MakeExpListAST($1, nullptr);}
