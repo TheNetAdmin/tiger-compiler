@@ -43,7 +43,7 @@ typedef list <shared_ptr<TypeTyAST>> TypeTyListAST;
 class AST {
     Tiger::location loc;
 public:
-    AST(Tiger::location loc) {
+    AST(Tiger::location & loc) {
         this->loc = loc;
     }
 
@@ -55,20 +55,20 @@ public:
 // Base class definition
 
 // VarAST - Base class for all varible nodes
-enum VaribleType {
+enum VariableType {
     SIMPLE_VAR, FIELD_VAR, SUBSCRIPT_VAR
 };
 
 class VarAST : public AST {
-    VaribleType classType;
+    VariableType classType;
 
 public:
-    VarAST(Tiger::location loc, VaribleType classType);
+    VarAST(Tiger::location loc, VariableType classType);
 
     virtual ~VarAST() {
     };
 
-    VaribleType getClassType() const;
+    VariableType getClassType() const;
 };
 
 

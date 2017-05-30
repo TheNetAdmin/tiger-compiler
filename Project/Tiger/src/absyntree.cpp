@@ -6,9 +6,9 @@
 
 // VarAST-------------------------------------
 
-VarAST::VarAST(Tiger::location loc, VaribleType classType) : AST(loc), classType(classType) {}
+VarAST::VarAST(Tiger::location loc, VariableType classType) : AST(loc), classType(classType) {}
 
-VaribleType VarAST::getClassType() const {
+VariableType VarAST::getClassType() const {
     return classType;
 }
 

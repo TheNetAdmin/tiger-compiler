@@ -36,13 +36,14 @@ objs: bison flex $(OBJ)
 $(OBJ_PATH)/%.o: $(SRC_PATH)/%.cpp
 	$(CXX) $(CXXFLAG) $(CXXOBJFLAG) -o $@ $<
 
-.PHONY: bison flex
+.PHONY: bison
 bison: $(SRC_PATH)/$(BISON_SUB_PATH)/parser.yy
 	bison -d -v \
 	--defines=$(SRC_PATH)/parser.h \
 	--output=$(SRC_PATH)/parser.cpp \
 	$<
 
+.PHONY: flex
 flex: $(SRC_PATH)/$(FLEX_SUB_PATH)/scanner.l
 	flex -o $(SRC_PATH)/scanner.cpp $<
 

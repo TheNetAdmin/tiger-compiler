@@ -65,7 +65,7 @@
 %type <shared_ptr<TyAST>> ty
 %type <shared_ptr<FieldListAST>> typefields
 /* et cetera */
-//TODO: loc change to location
+
 %start program
 
 %%
