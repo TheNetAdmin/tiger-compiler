@@ -75,7 +75,7 @@ public:
 // ExpAST - Base class for all expression nodes
 enum ExpressionType {
     VAR_EXP, NIL_EXP, INT_EXP, STRING_EXP,
-    CALL_EXP, OP_EXP, RECORD_EXP, SEQ_EXP, ASSING_EXP,
+    CALL_EXP, OP_EXP, RECORD_EXP, SEQ_EXP, ASSIGN_EXP,
     IF_EXP, WHILE_EXP, FOR_EXP, BREAK_EXP, LET_EXP, ARRAY_EXP
 };
 

@@ -63,14 +63,31 @@ namespace Type {
                 : name(name), type(type) {}
     };
 
+    class FieldList {
+    public:
+        std::list<std::shared_ptr<Field>> fieldList;
+        FieldList(){}
+        FieldList(std::initializer_list<std::shared_ptr<Field>> fields){
+            for ( auto field : fields){
+                enter(field);
+            }
+        }
+        FieldList(std::shared_ptr<Field> field){
+            enter(field);
+        }
+        void enter(std::shared_ptr<Field> entry){
+            this->fieldList.push_back(entry);
+        }
+    };
+
     class Record : public Type {
     public:
         // similar to Ty_fieldList record
-        std::shared_ptr<std::list<Field>> recordList;
+        FieldList recordList;
 
         //TODO: need a simpler constructor to simplify init of recordList
         //      consider using initializer_list
-        Record(const std::shared_ptr<std::list<Field>> &recordList)
+        Record(const FieldList &recordList)
                 : Type(RECORD), recordList(recordList) {}
     };
 

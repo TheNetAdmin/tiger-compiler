@@ -9,6 +9,7 @@
 #include "absyntree.h"
 #include "Translate.h"
 #include "Types.h"
+#include "Env.h"
 
 namespace Semantic {
     class ExpTy {
@@ -20,8 +21,8 @@ namespace Semantic {
 
         ExpTy(const shared_ptr<Translate::Exp> &exp, const shared_ptr<Type::Type> &type)
                 : exp(exp), type(type) {}
-    };
 
+    };
 
     void trasProg(std::shared_ptr<ExpAST> exp);
 };

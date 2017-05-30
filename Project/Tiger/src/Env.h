@@ -61,7 +61,7 @@ namespace Env {
                 : Entry(name), result(result) {}
     };
 
-    class Env {
+    virtual class Env {
     public:
 
         Env() {}
@@ -86,6 +86,12 @@ namespace Env {
 
         void enter(VarEntry &entry) {
             bindList.push_back(entry);
+        }
+
+        std::shared_ptr<VarEntry> find(std::string name){
+            // TODO: Implement
+            std::shared_ptr<VarEntry> result;
+
         }
     };
 

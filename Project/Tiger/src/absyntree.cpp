@@ -216,7 +216,7 @@ const shared_ptr<ExpListAST> &SeqExpAST::getSeq() const {
 // AssignExpAST--------------------------------------
 
 AssignExpAST::AssignExpAST(Tiger::location loc, const shared_ptr<VarAST> &var,
-                           const shared_ptr<ExpAST> &exp) : ExpAST(loc, ASSING_EXP), var(var), exp(exp) {}
+                           const shared_ptr<ExpAST> &exp) : ExpAST(loc, ASSIGN_EXP), var(var), exp(exp) {}
 
 const shared_ptr<VarAST> &AssignExpAST::getVar() const {
     return var;
