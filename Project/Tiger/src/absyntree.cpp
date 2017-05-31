@@ -115,7 +115,7 @@ const string &SimpleVarAST::getSimple() const {
 FieldVarAST::FieldVarAST(Tiger::location loc, const shared_ptr<VarAST> &var, const string &sym) : VarAST(loc, FIELD_VAR), var(var),
                                                                                       sym(sym) {}
 
-const shared_ptr<VarAST> &FieldVarAST::getVar() const {
+const shared_ptr<VarAST> FieldVarAST::getVar() const {
     return var;
 }
 

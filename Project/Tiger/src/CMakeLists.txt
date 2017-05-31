@@ -13,6 +13,6 @@ set(SOURCE_FILES
         parser.h
         position.hh
         scanner.cpp
-        stack.hh Semantic.h Semantic.cpp Semantic.h Types.cpp Types.h Translate.cpp Translate.h Env.cpp Env.h)
+        stack.hh Semantic.h Semantic.cpp Semantic.h Types.cpp Types.h Translate.cpp Translate.h Env.cpp Env.h Error.cpp Error.h)
 
 add_executable(src ${SOURCE_FILES})

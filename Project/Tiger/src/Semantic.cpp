@@ -3,6 +3,7 @@
 //
 
 #include "Semantic.h"
+#include "Error.h"
 
 using namespace Semantic;
 
@@ -24,7 +25,7 @@ void trasProg(std::shared_ptr<ExpAST> exp) {
 ExpTy transExp(Env::VarEnv venv, Env::FuncEnv fenv, shared_ptr<ExpAST> exp) {
     ExpTy result;
 
-    switch (exp->getClassType()){
+    switch (exp->getClassType()) {
         case VAR_EXP:
             auto var = dynamic_pointer_cast<VarExpAST>(exp);
             result = transVar(venv, fenv, var->getVar());
@@ -41,11 +42,32 @@ ExpTy transExp(Env::VarEnv venv, Env::FuncEnv fenv, shared_ptr<ExpAST> exp) {
     return ExpTy();
 }
 
+// TODO: make venv and fenv const?
 ExpTy transVar(Env::VarEnv venv, Env::FuncEnv fenv, const shared_ptr<VarAST> &var) {
-    switch (var->getClassType()){
+    ExpTy result;
+    Tiger::Error err;
+    switch (var->getClassType()) {
+        // TODO: construct result in each case
         case SIMPLE_VAR:
+            try {
+                auto simpleVar = dynamic_pointer_cast<SimpleVarAST>(var);
+                auto queryResult = venv.find(simpleVar->getSimple());
+            } catch (Env::EntryNotFound &e) {
+                err.setLoc(var->getLoc());
+                err.setMessage("Variable not defined");
+            }
             break;
         case FIELD_VAR:
+            auto fieldVar = dynamic_pointer_cast<FieldVarAST>(var);
+            auto varOfFieldVar = fieldVar->getVar();
+            ExpTy resultTransField = transVar(venv, fenv, varOfFieldVar);
+            if (!Type::isRecord(resultTransField.type)) {
+                err.setLoc(var->getLoc());
+                err.setMessage("Variable not defined");
+            } else {
+                auto recordVar = dynamic_pointer_cast<Type::Record>(resultTransField.type);
+//                for (auto record = recordVar->recordList)
+            }
             break;
         case SUBSCRIPT_VAR:
             break;

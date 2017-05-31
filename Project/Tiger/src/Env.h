@@ -71,6 +71,12 @@ namespace Env {
         virtual void setDefaultEnv() = 0;
     };
 
+    class EntryNotFound : public std::runtime_error {
+    public:
+        explicit EntryNotFound(const std::string &msg)
+                : std::runtime_error(msg) {}
+    };
+
     class VarEnv : public Env { // same as "tenv"
     public:
         std::list<VarEntry> bindList;
@@ -88,10 +94,17 @@ namespace Env {
             bindList.push_back(entry);
         }
 
-        std::shared_ptr<VarEntry> find(std::string name){
-            // TODO: Implement
+        std::shared_ptr<VarEntry> find(const std::string &name) {
             std::shared_ptr<VarEntry> result;
-
+            for (auto r_iter = bindList.crbegin(); r_iter != bindList.crend(); r_iter++) {
+                if (r_iter->name == name) {
+                    result = std::make_shared<VarEntry>(*r_iter);
+                }
+            }
+            if (result == nullptr) {
+                throw EntryNotFound("Var Entry with name " + name + " not found");
+            }
+            return result;
         }
     };
 

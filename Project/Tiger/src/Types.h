@@ -14,44 +14,26 @@ namespace Type {
 
     class Type {
     public:
-        enum type {
-            BASE = 0,
-            NIL,
-            INT,
-            STRING,
-            VOID,
-            RECORD,
-            ARRAY,
-            NAME
-        } type;
 
-        Type(type type)
-                : type(type) {}
-
-        Type()
-                : type(BASE) {}
+        Type() {}
 
         virtual ~Type() {}
     };
 
     class Nil : public Type {
-        Nil()
-                : Type(NIL) {}
+        Nil() {}
     };
 
     class Int : public Type {
-        Int()
-                : Type(INT) {}
+        Int() {}
     };
 
     class String : public Type {
-        String()
-                : Type(STRING) {}
+        String() {}
     };
 
     class Void : public Type {
-        Void()
-                : Type(VOID) {}
+        Void() {}
     };
 
     class Field { // similar to Ty_field
@@ -63,32 +45,18 @@ namespace Type {
                 : name(name), type(type) {}
     };
 
-    class FieldList {
-    public:
-        std::list<std::shared_ptr<Field>> fieldList;
-        FieldList(){}
-        FieldList(std::initializer_list<std::shared_ptr<Field>> fields){
-            for ( auto field : fields){
-                enter(field);
-            }
-        }
-        FieldList(std::shared_ptr<Field> field){
-            enter(field);
-        }
-        void enter(std::shared_ptr<Field> entry){
-            this->fieldList.push_back(entry);
-        }
-    };
-
     class Record : public Type {
     public:
         // similar to Ty_fieldList record
-        FieldList recordList;
+        std::list<std::shared_ptr<Field>> recordList;
 
         //TODO: need a simpler constructor to simplify init of recordList
         //      consider using initializer_list
-        Record(const FieldList &recordList)
-                : Type(RECORD), recordList(recordList) {}
+        Record(std::initializer_list<std::shared_ptr<Field>> fields) {
+            for (auto field : fields) {
+                recordList.push_back(field);
+            }
+        }
     };
 
     class Array : public Type {
@@ -96,7 +64,7 @@ namespace Type {
         std::shared_ptr<Type> array;
 
         Array(const std::shared_ptr<Type> &array)
-                : Type(ARRAY), array(array) {}
+                : array(array) {}
     };
 
     class Name : public Type {
@@ -105,7 +73,7 @@ namespace Type {
         std::shared_ptr<Type> type;
 
         Name(const std::string &name, const std::shared_ptr<Type> &type)
-                : Type(NAME), name(name), type(type) {}
+                : name(name), type(type) {}
     };
 
     namespace { // Make these static to save space
@@ -148,6 +116,33 @@ namespace Type {
         }
     };
 
+    bool isNil(const std::shared_ptr<Type> &t) const {
+        return typeid(*t) == typeid(Nil);
+    }
+
+    bool isInt(const std::shared_ptr<Type> &t) const {
+        return typeid(*t) == typeid(Int);
+    }
+
+    bool isString(const std::shared_ptr<Type> &t) const {
+        return typeid(*t) == typeid(String);
+    }
+
+    bool isVoid(const std::shared_ptr<Type> &t) const {
+        return typeid(*t) == typeid(Void);
+    }
+
+    bool isRecord(const std::shared_ptr<Type> &t) const {
+        return typeid(*t) == typeid(Record);
+    }
+
+    bool isArray(const std::shared_ptr<Type> &t) const {
+        return typeid(*t) == typeid(Array);
+    }
+
+    bool isName(const std::shared_ptr<Type> &t) const {
+        return typeid(*t) == typeid(Name);
+    }
 };
 
 #endif //SRC_TYPES_H

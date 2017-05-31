@@ -47,8 +47,8 @@ public:
         this->loc = loc;
     }
 
-    void printLoc() const{
-        cout << this->loc;
+    const Tiger::location &getLoc() const {
+        return loc;
     }
 };
 
@@ -216,7 +216,7 @@ class FieldVarAST : public VarAST {
 public:
     FieldVarAST(Tiger::location loc, const shared_ptr<VarAST> &var, const string &sym);
 
-    const shared_ptr<VarAST> &getVar() const;
+    const shared_ptr<VarAST> getVar() const;
 
     const string &getSym() const;
 };
