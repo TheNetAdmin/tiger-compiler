@@ -32,18 +32,19 @@ class TypeTyAST;
 
 // some type definition
 
-typedef list <shared_ptr<FieldAST>> FieldListAST;
-typedef list <shared_ptr<ExpAST>> ExpListAST;
-typedef list <shared_ptr<EFieldAST>> EFieldListAST;
-typedef list <shared_ptr<DecAST>> DecListAST;
-typedef list <shared_ptr<FunDecAST>> FunDecListAST;
-typedef list <shared_ptr<TypeTyAST>> TypeTyListAST;
+using FieldListAST = list<shared_ptr<FieldAST>>;
+using ExpListAST = list<shared_ptr<ExpAST>>;
+using EFieldListAST = list<shared_ptr<EFieldAST>>;
+using DecListAST = list<shared_ptr<DecAST>>;
+using FunDecListAST = list<shared_ptr<FunDecAST>>;
+using TypeTyListAST = list<shared_ptr<TypeTyAST>>;
 
 // Base class
 class AST {
     Tiger::location loc;
 public:
-    AST(Tiger::location & loc) {
+    AST(Tiger::location &loc)
+    {
         this->loc = loc;
     }
 
@@ -79,7 +80,8 @@ enum ExpressionType {
     IF_EXP, WHILE_EXP, FOR_EXP, BREAK_EXP, LET_EXP, ARRAY_EXP
 };
 
-class ExpAST: public AST {
+class ExpAST : public AST
+{
     ExpressionType classType;
 
 public:
@@ -97,7 +99,8 @@ enum DeclarationType {
     FUNCTION_DEC, VAR_DEC, TYPE_DEC
 };
 
-class DecAST: public AST {
+class DecAST : public AST
+{
     DeclarationType classType;
 
 public:
@@ -114,7 +117,8 @@ enum TypeType {
     NAME_TYPE, RECORD_TYPE, ARRAY_TYPE
 };
 
-class TyAST: public AST {
+class TyAST : public AST
+{
     TypeType classType;
 
 public:
@@ -131,7 +135,8 @@ public:
 // Some class used in extend class
 
 // FieldAST - Class used in RecordTyAST
-class FieldAST: public AST {
+class FieldAST : public AST
+{
     string name, typ;
     bool escape;
 
@@ -163,7 +168,8 @@ public:
 };
 
 // FunDecAST - Class used in FunctionDecAST
-class FunDecAST: public AST {
+class FunDecAST : public AST
+{
     string name, result;
     shared_ptr<FieldListAST> params;
     shared_ptr<ExpAST> body;

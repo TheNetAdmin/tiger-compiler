@@ -8,6 +8,7 @@
 #include <memory>
 #include <string>
 #include <list>
+#include <algorithm>
 #include "Types.h"
 
 namespace Env {
@@ -29,11 +30,17 @@ namespace Env {
 
         VarEntry(const std::string &name, const std::shared_ptr<Type::Type> &type)
                 : Entry(name), type(type) {}
+
+        const std::shared_ptr<Type::Type> getType() const
+        {
+            return type;
+        }
     };
 
     class FuncEntry : public Entry {
     public:
-        Type::TypeList formals;
+        using ArgList = std::list<std::shared_ptr<Type::Type>>;
+        std::shared_ptr<ArgList> args;
         std::shared_ptr<Type::Type> result;
 
         // Multiple arguments
@@ -43,7 +50,11 @@ namespace Env {
         FuncEntry(const std::string &name,
                   const std::initializer_list<std::shared_ptr<Type::Type>> &argTypes,
                   const std::shared_ptr<Type::Type> &resultType)
-                : Entry(name), formals(argTypes), result(resultType) {}
+                : Entry(name), result(resultType)
+        {
+            args = std::make_shared<ArgList>(argTypes);
+        }
+
 
         // Only one argument
         // @name:       function name
@@ -52,13 +63,28 @@ namespace Env {
         FuncEntry(const std::string &name,
                   const std::shared_ptr<Type::Type> &argType,
                   const std::shared_ptr<Type::Type> &resultType)
-                : Entry(name), formals(argType), result(resultType) {}
+                : Entry(name), result(resultType)
+        {
+            ArgList arg;
+            arg.push_back(argType);
+            args = std::make_shared<ArgList>(arg);
+        }
 
         // No argument
         // @name:       function name
         // @resultType: function return type
         FuncEntry(const std::string &name, const std::shared_ptr<Type::Type> &result)
                 : Entry(name), result(result) {}
+
+        const std::shared_ptr<ArgList> getArgs() const
+        {
+            return args;
+        }
+
+        const std::shared_ptr<Type::Type> getResultType() const
+        {
+            return result;
+        }
     };
 
     virtual class Env {
@@ -95,16 +121,13 @@ namespace Env {
         }
 
         std::shared_ptr<VarEntry> find(const std::string &name) {
-            std::shared_ptr<VarEntry> result;
+            // TODO: refactor with std::find
             for (auto r_iter = bindList.crbegin(); r_iter != bindList.crend(); r_iter++) {
                 if (r_iter->name == name) {
-                    result = std::make_shared<VarEntry>(*r_iter);
+                    return std::make_shared<VarEntry>(*r_iter);
                 }
             }
-            if (result == nullptr) {
-                throw EntryNotFound("Var Entry with name " + name + " not found");
-            }
-            return result;
+            throw EntryNotFound("Var Entry with name " + name + " not found");
         }
     };
 
@@ -151,6 +174,17 @@ namespace Env {
             this->bindList.push_back(entry);
         }
 
+        std::shared_ptr<FuncEntry> find(const std::string &funcName)
+        {
+            for (auto r_iter = bindList.crbegin(); r_iter != bindList.crend(); r_iter++)
+            {
+                if (r_iter->name == funcName)
+                {
+                    return std::make_shared<FuncEntry>(*r_iter);
+                }
+            }
+            throw EntryNotFound("Func entry with name " + funcName + " not found");
+        }
     };
 
 }

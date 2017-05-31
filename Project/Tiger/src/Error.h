@@ -12,24 +12,21 @@ namespace Tiger {
     class Error {
         location loc;
         std::string message;
+        bool hasError;
     public:
-        Error() {}
+        Error() : hasError(false)
+        {}
 
         Error(const location &loc, const std::string &message)
-                : loc(loc), message(message) {}
+                : loc(loc), message(message), hasError(true)
+        {}
 
         void set(const location &loc, const std::string &message) {
             this->loc = loc;
             this->message = message;
+            hasError = true;
         }
 
-        void setLoc(const location &loc) {
-            Error::loc = loc;
-        }
-
-        void setMessage(const std::string &message) {
-            Error::message = message;
-        }
     };
 }
 

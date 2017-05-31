@@ -10,138 +10,199 @@
 #include <list>
 #include <list>
 
-namespace Type {
+namespace Type
+{
 
-    class Type {
-    public:
-
-        Type() {}
-
-        virtual ~Type() {}
-    };
-
-    class Nil : public Type {
-        Nil() {}
-    };
-
-    class Int : public Type {
-        Int() {}
-    };
-
-    class String : public Type {
-        String() {}
-    };
-
-    class Void : public Type {
-        Void() {}
-    };
-
-    class Field { // similar to Ty_field
+    class Field
+    { // similar to Ty_field
     public:
         std::string name;
         std::shared_ptr<Type> type;
 
         Field(const std::string &name, const std::shared_ptr<Type> &type)
-                : name(name), type(type) {}
+                : name(name), type(type)
+        {}
     };
 
-    class Record : public Type {
+    class EntryNotFound : public std::runtime_error
+    {
+    public:
+        explicit EntryNotFound(const std::string &msg)
+                : std::runtime_error(msg)
+        {}
+    };
+
+    class Type
+    {
+    public:
+
+        Type()
+        {}
+
+        virtual ~Type()
+        {}
+    };
+
+    class Nil : public Type
+    {
+    public:
+
+        Nil()
+        {}
+    };
+
+    class Int : public Type
+    {
+    public:
+
+        Int()
+        {}
+    };
+
+    class String : public Type
+    {
+    public:
+
+        String()
+        {}
+    };
+
+    class Void : public Type
+    {
+    public:
+
+        Void()
+        {}
+    };
+
+    class Record : public Type
+    {
     public:
         // similar to Ty_fieldList record
-        std::list<std::shared_ptr<Field>> recordList;
+        using FieldList = std::list<std::shared_ptr<Field>>;
+        std::shared_ptr<FieldList> fields;
 
-        //TODO: need a simpler constructor to simplify init of recordList
-        //      consider using initializer_list
-        Record(std::initializer_list<std::shared_ptr<Field>> fields) {
-            for (auto field : fields) {
-                recordList.push_back(field);
+        Record()
+        {}
+
+        Record(std::initializer_list<std::shared_ptr<Field>> fields)
+        {
+            this->fields = std::make_shared<FieldList>(fields);
+        }
+
+        std::shared_ptr<Field> find(std::string name)
+        {
+            for (auto iter = fields->begin(); iter != fields->end(); iter++)
+            {
+                if ((*iter)->name == name)
+                {
+                    return *iter;
+                }
             }
+            throw EntryNotFound("No such field with name : " + name);
+        }
+
+        const std::shared_ptr<FieldList> getFields() const
+        {
+            return fields;
         }
     };
 
-    class Array : public Type {
+    class Array : public Type
+    {
     public:
         std::shared_ptr<Type> array;
 
+        Array()
+        {}
+
         Array(const std::shared_ptr<Type> &array)
-                : array(array) {}
+                : array(array)
+        {}
     };
 
-    class Name : public Type {
+    class Name : public Type
+    {
     public:
         std::string name;
         std::shared_ptr<Type> type;
 
         Name(const std::string &name, const std::shared_ptr<Type> &type)
-                : name(name), type(type) {}
+                : name(name), type(type)
+        {}
     };
 
-    namespace { // Make these static to save space
+    // Default types
+
+    namespace
+    {
+        // Make these static to save space
         std::shared_ptr<Nil> NIL;
         std::shared_ptr<Int> INT;
         std::shared_ptr<String> STRING;
         std::shared_ptr<Void> VOID;
+        std::shared_ptr<Record> RECORD;
+        std::shared_ptr<Array> ARRAY;
     }
 
-    std::shared_ptr<Nil> makeNil() {
-        return NIL;
-    }
-
-    std::shared_ptr<Int> makeInt() {
-        return INT;
-    }
-
-    std::shared_ptr<String> makeString() {
-        return STRING;
-    }
-
-    std::shared_ptr<Void> makeVoid() {
-        return VOID;
-    }
-
-    class TypeList {
-    public:
-        std::list<std::shared_ptr<Type>> typeList;
-
-        TypeList() {}
-
-        TypeList(std::initializer_list<std::shared_ptr<Type>> types) {
-            for (auto type : types) {
-                typeList.push_back(type);
-            }
-        }
-
-        TypeList(std::shared_ptr<Type> type) {
-            typeList.push_back(type);
-        }
-    };
-
-    bool isNil(const std::shared_ptr<Type> &t) const {
+    bool isNil(const std::shared_ptr<Type> &t) const
+    {
         return typeid(*t) == typeid(Nil);
     }
 
-    bool isInt(const std::shared_ptr<Type> &t) const {
+    bool isInt(const std::shared_ptr<Type> &t) const
+    {
         return typeid(*t) == typeid(Int);
     }
 
-    bool isString(const std::shared_ptr<Type> &t) const {
+    bool isString(const std::shared_ptr<Type> &t) const
+    {
         return typeid(*t) == typeid(String);
     }
 
-    bool isVoid(const std::shared_ptr<Type> &t) const {
+    bool isVoid(const std::shared_ptr<Type> &t) const
+    {
         return typeid(*t) == typeid(Void);
     }
 
-    bool isRecord(const std::shared_ptr<Type> &t) const {
+    bool isRecord(const std::shared_ptr<Type> &t) const
+    {
         return typeid(*t) == typeid(Record);
     }
 
-    bool isArray(const std::shared_ptr<Type> &t) const {
+    bool isArray(const std::shared_ptr<Type> &t) const
+    {
         return typeid(*t) == typeid(Array);
     }
 
-    bool isName(const std::shared_ptr<Type> &t) const {
+    bool isName(const std::shared_ptr<Type> &t) const
+    {
         return typeid(*t) == typeid(Name);
+    }
+
+    bool match(const std::shared_ptr<Type> &t1,
+               const std::shared_ptr<Type> &t2) const
+    {
+        return typeid(t1) == typeid(t2);
+    }
+
+    // Get type name
+    const std::string getName(std::shared_ptr<Type> &t)
+    {
+        std::string name;
+        if (isNil(t))
+        { name = "nil"; }
+        else if (isInt(t))
+        { name = "int"; }
+        else if (isString(t))
+        { name = "string"; }
+        else if (isVoid(t))
+        { name = "void"; }
+        else if (isRecord(t))
+        { name = "record"; }
+        else if (isName(t))
+        { name = "name"; }
+        return name;
     }
 };
 
