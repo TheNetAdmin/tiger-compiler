@@ -65,30 +65,23 @@ namespace Semantic
     {
     public:
 
-
         explicit TypeNotMatchError(const string &etName,
                                    const string &atName,
                                    const string &declareName,
                                    const Tiger::location &loc)
-                : declareName(declareName),
-                  expectTypeName(etName),
-                  actualTypeName(atName),
-                  TypeError(loc,
+                : TypeError(loc,
                             "Type mismatch : " + declareName
-                            + " . Except " + expectTypeName
-                            + " , but get " + actualTypeName)
+                            + " . Except " + etName
+                            + " , but get " + atName)
         {
         }
 
         explicit TypeNotMatchError(const string &etName,
                                    const string &atName,
                                    const Tiger::location &loc)
-                : declareName(declareName),
-                  expectTypeName(etName),
-                  actualTypeName(atName),
-                  TypeError(loc,
-                            "Type mismatch. Except " + expectTypeName
-                            + " , but get " + actualTypeName)
+                : TypeError(loc,
+                            "Type mismatch. Except " + etName
+                            + " , but get " + atName)
         {}
     };
 
@@ -97,8 +90,7 @@ namespace Semantic
     public:
         explicit TypeMatchError(const string &actualTypeName,
                                 const Tiger::location &loc)
-                : actualTypeName(actualTypeName),
-                  TypeError(loc,
+                : TypeError(loc,
                             "Type should not be " + actualTypeName)
         {}
     };

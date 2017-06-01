@@ -26,6 +26,7 @@ namespace Semantic
         {
             // TODO: construct result in each case
             case SIMPLE_VAR:
+            {
                 try
                 {
                     auto simpleVar = dynamic_pointer_cast<SimpleVarAST>(var);
@@ -37,8 +38,10 @@ namespace Semantic
                     Tiger::Error err(var->getLoc(), "Variable not defined");
                     return ExpTy(nullptr, Type::INT);
                 }
+            }
                 break;
             case FIELD_VAR:
+            {
                 auto fieldVar = dynamic_pointer_cast<FieldVarAST>(var);
                 ExpTy resultTransField = transVar(venv, fenv, fieldVar->getVar());
                 if (!Type::isRecord(resultTransField.type))
@@ -61,8 +64,10 @@ namespace Semantic
                         return ExpTy(nullptr, Type::RECORD);
                     }
                 }
+            }
                 break;
             case SUBSCRIPT_VAR:
+            {
                 auto subscriptVar = dynamic_pointer_cast<SubscriptVarAST>(var);
                 ExpTy resultTransSubscript = transVar(venv, fenv, subscriptVar->getVar());
                 if (!Type::isArray(resultTransSubscript.type))
@@ -84,10 +89,13 @@ namespace Semantic
                         return ExpTy(nullptr, resultTransExp.type);
                     }
                 }
+            }
                 break;
             default:
+            {
                 Tiger::Error err(var->getLoc(), "Unknown type of variable");
                 exit(1);
+            }
                 break;
         }
     }
@@ -98,14 +106,19 @@ namespace Semantic
         switch (exp->getClassType())
         {
             case VAR_EXP:
+            {
                 auto var = dynamic_pointer_cast<VarExpAST>(exp);
                 return transVar(venv, fenv, var->getVar());
+            }
                 break;
             case NIL_EXP:
+            {
                 // TODO: replace nullptr with translate info
                 return ExpTy(nullptr, Type::NIL);
+            }
                 break;
             case CALL_EXP:
+            {
                 auto funcUsage = dynamic_pointer_cast<CallExpAST>(exp);
                 string funcName = funcUsage->getFunc();
                 try
@@ -124,8 +137,10 @@ namespace Semantic
                 }
                 // default return with error
                 return ExpTy(nullptr, Type::VOID);
+            }
                 break;
             case RECORD_EXP:
+            {
                 auto recordUsage = dynamic_pointer_cast<RecordExpAST>(exp);
                 string recordName = recordUsage->getTyp();
                 try
@@ -152,8 +167,10 @@ namespace Semantic
                 }
                 // default return with error
                 return ExpTy(nullptr, Type::RECORD);
+            }
                 break;
             case ARRAY_EXP:
+            {
                 auto arrayUsage = dynamic_pointer_cast<ArrayExpAST>(exp);
                 string arrayName = arrayUsage->getTyp();
                 try
@@ -180,8 +197,10 @@ namespace Semantic
                 }
                 // default return with error
                 return ExpTy(nullptr, Type::ARRAY);
+            }
                 break;
             case SEQ_EXP:
+            {
                 auto exps = dynamic_pointer_cast<SeqExpAST>(exp);
                 const std::list<shared_ptr<ExpAST>> expList = *(exps->getSeq());
                 // Check num of exps
@@ -194,15 +213,17 @@ namespace Semantic
                 last_iter--;
                 for (auto iter = expList.begin(); iter != expList.end(); iter++)
                 {
-                    auto result = transExp(venv, fenv, e);
+                    auto result = transExp(venv, fenv, (*iter));
                     if (iter == last_iter)
                     {
                         return result;
                     }
                 }
+            }
                 // run here into error?
                 break;
             case WHILE_EXP:
+            {
                 auto whileUsage = dynamic_pointer_cast<WhileExpAST>(exp);
                 // Check while's test condition
                 auto whileTest = transExp(venv, fenv, whileUsage->getTest());
@@ -217,8 +238,10 @@ namespace Semantic
                 // Trans while's body
                 auto whileBody = transExp(venv, fenv, whileUsage->getBody());
                 return ExpTy(nullptr, Type::VOID);
+            }
                 break;
             case ASSIGN_EXP:
+            {
                 auto assignUsage = dynamic_pointer_cast<AssignExpAST>(exp);
                 // Check assign's var
                 auto assignVar = assignUsage->getVar();
@@ -236,11 +259,15 @@ namespace Semantic
                     Tiger::Error err(e.loc, e.what());
                 }
                 return ExpTy(nullptr, Type::VOID);
+            }
                 break;
             case BREAK_EXP:
+            {
                 return ExpTy(nullptr, Type::VOID);
+            }
                 break;
             case FOR_EXP:
+            {
                 auto forUsage = dynamic_pointer_cast<ForExpAST>(exp);
                 // Check low and high range
                 auto forLo = forUsage->getLo();
@@ -266,7 +293,9 @@ namespace Semantic
                 fenv.endScope();
                 // TODO: Handle error?
                 return ExpTy(nullptr, Type::VOID);
+            }
             case LET_EXP:
+            {
                 fenv.beginScope();
                 venv.beginScope();
                 // Check each exp decs
@@ -282,8 +311,10 @@ namespace Semantic
                 venv.endScope();
                 fenv.endScope();
                 return result;
+            }
                 break;
             case OP_EXP:
+            {
                 auto opUsage = dynamic_pointer_cast<OpExpAST>(exp);
                 // Check both side of op exp
                 auto opLeft = transExp(venv, fenv, opUsage->getLeft());
@@ -327,9 +358,10 @@ namespace Semantic
                 {
                     Tiger::Error(e.loc, e.what());
                 }
-
+            }
                 break;
             case IF_EXP:
+            {
                 auto ifUsage = dynamic_pointer_cast<IfExpAST>(exp);
                 auto ifTestPtr = ifUsage->getTest();
                 auto ifThenPtr = ifUsage->getThen();
@@ -361,13 +393,20 @@ namespace Semantic
                 }
                 // TODO: use which return?
                 return ExpTy(nullptr, ifThen.type);
+            }
                 break;
             case STRING_EXP:
+            {
                 return ExpTy(nullptr, Type::STRING);
+            }
             case INT_EXP:
+            {
                 return ExpTy(nullptr, Type::INT);
+            }
             default:
+            {
                 // TODO: handle default case
+            }
                 break;
         }
 
@@ -381,6 +420,8 @@ namespace Semantic
         switch (dec->getClassType())
         {
             case VAR_DEC:
+            {
+
                 auto varUsage = dynamic_pointer_cast<VarDecAST>(dec);
                 auto varName = varUsage->getVar();
                 // Check var init
@@ -420,8 +461,10 @@ namespace Semantic
                 }
                 Env::VarEntry ve(varName, varType);
                 venv.enter(ve);
+            }
                 break;
             case FUNCTION_DEC:
+            {
                 auto funcUsage = dynamic_pointer_cast<FunctionDecAST>(dec);
                 auto funcList = funcUsage->getFunction();
                 // Add functions' declaration
@@ -438,7 +481,7 @@ namespace Semantic
                     {
                         try
                         {
-                            returnType = venv.find(returnTypeName);
+                            returnType = venv.find(returnTypeName)->getType();
                         }
                         catch (Env::EntryNotFound &e)
                         {
@@ -454,7 +497,8 @@ namespace Semantic
                         shared_ptr<Type::Type> argType;
                         try
                         {
-                            argType = venv.find((*arg)->getTyp());
+                            // TODO: getTyp? getName?
+                            argType = venv.find((*arg)->getTyp())->getType();
                         }
                         catch (Env::EntryNotFound &e)
                         {
@@ -480,7 +524,7 @@ namespace Semantic
                         shared_ptr<Type::Type> argType;
                         try
                         {
-                            argType = venv.find(argName);
+                            argType = venv.find(argName)->getType();
                         }
                         catch (Env::EntryNotFound &e)
                         {
@@ -507,8 +551,10 @@ namespace Semantic
                     }
                     fenv.endScope();
                 }
+            }
                 break;
             case TYPE_DEC:
+            {
                 auto typeUsage = std::dynamic_pointer_cast<TypeDecAST>(dec);
                 auto types = typeUsage->getType();
                 for (auto t = types->begin(); t != types->end(); t++)
@@ -524,7 +570,11 @@ namespace Semantic
                     shared_ptr<Type::Type> result = transTy(venv, (*t)->getTy());
                 }
                 break;
+            }
             default:
+            {
+
+            }
                 break;
         }
     }
@@ -534,20 +584,22 @@ namespace Semantic
         switch (ty->getClassType())
         {
             case NAME_TYPE:
+            {
                 auto nameTy = dynamic_pointer_cast<NameTyAST>(ty);
-                shared_ptr<Type::Name> name;
                 try
                 {
                     auto t = venv.find(nameTy->getName());
-                    name = t->getType();
+                    return t->getType();
                 }
                 catch (Env::EntryNotFound &e)
                 {
                     Tiger::Error err(nameTy->getLoc(), e.what());
                 }
-                return name;
+                return Type::INT;
+            }
                 break;
             case RECORD_TYPE:
+            {
                 auto recordTy = dynamic_pointer_cast<RecordTyAST>(ty);
                 auto fields = recordTy->getRecord();
                 shared_ptr<Type::Record> record;
@@ -565,9 +617,11 @@ namespace Semantic
                     }
 
                 }
-                return make_shared<Type::Type>(record);
+                return record;
+            }
                 break;
             case ARRAY_TYPE:
+            {
                 auto arrayTy = dynamic_pointer_cast<ArrayTyAST>(ty);
                 shared_ptr<Type::Array> array;
                 try
@@ -577,9 +631,10 @@ namespace Semantic
                 }
                 catch (Env::EntryNotFound &e)
                 {
-                    Tiger::Error err(recordTy->getLoc(), e.what());
+                    Tiger::Error err(arrayTy->getLoc(), e.what());
                 }
                 return array;
+            }
                 break;
             default:
                 break;

@@ -13,17 +13,6 @@
 namespace Type
 {
 
-    class Field
-    { // similar to Ty_field
-    public:
-        std::string name;
-        std::shared_ptr<Type> type;
-
-        Field(const std::string &name, const std::shared_ptr<Type> &type)
-                : name(name), type(type)
-        {}
-    };
-
     class EntryNotFound : public std::runtime_error
     {
     public:
@@ -72,6 +61,17 @@ namespace Type
     public:
 
         Void()
+        {}
+    };
+
+    class Field
+    { // similar to Ty_field
+    public:
+        std::string name;
+        std::shared_ptr<Type> type;
+
+        Field(const std::string &name, const std::shared_ptr<Type> &type)
+                : name(name), type(type)
         {}
     };
 
@@ -156,43 +156,43 @@ namespace Type
         std::shared_ptr<Array> ARRAY;
     }
 
-    bool isNil(const std::shared_ptr<Type> &t) const
+    bool isNil(const std::shared_ptr<Type> &t)
     {
         return typeid(*t) == typeid(Nil);
     }
 
-    bool isInt(const std::shared_ptr<Type> &t) const
+    bool isInt(const std::shared_ptr<Type> &t)
     {
         return typeid(*t) == typeid(Int);
     }
 
-    bool isString(const std::shared_ptr<Type> &t) const
+    bool isString(const std::shared_ptr<Type> &t)
     {
         return typeid(*t) == typeid(String);
     }
 
-    bool isVoid(const std::shared_ptr<Type> &t) const
+    bool isVoid(const std::shared_ptr<Type> &t)
     {
         return typeid(*t) == typeid(Void);
     }
 
-    bool isRecord(const std::shared_ptr<Type> &t) const
+    bool isRecord(const std::shared_ptr<Type> &t)
     {
         return typeid(*t) == typeid(Record);
     }
 
-    bool isArray(const std::shared_ptr<Type> &t) const
+    bool isArray(const std::shared_ptr<Type> &t)
     {
         return typeid(*t) == typeid(Array);
     }
 
-    bool isName(const std::shared_ptr<Type> &t) const
+    bool isName(const std::shared_ptr<Type> &t)
     {
         return typeid(*t) == typeid(Name);
     }
 
     bool match(const std::shared_ptr<Type> &t1,
-               const std::shared_ptr<Type> &t2) const
+               const std::shared_ptr<Type> &t2)
     {
         return typeid(t1) == typeid(t2);
     }

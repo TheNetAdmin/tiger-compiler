@@ -27,6 +27,11 @@ namespace Env
         Entry(const std::string &name)
                 : name(name)
         {}
+
+        void setName(const std::string &name)
+        {
+            Entry::name = name;
+        }
     };
 
     class VarEntry : public Entry
@@ -34,12 +39,15 @@ namespace Env
     public:
         std::shared_ptr<Type::Type> type;
 
+        VarEntry()
+        {}
+
         VarEntry(const std::string &name,
                  const std::shared_ptr<Type::Type> &type)
                 : Entry(name), type(type)
         {}
 
-        const std::shared_ptr<Type::Type> getType() const
+        std::shared_ptr<Type::Type> getType() const
         {
             return type;
         }
@@ -51,6 +59,9 @@ namespace Env
         using ArgList = std::list<std::shared_ptr<Type::Type>>;
         std::shared_ptr<ArgList> args;
         std::shared_ptr<Type::Type> result;
+
+        FuncEntry()
+        {}
 
         // Multiple arguments
         // @name:       function name
@@ -103,7 +114,7 @@ namespace Env
         }
     };
 
-    virtual class Env
+    class Env
     {
     public:
 
