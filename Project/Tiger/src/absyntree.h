@@ -540,7 +540,7 @@ shared_ptr<ExpAST> MakeArrayExpAST(Tiger::location loc, string &typ, shared_ptr<
 // DecAST::
 shared_ptr<DecAST> MakeFunctionDecAST(Tiger::location loc, shared_ptr<FunDecListAST> function);
 
-shared_ptr<DecAST> MakeVarDecAST(Tiger::location loc, string &var, string &typ, shared_ptr<ExpAST> init);
+shared_ptr<DecAST> MakeVarDecAST(Tiger::location loc, const string &var, const string &typ, shared_ptr<ExpAST> init);
 
 shared_ptr<DecAST> MakeTypeDecAST(Tiger::location loc, shared_ptr<TypeTyListAST> type);
 

@@ -106,6 +106,12 @@ namespace Type
         {
             return fields;
         }
+
+        void addField(const std::string &name, const std::shared_ptr<Type> type)
+        {
+            Field field(name, type);
+            fields->push_back(std::make_shared<Field>(field));
+        }
     };
 
     class Array : public Type
@@ -119,6 +125,11 @@ namespace Type
         Array(const std::shared_ptr<Type> &array)
                 : array(array)
         {}
+
+        void setArray(const std::shared_ptr<Type> &array)
+        {
+            Array::array = array;
+        }
     };
 
     class Name : public Type
@@ -187,7 +198,7 @@ namespace Type
     }
 
     // Get type name
-    const std::string getName(std::shared_ptr<Type> &t)
+    const std::string getName(const std::shared_ptr<Type> &t)
     {
         std::string name;
         if (isNil(t))

@@ -475,7 +475,8 @@ shared_ptr<DecAST> MakeFunctionDecAST(Tiger::location loc, shared_ptr<FunDecList
     return make_shared<FunctionDecAST>(loc, function);
 }
 
-shared_ptr<DecAST> MakeVarDecAST(Tiger::location loc, string &var, string &typ, shared_ptr<ExpAST> init) {
+shared_ptr<DecAST> MakeVarDecAST(Tiger::location loc, const string &var, const string &typ, shared_ptr<ExpAST> init)
+{
     return make_shared<VarDecAST>(loc, var, typ, init, true);
 }
 

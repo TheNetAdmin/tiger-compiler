@@ -55,24 +55,51 @@ namespace Semantic
         string expectTypeName;
         string actualTypeName;
 
-        explicit TypeError(const string &rtName,
-                           const string &atName,
-                           const string &declareName,
-                           const Tiger::location &loc)
-                : SemanticError(loc,
-                                "Type mismatch : " + declareName
-                                + " . Except " + expectTypeName
-                                + " , but get " + actualTypeName),
-                  declareName(declareName)
+        explicit TypeError(const Tiger::location &loc,
+                           const string &msg)
+                : SemanticError(loc, msg)
+        {}
+    };
+
+    class TypeNotMatchError : public TypeError
+    {
+    public:
+
+
+        explicit TypeNotMatchError(const string &etName,
+                                   const string &atName,
+                                   const string &declareName,
+                                   const Tiger::location &loc)
+                : declareName(declareName),
+                  expectTypeName(etName),
+                  actualTypeName(atName),
+                  TypeError(loc,
+                            "Type mismatch : " + declareName
+                            + " . Except " + expectTypeName
+                            + " , but get " + actualTypeName)
         {
         }
 
-        explicit TypeError(const string &rtName,
-                           const string &atName,
-                           const Tiger::location &loc)
-                : SemanticError(loc,
-                                "Type mismatch. Except " + expectTypeName
-                                + " , but get " + actualTypeName)
+        explicit TypeNotMatchError(const string &etName,
+                                   const string &atName,
+                                   const Tiger::location &loc)
+                : declareName(declareName),
+                  expectTypeName(etName),
+                  actualTypeName(atName),
+                  TypeError(loc,
+                            "Type mismatch. Except " + expectTypeName
+                            + " , but get " + actualTypeName)
+        {}
+    };
+
+    class TypeMatchError : public TypeError
+    {
+    public:
+        explicit TypeMatchError(const string &actualTypeName,
+                                const Tiger::location &loc)
+                : actualTypeName(actualTypeName),
+                  TypeError(loc,
+                            "Type should not be " + actualTypeName)
         {}
     };
 
@@ -151,6 +178,37 @@ namespace Semantic
     };
 
     void trasProg(std::shared_ptr<ExpAST> exp);
+
+    ExpTy transExp(Env::VarEnv &venv, Env::FuncEnv &fenv, shared_ptr<ExpAST> exp) noexcept(true);
+
+    ExpTy transVar(Env::VarEnv &venv, Env::FuncEnv &fenv, const shared_ptr<VarAST> var) noexcept(true);
+
+
+    void checkCallArgs(Env::VarEnv &venv, Env::FuncEnv &fenv,
+                       const shared_ptr<CallExpAST> usage,
+                       const shared_ptr<Env::FuncEntry> def);
+
+
+    void checkRecordEfields(Env::VarEnv &venv, Env::FuncEnv &fenv,
+                            shared_ptr<RecordExpAST> usage,
+                            shared_ptr<Env::VarEntry> def);
+
+    void assertTypeMatch(const shared_ptr<Type::Type> check,
+                         const shared_ptr<Type::Type> base,
+                         const std::string &declareName,
+                         const Tiger::location &loc);
+
+    void assertTypeMatch(const shared_ptr<Type::Type> check,
+                         const shared_ptr<Type::Type> base,
+                         const Tiger::location &loc);
+
+    void assertTypeNotMatch(const shared_ptr<Type::Type> actualType,
+                            const shared_ptr<Type::Type> assertType,
+                            const Tiger::location &loc);
+
+    void transDec(Env::VarEnv &venv, Env::FuncEnv &fenv, const shared_ptr<DecAST> dec);
+
+    shared_ptr<Type::Type> transTy(Env::VarEnv &venv, const shared_ptr<TyAST> &ty);
 };
 
 #endif //_TIGER_SEMANTIC_H

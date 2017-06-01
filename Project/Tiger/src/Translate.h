@@ -8,6 +8,7 @@
 namespace Translate{
     class Exp {
     };
+
 }
 
 #endif //SRC_TRANSLATE_H
