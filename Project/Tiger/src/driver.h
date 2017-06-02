@@ -19,7 +19,7 @@ class Driver
     bool trace_parsing;
     bool trace_scanning;
     std::string filename;
-    shared_ptr<ExpAST> result;
+    shared_ptr<AST::Exp> result;
     Driver();
     virtual ~Driver();
     void scan_begin();

@@ -299,13 +299,13 @@ namespace Tiger {
       // tydecs
       // vardec
       // fundecs
-      char dummy2[sizeof(shared_ptr<DecAST>)];
+      char dummy2[sizeof(shared_ptr<AST::Dec>)];
 
       // decs
-      char dummy3[sizeof(shared_ptr<DecListAST>)];
+      char dummy3[sizeof(shared_ptr<AST::DecList>)];
 
       // refields
-      char dummy4[sizeof(shared_ptr<EFieldListAST>)];
+      char dummy4[sizeof(shared_ptr<AST::EFieldList>)];
 
       // program
       // exp
@@ -313,26 +313,26 @@ namespace Tiger {
       // record
       // array
       // funcall
-      char dummy5[sizeof(shared_ptr<ExpAST>)];
+      char dummy5[sizeof(shared_ptr<AST::Exp>)];
 
       // explist
       // args
-      char dummy6[sizeof(shared_ptr<ExpListAST>)];
+      char dummy6[sizeof(shared_ptr<AST::ExpList>)];
 
       // typefields
-      char dummy7[sizeof(shared_ptr<FieldListAST>)];
+      char dummy7[sizeof(shared_ptr<AST::FieldList>)];
 
       // fundec
-      char dummy8[sizeof(shared_ptr<FunDecAST>)];
+      char dummy8[sizeof(shared_ptr<AST::FunDec>)];
 
       // ty
-      char dummy9[sizeof(shared_ptr<TyAST>)];
+      char dummy9[sizeof(shared_ptr<AST::Ty>)];
 
       // tydec
-      char dummy10[sizeof(shared_ptr<TypeTyAST>)];
+      char dummy10[sizeof(shared_ptr<AST::TypeTy>)];
 
       // lvalue
-      char dummy11[sizeof(shared_ptr<VarAST>)];
+      char dummy11[sizeof(shared_ptr<AST::Var>)];
 
       // ID
       // STRING
@@ -444,25 +444,25 @@ namespace Tiger {
 
   basic_symbol (typename Base::kind_type t, const int v, const location_type& l);
 
-  basic_symbol (typename Base::kind_type t, const shared_ptr<DecAST> v, const location_type& l);
+  basic_symbol (typename Base::kind_type t, const shared_ptr<AST::Dec> v, const location_type& l);
 
-  basic_symbol (typename Base::kind_type t, const shared_ptr<DecListAST> v, const location_type& l);
+  basic_symbol (typename Base::kind_type t, const shared_ptr<AST::DecList> v, const location_type& l);
 
-  basic_symbol (typename Base::kind_type t, const shared_ptr<EFieldListAST> v, const location_type& l);
+  basic_symbol (typename Base::kind_type t, const shared_ptr<AST::EFieldList> v, const location_type& l);
 
-  basic_symbol (typename Base::kind_type t, const shared_ptr<ExpAST> v, const location_type& l);
+  basic_symbol (typename Base::kind_type t, const shared_ptr<AST::Exp> v, const location_type& l);
 
-  basic_symbol (typename Base::kind_type t, const shared_ptr<ExpListAST> v, const location_type& l);
+  basic_symbol (typename Base::kind_type t, const shared_ptr<AST::ExpList> v, const location_type& l);
 
-  basic_symbol (typename Base::kind_type t, const shared_ptr<FieldListAST> v, const location_type& l);
+  basic_symbol (typename Base::kind_type t, const shared_ptr<AST::FieldList> v, const location_type& l);
 
-  basic_symbol (typename Base::kind_type t, const shared_ptr<FunDecAST> v, const location_type& l);
+  basic_symbol (typename Base::kind_type t, const shared_ptr<AST::FunDec> v, const location_type& l);
 
-  basic_symbol (typename Base::kind_type t, const shared_ptr<TyAST> v, const location_type& l);
+  basic_symbol (typename Base::kind_type t, const shared_ptr<AST::Ty> v, const location_type& l);
 
-  basic_symbol (typename Base::kind_type t, const shared_ptr<TypeTyAST> v, const location_type& l);
+  basic_symbol (typename Base::kind_type t, const shared_ptr<AST::TypeTy> v, const location_type& l);
 
-  basic_symbol (typename Base::kind_type t, const shared_ptr<VarAST> v, const location_type& l);
+  basic_symbol (typename Base::kind_type t, const shared_ptr<AST::Var> v, const location_type& l);
 
   basic_symbol (typename Base::kind_type t, const string v, const location_type& l);
 
@@ -1013,15 +1013,15 @@ namespace Tiger {
       case 56: // tydecs
       case 60: // vardec
       case 61: // fundecs
-        value.copy< shared_ptr<DecAST> > (other.value);
+        value.copy< shared_ptr<AST::Dec> > (other.value);
         break;
 
       case 54: // decs
-        value.copy< shared_ptr<DecListAST> > (other.value);
+        value.copy< shared_ptr<AST::DecList> > (other.value);
         break;
 
       case 52: // refields
-        value.copy< shared_ptr<EFieldListAST> > (other.value);
+        value.copy< shared_ptr<AST::EFieldList> > (other.value);
         break;
 
       case 48: // program
@@ -1030,32 +1030,32 @@ namespace Tiger {
       case 51: // record
       case 53: // array
       case 65: // funcall
-        value.copy< shared_ptr<ExpAST> > (other.value);
+        value.copy< shared_ptr<AST::Exp> > (other.value);
         break;
 
       case 63: // explist
       case 66: // args
-        value.copy< shared_ptr<ExpListAST> > (other.value);
+        value.copy< shared_ptr<AST::ExpList> > (other.value);
         break;
 
       case 59: // typefields
-        value.copy< shared_ptr<FieldListAST> > (other.value);
+        value.copy< shared_ptr<AST::FieldList> > (other.value);
         break;
 
       case 62: // fundec
-        value.copy< shared_ptr<FunDecAST> > (other.value);
+        value.copy< shared_ptr<AST::FunDec> > (other.value);
         break;
 
       case 58: // ty
-        value.copy< shared_ptr<TyAST> > (other.value);
+        value.copy< shared_ptr<AST::Ty> > (other.value);
         break;
 
       case 57: // tydec
-        value.copy< shared_ptr<TypeTyAST> > (other.value);
+        value.copy< shared_ptr<AST::TypeTy> > (other.value);
         break;
 
       case 64: // lvalue
-        value.copy< shared_ptr<VarAST> > (other.value);
+        value.copy< shared_ptr<AST::Var> > (other.value);
         break;
 
       case 3: // ID
@@ -1089,15 +1089,15 @@ namespace Tiger {
       case 56: // tydecs
       case 60: // vardec
       case 61: // fundecs
-        value.copy< shared_ptr<DecAST> > (v);
+        value.copy< shared_ptr<AST::Dec> > (v);
         break;
 
       case 54: // decs
-        value.copy< shared_ptr<DecListAST> > (v);
+        value.copy< shared_ptr<AST::DecList> > (v);
         break;
 
       case 52: // refields
-        value.copy< shared_ptr<EFieldListAST> > (v);
+        value.copy< shared_ptr<AST::EFieldList> > (v);
         break;
 
       case 48: // program
@@ -1106,32 +1106,32 @@ namespace Tiger {
       case 51: // record
       case 53: // array
       case 65: // funcall
-        value.copy< shared_ptr<ExpAST> > (v);
+        value.copy< shared_ptr<AST::Exp> > (v);
         break;
 
       case 63: // explist
       case 66: // args
-        value.copy< shared_ptr<ExpListAST> > (v);
+        value.copy< shared_ptr<AST::ExpList> > (v);
         break;
 
       case 59: // typefields
-        value.copy< shared_ptr<FieldListAST> > (v);
+        value.copy< shared_ptr<AST::FieldList> > (v);
         break;
 
       case 62: // fundec
-        value.copy< shared_ptr<FunDecAST> > (v);
+        value.copy< shared_ptr<AST::FunDec> > (v);
         break;
 
       case 58: // ty
-        value.copy< shared_ptr<TyAST> > (v);
+        value.copy< shared_ptr<AST::Ty> > (v);
         break;
 
       case 57: // tydec
-        value.copy< shared_ptr<TypeTyAST> > (v);
+        value.copy< shared_ptr<AST::TypeTy> > (v);
         break;
 
       case 64: // lvalue
-        value.copy< shared_ptr<VarAST> > (v);
+        value.copy< shared_ptr<AST::Var> > (v);
         break;
 
       case 3: // ID
@@ -1163,70 +1163,70 @@ namespace Tiger {
   {}
 
   template <typename Base>
-  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const shared_ptr<DecAST> v, const location_type& l)
+  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const shared_ptr<AST::Dec> v, const location_type& l)
     : Base (t)
     , value (v)
     , location (l)
   {}
 
   template <typename Base>
-  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const shared_ptr<DecListAST> v, const location_type& l)
+  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const shared_ptr<AST::DecList> v, const location_type& l)
     : Base (t)
     , value (v)
     , location (l)
   {}
 
   template <typename Base>
-  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const shared_ptr<EFieldListAST> v, const location_type& l)
+  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const shared_ptr<AST::EFieldList> v, const location_type& l)
     : Base (t)
     , value (v)
     , location (l)
   {}
 
   template <typename Base>
-  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const shared_ptr<ExpAST> v, const location_type& l)
+  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const shared_ptr<AST::Exp> v, const location_type& l)
     : Base (t)
     , value (v)
     , location (l)
   {}
 
   template <typename Base>
-  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const shared_ptr<ExpListAST> v, const location_type& l)
+  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const shared_ptr<AST::ExpList> v, const location_type& l)
     : Base (t)
     , value (v)
     , location (l)
   {}
 
   template <typename Base>
-  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const shared_ptr<FieldListAST> v, const location_type& l)
+  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const shared_ptr<AST::FieldList> v, const location_type& l)
     : Base (t)
     , value (v)
     , location (l)
   {}
 
   template <typename Base>
-  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const shared_ptr<FunDecAST> v, const location_type& l)
+  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const shared_ptr<AST::FunDec> v, const location_type& l)
     : Base (t)
     , value (v)
     , location (l)
   {}
 
   template <typename Base>
-  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const shared_ptr<TyAST> v, const location_type& l)
+  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const shared_ptr<AST::Ty> v, const location_type& l)
     : Base (t)
     , value (v)
     , location (l)
   {}
 
   template <typename Base>
-  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const shared_ptr<TypeTyAST> v, const location_type& l)
+  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const shared_ptr<AST::TypeTy> v, const location_type& l)
     : Base (t)
     , value (v)
     , location (l)
   {}
 
   template <typename Base>
-  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const shared_ptr<VarAST> v, const location_type& l)
+  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const shared_ptr<AST::Var> v, const location_type& l)
     : Base (t)
     , value (v)
     , location (l)
@@ -1273,15 +1273,15 @@ namespace Tiger {
       case 56: // tydecs
       case 60: // vardec
       case 61: // fundecs
-        value.template destroy< shared_ptr<DecAST> > ();
+        value.template destroy< shared_ptr<AST::Dec> > ();
         break;
 
       case 54: // decs
-        value.template destroy< shared_ptr<DecListAST> > ();
+        value.template destroy< shared_ptr<AST::DecList> > ();
         break;
 
       case 52: // refields
-        value.template destroy< shared_ptr<EFieldListAST> > ();
+        value.template destroy< shared_ptr<AST::EFieldList> > ();
         break;
 
       case 48: // program
@@ -1290,32 +1290,32 @@ namespace Tiger {
       case 51: // record
       case 53: // array
       case 65: // funcall
-        value.template destroy< shared_ptr<ExpAST> > ();
+        value.template destroy< shared_ptr<AST::Exp> > ();
         break;
 
       case 63: // explist
       case 66: // args
-        value.template destroy< shared_ptr<ExpListAST> > ();
+        value.template destroy< shared_ptr<AST::ExpList> > ();
         break;
 
       case 59: // typefields
-        value.template destroy< shared_ptr<FieldListAST> > ();
+        value.template destroy< shared_ptr<AST::FieldList> > ();
         break;
 
       case 62: // fundec
-        value.template destroy< shared_ptr<FunDecAST> > ();
+        value.template destroy< shared_ptr<AST::FunDec> > ();
         break;
 
       case 58: // ty
-        value.template destroy< shared_ptr<TyAST> > ();
+        value.template destroy< shared_ptr<AST::Ty> > ();
         break;
 
       case 57: // tydec
-        value.template destroy< shared_ptr<TypeTyAST> > ();
+        value.template destroy< shared_ptr<AST::TypeTy> > ();
         break;
 
       case 64: // lvalue
-        value.template destroy< shared_ptr<VarAST> > ();
+        value.template destroy< shared_ptr<AST::Var> > ();
         break;
 
       case 3: // ID
@@ -1355,15 +1355,15 @@ namespace Tiger {
       case 56: // tydecs
       case 60: // vardec
       case 61: // fundecs
-        value.move< shared_ptr<DecAST> > (s.value);
+        value.move< shared_ptr<AST::Dec> > (s.value);
         break;
 
       case 54: // decs
-        value.move< shared_ptr<DecListAST> > (s.value);
+        value.move< shared_ptr<AST::DecList> > (s.value);
         break;
 
       case 52: // refields
-        value.move< shared_ptr<EFieldListAST> > (s.value);
+        value.move< shared_ptr<AST::EFieldList> > (s.value);
         break;
 
       case 48: // program
@@ -1372,32 +1372,32 @@ namespace Tiger {
       case 51: // record
       case 53: // array
       case 65: // funcall
-        value.move< shared_ptr<ExpAST> > (s.value);
+        value.move< shared_ptr<AST::Exp> > (s.value);
         break;
 
       case 63: // explist
       case 66: // args
-        value.move< shared_ptr<ExpListAST> > (s.value);
+        value.move< shared_ptr<AST::ExpList> > (s.value);
         break;
 
       case 59: // typefields
-        value.move< shared_ptr<FieldListAST> > (s.value);
+        value.move< shared_ptr<AST::FieldList> > (s.value);
         break;
 
       case 62: // fundec
-        value.move< shared_ptr<FunDecAST> > (s.value);
+        value.move< shared_ptr<AST::FunDec> > (s.value);
         break;
 
       case 58: // ty
-        value.move< shared_ptr<TyAST> > (s.value);
+        value.move< shared_ptr<AST::Ty> > (s.value);
         break;
 
       case 57: // tydec
-        value.move< shared_ptr<TypeTyAST> > (s.value);
+        value.move< shared_ptr<AST::TypeTy> > (s.value);
         break;
 
       case 64: // lvalue
-        value.move< shared_ptr<VarAST> > (s.value);
+        value.move< shared_ptr<AST::Var> > (s.value);
         break;
 
       case 3: // ID

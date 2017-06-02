@@ -15,566 +15,605 @@
 
 using namespace std;
 
+namespace AST
+{
 // some class predefine
-class FieldAST;
+    class Field;
 
-class ExpAST;
+    class Exp;
 
-class EFieldAST;
+    class EField;
 
-class DecAST;
+    class Dec;
 
-class FunDecAST;
+    class FunDec;
 
-class NameTyAST;
+    class NameTy;
 
-class TypeTyAST;
+    class TypeTy;
 
 // some type definition
 
-using FieldListAST = list<shared_ptr<FieldAST>>;
-using ExpListAST = list<shared_ptr<ExpAST>>;
-using EFieldListAST = list<shared_ptr<EFieldAST>>;
-using DecListAST = list<shared_ptr<DecAST>>;
-using FunDecListAST = list<shared_ptr<FunDecAST>>;
-using TypeTyListAST = list<shared_ptr<TypeTyAST>>;
+    using FieldList = list<shared_ptr<Field>>;
+    using ExpList = list<shared_ptr<Exp>>;
+    using EFieldList = list<shared_ptr<EField>>;
+    using DecList = list<shared_ptr<Dec>>;
+    using FunDecList = list<shared_ptr<FunDec>>;
+    using TypeTyList = list<shared_ptr<TypeTy>>;
 
 // Base class
-class AST {
-    Tiger::location loc;
-public:
-    AST(Tiger::location &loc)
+    class AST
     {
-        this->loc = loc;
-    }
+        Tiger::location loc;
+    public:
+        AST(Tiger::location &loc)
+        {
+            this->loc = loc;
+        }
 
-    const Tiger::location &getLoc() const {
-        return loc;
-    }
-};
+        const Tiger::location &getLoc() const
+        {
+            return loc;
+        }
+    };
 
 // Base class definition
 
-// VarAST - Base class for all varible nodes
-enum VariableType {
-    SIMPLE_VAR, FIELD_VAR, SUBSCRIPT_VAR
-};
-
-class VarAST : public AST {
-    VariableType classType;
-
-public:
-    VarAST(Tiger::location loc, VariableType classType);
-
-    virtual ~VarAST() {
+// Var - Base class for all varible nodes
+    enum VariableType
+    {
+        SIMPLE_VAR, FIELD_VAR, SUBSCRIPT_VAR
     };
 
-    VariableType getClassType() const;
-};
+    class Var : public AST
+    {
+        VariableType classType;
+
+    public:
+        Var(Tiger::location loc, VariableType classType);
+
+        virtual ~Var()
+        {
+        };
+
+        VariableType getClassType() const;
+    };
 
 
-// ExpAST - Base class for all expression nodes
-enum ExpressionType {
-    VAR_EXP, NIL_EXP, INT_EXP, STRING_EXP,
-    CALL_EXP, OP_EXP, RECORD_EXP, SEQ_EXP, ASSIGN_EXP,
-    IF_EXP, WHILE_EXP, FOR_EXP, BREAK_EXP, LET_EXP, ARRAY_EXP
-};
+// Exp - Base class for all expression nodes
+    enum ExpressionType
+    {
+        VAR_EXP, NIL_EXP, INT_EXP, STRING_EXP,
+        CALL_EXP, OP_EXP, RECORD_EXP, SEQ_EXP, ASSIGN_EXP,
+        IF_EXP, WHILE_EXP, FOR_EXP, BREAK_EXP, LET_EXP, ARRAY_EXP
+    };
 
-class ExpAST : public AST
-{
-    ExpressionType classType;
+    class Exp : public AST
+    {
+        ExpressionType classType;
 
-public:
-    ExpAST(Tiger::location loc, ExpressionType classType);
+    public:
+        Exp(Tiger::location loc, ExpressionType classType);
 
-    virtual ~ExpAST() {};
-
-
-    ExpressionType getClassType();
-};
+        virtual ~Exp()
+        {};
 
 
-// DecAST - Base class for all declaration nodes
-enum DeclarationType {
-    FUNCTION_DEC, VAR_DEC, TYPE_DEC
-};
-
-class DecAST : public AST
-{
-    DeclarationType classType;
-
-public:
-    DecAST(Tiger::location loc, DeclarationType classType);
-
-    virtual ~DecAST() {};
+        ExpressionType getClassType();
+    };
 
 
-    DeclarationType getClassType();
-};
+// Dec - Base class for all declaration nodes
+    enum DeclarationType
+    {
+        FUNCTION_DEC, VAR_DEC, TYPE_DEC
+    };
 
-// TyAST - Base class for all type nodes
-enum TypeType {
-    NAME_TYPE, RECORD_TYPE, ARRAY_TYPE
-};
+    class Dec : public AST
+    {
+        DeclarationType classType;
 
-class TyAST : public AST
-{
-    TypeType classType;
+    public:
+        Dec(Tiger::location loc, DeclarationType classType);
 
-public:
-    TyAST(Tiger::location loc, TypeType classType);
-
-    virtual ~TyAST() {};
+        virtual ~Dec()
+        {};
 
 
-    TypeType getClassType();
-};
+        DeclarationType getClassType();
+    };
+
+// Ty - Base class for all type nodes
+    enum TypeType
+    {
+        NAME_TYPE, RECORD_TYPE, ARRAY_TYPE
+    };
+
+    class Ty : public AST
+    {
+        TypeType classType;
+
+    public:
+        Ty(Tiger::location loc, TypeType classType);
+
+        virtual ~Ty()
+        {};
+
+
+        TypeType getClassType();
+    };
 
 //===----------------------------------------------------------------------===//
 
 // Some class used in extend class
 
-// FieldAST - Class used in RecordTyAST
-class FieldAST : public AST
-{
-    string name, typ;
-    bool escape;
+// Field - Class used in RecordTy
+    class Field : public AST
+    {
+        string name, typ;
+        bool escape;
 
-public:
-    FieldAST(Tiger::location loc, const string &name, const string &typ, bool escape);
-
-
-    const string &getName() const;
-
-    const string &getTyp() const;
-
-    bool isEscape() const;
-
-    void setEscape(bool escape);
-};
-
-// EFieldAST - Class used in RecordExpAST
-class EFieldAST {
-    string name;
-    shared_ptr<ExpAST> exp;
-
-public:
-    EFieldAST(const string &name, const shared_ptr<ExpAST> &exp);
-
-    const string &getName() const;
-
-    const shared_ptr<ExpAST> &getExp() const;
-
-};
-
-// FunDecAST - Class used in FunctionDecAST
-class FunDecAST : public AST
-{
-    string name, result;
-    shared_ptr<FieldListAST> params;
-    shared_ptr<ExpAST> body;
-
-public:
-    FunDecAST(Tiger::location loc, const string &name, const string &result, const shared_ptr<FieldListAST> &params,
-              const shared_ptr<ExpAST> &body);
-
-    const string &getName() const;
-
-    const string &getResult() const;
-
-    const shared_ptr<FieldListAST> &getParams() const;
-
-    const shared_ptr<ExpAST> &getBody() const;
-};
+    public:
+        Field(Tiger::location loc, const string &name, const string &typ, bool escape);
 
 
-// TypeTyAST - Class used in / TYPE type-id = ty / to create a full type (TYPE type-id = ty) as a node
-class TypeTyAST {
-    string name;
-    shared_ptr<TyAST> ty;
+        const string &getName() const;
 
-public:
-    TypeTyAST(const string &name, const shared_ptr<TyAST> &ty);
+        const string &getTyp() const;
 
-    const string &getName() const;
+        bool isEscape() const;
 
-    const shared_ptr<TyAST> &getTy() const;
-};
+        void setEscape(bool escape);
+    };
+
+// EField - Class used in RecordExp
+    class EField
+    {
+        string name;
+        shared_ptr<Exp> exp;
+
+    public:
+        EField(const string &name, const shared_ptr<Exp> &exp);
+
+        const string &getName() const;
+
+        const shared_ptr<Exp> &getExp() const;
+
+    };
+
+// FunDec - Class used in FunctionDec
+    class FunDec : public AST
+    {
+        string name, result;
+        shared_ptr<FieldList> params;
+        shared_ptr<Exp> body;
+
+    public:
+        FunDec(Tiger::location loc, const string &name, const string &result, const shared_ptr<FieldList> &params,
+               const shared_ptr<Exp> &body);
+
+        const string &getName() const;
+
+        const string &getResult() const;
+
+        const shared_ptr<FieldList> &getParams() const;
+
+        const shared_ptr<Exp> &getBody() const;
+    };
+
+
+// TypeTy - Class used in / TYPE type-id = ty / to create a full type (TYPE type-id = ty) as a node
+    class TypeTy
+    {
+        string name;
+        shared_ptr<Ty> ty;
+
+    public:
+        TypeTy(const string &name, const shared_ptr<Ty> &ty);
+
+        const string &getName() const;
+
+        const shared_ptr<Ty> &getTy() const;
+    };
 
 //===----------------------------------------------------------------------===//
 
 // Extend class definition
 
-// Extend VarAST---------------------------
-// SimpleVarAST - Extend class for all simple varible nodes
-class SimpleVarAST : public VarAST {
-    string simple;
-public:
-    SimpleVarAST(Tiger::location loc, const string &simple);
-
-    const string &getSimple() const;
-};
-
-// FieldVarAST - Extend class for all field varible nodes
-class FieldVarAST : public VarAST {
-    shared_ptr<VarAST> var;
-    string sym;
-public:
-    FieldVarAST(Tiger::location loc, const shared_ptr<VarAST> &var, const string &sym);
+// Extend Var---------------------------
+// SimpleVar - Extend class for all simple varible nodes
+    class SimpleVar : public Var
+    {
+        string simple;
+    public:
+        SimpleVar(Tiger::location loc, const string &simple);
+
+        const string &getSimple() const;
+    };
+
+// FieldVar - Extend class for all field varible nodes
+    class FieldVar : public Var
+    {
+        shared_ptr<Var> var;
+        string sym;
+    public:
+        FieldVar(Tiger::location loc, const shared_ptr<Var> &var, const string &sym);
+
+        const shared_ptr<Var> getVar() const;
+
+        const string &getSym() const;
+    };
+
+// SubscriptVar - Extend class for all subscript varible nodes
+    class SubscriptVar : public Var
+    {
+        shared_ptr<Var> var;
+        shared_ptr<Exp> exp;
+    public:
+        SubscriptVar(Tiger::location loc, const shared_ptr<Var> &var, const shared_ptr<Exp> &exp);
+
+        const shared_ptr<Var> &getVar() const;
+
+        const shared_ptr<Exp> &getExp() const;
+    };
+
+
+// Extend Exp-------------------------
+// VarExp - Extend class for all varible expression nodes
+    class VarExp : public Exp
+    {
+        shared_ptr<Var> var;
+    public:
+        VarExp(Tiger::location loc, const shared_ptr<Var> &var);
+
+        const shared_ptr<Var> &getVar() const;
+    };
+
+// NilExp - Extend class for all nil expression nodes
+    class NilExp : public Exp
+    {
+    public:
+        NilExp(Tiger::location loc);
+    };
+
+// IntExp - Extend class for all int expression nodes
+    class IntExp : public Exp
+    {
+        int intt;
+    public:
+        IntExp(Tiger::location loc, int intt);
+
+        int getIntt() const;
+    };
+
+// StringExp - Extend class for all string expression nodes
+    class StringExp : public Exp
+    {
+        string str;
+
+    public:
+        StringExp(Tiger::location loc, const string &stringg);
+
+        const string &getStringg() const;
+    };
+
+// CallExp - Extend class for all call expression
+    class CallExp : public Exp
+    {
+        string func;
+        shared_ptr<ExpList> args;
+
+    public:
+        CallExp(Tiger::location loc, const string &func, const shared_ptr<ExpList> &args);
+
+        const string &getFunc() const;
+
+        const shared_ptr<ExpList> &getArgs() const;
+    };
+
+// OpExp - Extend class for all operation expression
+    enum Operator
+    {
+        PLUSOP, MINUSOP, TIMESOP, DIVIDEOP,
+        EQOP, NEQOP, LTOP, LEOP, GTOP, GEOP
+    };
+
+    class OpExp : public Exp
+    {
+        Operator op;
+        shared_ptr<Exp> left;
+        shared_ptr<Exp> right;
+    public:
+        OpExp(Tiger::location loc, Operator op, const shared_ptr<Exp> &left,
+              const shared_ptr<Exp> &right);
 
-    const shared_ptr<VarAST> getVar() const;
+        Operator getOp() const;
 
-    const string &getSym() const;
-};
-
-// SubscriptVarAST - Extend class for all subscript varible nodes
-class SubscriptVarAST : public VarAST {
-    shared_ptr<VarAST> var;
-    shared_ptr<ExpAST> exp;
-public:
-    SubscriptVarAST(Tiger::location loc, const shared_ptr<VarAST> &var, const shared_ptr<ExpAST> &exp);
+        const shared_ptr<Exp> &getLeft() const;
 
-    const shared_ptr<VarAST> &getVar() const;
-
-    const shared_ptr<ExpAST> &getExp() const;
-};
-
-
-// Extend ExpAST-------------------------
-// VarExpAST - Extend class for all varible expression nodes
-class VarExpAST : public ExpAST {
-    shared_ptr<VarAST> var;
-public:
-    VarExpAST(Tiger::location loc, const shared_ptr<VarAST> &var);
-
-    const shared_ptr<VarAST> &getVar() const;
-};
-
-// NilExpAST - Extend class for all nil expression nodes
-class NilExpAST : public ExpAST {
-public:
-    NilExpAST(Tiger::location loc);
-};
+        const shared_ptr<Exp> &getRight() const;
+    };
+
+// RecordExp - Extend class for all record expression
+    class RecordExp : public Exp
+    {
+        string typ;
+        shared_ptr<EFieldList> fields;
 
-// IntExpAST - Extend class for all int expression nodes
-class IntExpAST : public ExpAST {
-    int intt;
-public:
-    IntExpAST(Tiger::location loc, int intt);
+    public:
+        RecordExp(Tiger::location loc, const string &typ, const shared_ptr<EFieldList> &fields);
 
-    int getIntt() const;
-};
+        const string &getTyp() const;
 
-// StringExpAST - Extend class for all string expression nodes
-class StringExpAST : public ExpAST {
-    string stringg;
+        const shared_ptr<EFieldList> &getFields() const;
+    };
+
+// SeqExp - Extend class for all sequence expression
+    class SeqExp : public Exp
+    {
+        shared_ptr<ExpList> seq;
+    public:
+        SeqExp(Tiger::location loc, const shared_ptr<ExpList> &seq);
 
-public:
-    StringExpAST(Tiger::location loc, const string &stringg);
+        const shared_ptr<ExpList> &getSeq() const;
+    };
 
-    const string &getStringg() const;
-};
+// AssignExp - Extend class for all assign expression
+    class AssignExp : public Exp
+    {
+        shared_ptr<Var> var;
+        shared_ptr<Exp> exp;
+    public:
+        AssignExp(Tiger::location loc, const shared_ptr<Var> &var, const shared_ptr<Exp> &exp);
+
+        const shared_ptr<Var> &getVar() const;
 
-// CallExpAST - Extend class for all call expression
-class CallExpAST : public ExpAST {
-    string func;
-    shared_ptr<ExpListAST> args;
-
-public:
-    CallExpAST(Tiger::location loc, const string &func, const shared_ptr<ExpListAST> &args);
-
-    const string &getFunc() const;
-
-    const shared_ptr<ExpListAST> &getArgs() const;
-};
+        const shared_ptr<Exp> &getExp() const;
+    };
 
-// OpExpAST - Extend class for all operation expression
-enum Operator {
-    PLUSOP, MINUSOP, TIMESOP, DIVIDEOP,
-    EQOP, NEQOP, LTOP, LEOP, GTOP, GEOP
-};
+// IfExp - Extend class for all if expression
+    class IfExp : public Exp
+    {
+        shared_ptr<Exp> test, then, elsee;
+    public:
+        IfExp(Tiger::location loc, const shared_ptr<Exp> &test, const shared_ptr<Exp> &then,
+              const shared_ptr<Exp> &elsee);
+
+        const shared_ptr<Exp> &getTest() const;
+
+        const shared_ptr<Exp> &getThen() const;
+
+        const shared_ptr<Exp> &getElsee() const;
+    };
 
-class OpExpAST : public ExpAST {
-    Operator op;
-    shared_ptr<ExpAST> left;
-    shared_ptr<ExpAST> right;
-public:
-    OpExpAST(Tiger::location loc, Operator op, const shared_ptr<ExpAST> &left,
-             const shared_ptr<ExpAST> &right);
+// WhileExp - Extend class for all while expression
+    class WhileExp : public Exp
+    {
+        shared_ptr<Exp> test, body;
+    public:
+        WhileExp(Tiger::location loc, const shared_ptr<Exp> &test, const shared_ptr<Exp> &body);
 
-    Operator getOp() const;
+        const shared_ptr<Exp> &getTest() const;
 
-    const shared_ptr<ExpAST> &getLeft() const;
+        const shared_ptr<Exp> &getBody() const;
+    };
 
-    const shared_ptr<ExpAST> &getRight() const;
-};
+// BreakExp - Extend class for all break expression
+    class BreakExp : public Exp
+    {
+    public:
+        BreakExp(Tiger::location loc);
+    };
 
-// RecordExpAST - Extend class for all record expression
-class RecordExpAST : public ExpAST {
-    string typ;
-    shared_ptr<EFieldListAST> fields;
+// ForExp - Extend class for all for expression
+    class ForExp : public Exp
+    {
+        string var;
+        shared_ptr<Exp> lo, hi, body;
+        bool escape;
+    public:
+        ForExp(Tiger::location loc, const string &var, const shared_ptr<Exp> &lo,
+               const shared_ptr<Exp> &hi, const shared_ptr<Exp> &body, bool escape);
 
-public:
-    RecordExpAST(Tiger::location loc, const string &typ, const shared_ptr<EFieldListAST> &fields);
+        const string &getVar() const;
 
-    const string &getTyp() const;
+        const shared_ptr<Exp> &getLo() const;
+
+        const shared_ptr<Exp> &getHi() const;
 
-    const shared_ptr<EFieldListAST> &getFields() const;
-};
+        const shared_ptr<Exp> &getBody() const;
 
-// SeqExpAST - Extend class for all sequence expression
-class SeqExpAST : public ExpAST {
-    shared_ptr<ExpListAST> seq;
-public:
-    SeqExpAST(Tiger::location loc, const shared_ptr<ExpListAST> &seq);
+        bool isEscape() const;
 
-    const shared_ptr<ExpListAST> &getSeq() const;
-};
-
-// AssignExpAST - Extend class for all assign expression
-class AssignExpAST : public ExpAST {
-    shared_ptr<VarAST> var;
-    shared_ptr<ExpAST> exp;
-public:
-    AssignExpAST(Tiger::location loc, const shared_ptr<VarAST> &var, const shared_ptr<ExpAST> &exp);
-
-    const shared_ptr<VarAST> &getVar() const;
-
-    const shared_ptr<ExpAST> &getExp() const;
-};
-
-// IfExpAST - Extend class for all if expression
-class IfExpAST : public ExpAST {
-    shared_ptr<ExpAST> test, then, elsee;
-public:
-    IfExpAST(Tiger::location loc, const shared_ptr<ExpAST> &test, const shared_ptr<ExpAST> &then,
-             const shared_ptr<ExpAST> &elsee);
-
-    const shared_ptr<ExpAST> &getTest() const;
-
-    const shared_ptr<ExpAST> &getThen() const;
-
-    const shared_ptr<ExpAST> &getElsee() const;
-};
-
-// WhileExpAST - Extend class for all while expression
-class WhileExpAST : public ExpAST {
-    shared_ptr<ExpAST> test, body;
-public:
-    WhileExpAST(Tiger::location loc, const shared_ptr<ExpAST> &test, const shared_ptr<ExpAST> &body);
-
-    const shared_ptr<ExpAST> &getTest() const;
-
-    const shared_ptr<ExpAST> &getBody() const;
-};
-
-// BreakExpAST - Extend class for all break expression
-class BreakExpAST : public ExpAST {
-public:
-    BreakExpAST(Tiger::location loc);
-};
-
-// ForExpAST - Extend class for all for expression
-class ForExpAST : public ExpAST {
-    string var;
-    shared_ptr<ExpAST> lo, hi, body;
-    bool escape;
-public:
-    ForExpAST(Tiger::location loc, const string &var, const shared_ptr<ExpAST> &lo,
-              const shared_ptr<ExpAST> &hi, const shared_ptr<ExpAST> &body, bool escape);
-
-    const string &getVar() const;
-
-    const shared_ptr<ExpAST> &getLo() const;
-
-    const shared_ptr<ExpAST> &getHi() const;
-
-    const shared_ptr<ExpAST> &getBody() const;
-
-    bool isEscape() const;
-
-    void setEscape(bool escape);
-};
-
-// LetExpAST - Extend class for all let expression
-class LetExpAST : public ExpAST {
-    shared_ptr<DecListAST> decs;
-    shared_ptr<ExpAST> body;
-public:
-    LetExpAST(Tiger::location loc, const shared_ptr<DecListAST> &decs, const shared_ptr<ExpAST> &body);
-
-    const shared_ptr<DecListAST> &getDecs() const;
-
-    const shared_ptr<ExpAST> &getBody() const;
-};
-
-// ArrayExpAST - Extend class for all array expression
-class ArrayExpAST : public ExpAST {
-    string typ;
-    shared_ptr<ExpAST> size, init;
-public:
-    ArrayExpAST(Tiger::location loc, const string &typ, const shared_ptr<ExpAST> &size,
-                const shared_ptr<ExpAST> &init);
-
-    const string &getTyp() const;
-
-    const shared_ptr<ExpAST> &getSize() const;
-
-    const shared_ptr<ExpAST> &getInit() const;
-};
-
-
-// Extend DecAST---------------------------------
-// FunctionDecAST - Extend class for all function declaration
-class FunctionDecAST : public DecAST {
-    shared_ptr<FunDecListAST> function;
-public:
-    FunctionDecAST(Tiger::location loc, const shared_ptr<FunDecListAST> &function);
-
-    const shared_ptr<FunDecListAST> &getFunction() const;
-};
-
-// VarDecAST - Extend class for all varible declaration
-class VarDecAST : public DecAST {
-    string var, typ;
-    shared_ptr<ExpAST> init;
-    bool escape;
-public:
-    VarDecAST(Tiger::location loc, const string &var, const string &typ, const shared_ptr<ExpAST> &init,
-              bool escape);
-
-    const string &getVar() const;
-
-    const string &getTyp() const;
-
-    const shared_ptr<ExpAST> &getInit() const;
-
-    bool isEscape() const;
-
-    void setEscape(bool escape);
-};
-
-// TypeDecAST - Extend class for all type declaration
-class TypeDecAST : public DecAST {
-    shared_ptr<TypeTyListAST> type;
-public:
-    TypeDecAST(Tiger::location loc, const shared_ptr<TypeTyListAST> &type);
-
-    const shared_ptr<TypeTyListAST> &getType() const;
-};
-
-
-// Extend TyAST---------------------------------
-// NameTyAST - Extend class for all name type
-class NameTyAST : public TyAST {
-    string name;
-public:
-    NameTyAST(Tiger::location loc, const string &name);
-
-    const string &getName() const;
-};
-
-// RecordTyAST - Extend class for all record type
-class RecordTyAST : public TyAST {
-    shared_ptr<FieldListAST> record;
-public:
-    RecordTyAST(Tiger::location loc, const shared_ptr<FieldListAST> &record);
-
-    const shared_ptr<FieldListAST> &getRecord() const;
-};
-
-// ArrayTyAST - Extend class for all array type
-class ArrayTyAST : public TyAST {
-    string array;
-public:
-    ArrayTyAST(Tiger::location loc, const string &array);
-
-    const string &getArray() const;
-};
+        void setEscape(bool escape);
+    };
+
+// LetExp - Extend class for all let expression
+    class LetExp : public Exp
+    {
+        shared_ptr<DecList> decs;
+        shared_ptr<Exp> body;
+    public:
+        LetExp(Tiger::location loc, const shared_ptr<DecList> &decs, const shared_ptr<Exp> &body);
+
+        const shared_ptr<DecList> &getDecs() const;
+
+        const shared_ptr<Exp> &getBody() const;
+    };
+
+// ArrayExp - Extend class for all array expression
+    class ArrayExp : public Exp
+    {
+        string typ;
+        shared_ptr<Exp> size, init;
+    public:
+        ArrayExp(Tiger::location loc, const string &typ, const shared_ptr<Exp> &size,
+                 const shared_ptr<Exp> &init);
+
+        const string &getTyp() const;
+
+        const shared_ptr<Exp> &getSize() const;
+
+        const shared_ptr<Exp> &getInit() const;
+    };
+
+
+// Extend Dec---------------------------------
+// FunctionDec - Extend class for all function declaration
+    class FunctionDec : public Dec
+    {
+        shared_ptr<FunDecList> function;
+    public:
+        FunctionDec(Tiger::location loc, const shared_ptr<FunDecList> &function);
+
+        const shared_ptr<FunDecList> &getFunction() const;
+    };
+
+// VarDec - Extend class for all varible declaration
+    class VarDec : public Dec
+    {
+        string var, typ;
+        shared_ptr<Exp> init;
+        bool escape;
+    public:
+        VarDec(Tiger::location loc, const string &var, const string &typ, const shared_ptr<Exp> &init,
+               bool escape);
+
+        const string &getVar() const;
+
+        const string &getTyp() const;
+
+        const shared_ptr<Exp> &getInit() const;
+
+        bool isEscape() const;
+
+        void setEscape(bool escape);
+    };
+
+// TypeDec - Extend class for all type declaration
+    class TypeDec : public Dec
+    {
+        shared_ptr<TypeTyList> type;
+    public:
+        TypeDec(Tiger::location loc, const shared_ptr<TypeTyList> &type);
+
+        const shared_ptr<TypeTyList> &getType() const;
+    };
+
+
+// Extend Ty---------------------------------
+// NameTy - Extend class for all name type
+    class NameTy : public Ty
+    {
+        string name;
+    public:
+        NameTy(Tiger::location loc, const string &name);
+
+        const string &getName() const;
+    };
+
+// RecordTy - Extend class for all record type
+    class RecordTy : public Ty
+    {
+        shared_ptr<FieldList> record;
+    public:
+        RecordTy(Tiger::location loc, const shared_ptr<FieldList> &record);
+
+        const shared_ptr<FieldList> &getRecord() const;
+    };
+
+// ArrayTy - Extend class for all array type
+    class ArrayTy : public Ty
+    {
+        string array;
+    public:
+        ArrayTy(Tiger::location loc, const string &array);
+
+        const string &getArray() const;
+    };
 
 
 //===----------------------------------------------------------------------===//
 // Function used in parser(bison)
-// VarAST::
-shared_ptr<VarAST> MakeSimpleVarAST(Tiger::location loc, string &sym);
+// Var::
+    shared_ptr<Var> MakeSimpleVar(Tiger::location loc, string &sym);
 
-shared_ptr<VarAST> MakeFieldVarAST(Tiger::location loc, shared_ptr<VarAST> var, string &sym);
+    shared_ptr<Var> MakeFieldVar(Tiger::location loc, shared_ptr<Var> var, string &sym);
 
-shared_ptr<VarAST> MakeSubscriptVarAST(Tiger::location loc, shared_ptr<VarAST> var, shared_ptr<ExpAST> exp);
-
-
-// ExpAST::
-shared_ptr<ExpAST> MakeVarExpAST(Tiger::location loc, shared_ptr<VarAST> sym);
-
-shared_ptr<ExpAST> MakeNilExpAST(Tiger::location loc);
-
-shared_ptr<ExpAST> MakeIntExpAST(Tiger::location loc, int i);
-
-shared_ptr<ExpAST> MakeStringExpAST(Tiger::location loc, string &s);
-
-shared_ptr<ExpAST> MakeCallExpAST(Tiger::location loc, string &func, shared_ptr<ExpListAST> args);
-
-shared_ptr<ExpAST> MakeOpExpAST(Tiger::location loc, Operator oper, shared_ptr<ExpAST> left, shared_ptr<ExpAST> right);
-
-shared_ptr<ExpAST> MakeRecordExpAST(Tiger::location loc, string &typ, shared_ptr<EFieldListAST> fields);
-
-shared_ptr<ExpAST> MakeSeqExpAST(Tiger::location loc, shared_ptr<ExpListAST> seq);
-
-shared_ptr<ExpAST> MakeAssignExpAST(Tiger::location loc, shared_ptr<VarAST> var, shared_ptr<ExpAST> exp);
-
-shared_ptr<ExpAST>
-MakeIfExpAST(Tiger::location loc, shared_ptr<ExpAST> test, shared_ptr<ExpAST> then, shared_ptr<ExpAST> elsee);
-
-shared_ptr<ExpAST> MakeWhileExpAST(Tiger::location loc, shared_ptr<ExpAST> test, shared_ptr<ExpAST> body);
-
-shared_ptr<ExpAST>
-MakeForExpAST(Tiger::location loc, string &var, shared_ptr<ExpAST> lo, shared_ptr<ExpAST> hi, shared_ptr<ExpAST> body);
-
-shared_ptr<ExpAST> MakeBreakExpAST(Tiger::location loc);
-
-shared_ptr<ExpAST> MakeLetExpAST(Tiger::location loc, shared_ptr<DecListAST> decs, shared_ptr<ExpAST> body);
-
-shared_ptr<ExpAST> MakeArrayExpAST(Tiger::location loc, string &typ, shared_ptr<ExpAST> size, shared_ptr<ExpAST> init);
+    shared_ptr<Var> MakeSubscriptVar(Tiger::location loc, shared_ptr<Var> var, shared_ptr<Exp> exp);
 
 
-// DecAST::
-shared_ptr<DecAST> MakeFunctionDecAST(Tiger::location loc, shared_ptr<FunDecListAST> function);
+// Exp::
+    shared_ptr<Exp> MakeVarExp(Tiger::location loc, shared_ptr<Var> sym);
 
-shared_ptr<DecAST> MakeVarDecAST(Tiger::location loc, const string &var, const string &typ, shared_ptr<ExpAST> init);
+    shared_ptr<Exp> MakeNilExp(Tiger::location loc);
 
-shared_ptr<DecAST> MakeTypeDecAST(Tiger::location loc, shared_ptr<TypeTyListAST> type);
+    shared_ptr<Exp> MakeIntExp(Tiger::location loc, int i);
+
+    shared_ptr<Exp> MakeStringExp(Tiger::location loc, string &s);
+
+    shared_ptr<Exp> MakeCallExp(Tiger::location loc, string &func, shared_ptr<ExpList> args);
+
+    shared_ptr<Exp> MakeOpExp(Tiger::location loc, Operator oper, shared_ptr<Exp> left, shared_ptr<Exp> right);
+
+    shared_ptr<Exp> MakeRecordExp(Tiger::location loc, string &typ, shared_ptr<EFieldList> fields);
+
+    shared_ptr<Exp> MakeSeqExp(Tiger::location loc, shared_ptr<ExpList> seq);
+
+    shared_ptr<Exp> MakeAssignExp(Tiger::location loc, shared_ptr<Var> var, shared_ptr<Exp> exp);
+
+    shared_ptr<Exp> MakeIfExp(Tiger::location loc, shared_ptr<Exp> test, shared_ptr<Exp> then, shared_ptr<Exp> elsee);
+
+    shared_ptr<Exp> MakeWhileExp(Tiger::location loc, shared_ptr<Exp> test, shared_ptr<Exp> body);
+
+    shared_ptr<Exp>
+    MakeForExp(Tiger::location loc, string &var, shared_ptr<Exp> lo, shared_ptr<Exp> hi, shared_ptr<Exp> body);
+
+    shared_ptr<Exp> MakeBreakExp(Tiger::location loc);
+
+    shared_ptr<Exp> MakeLetExp(Tiger::location loc, shared_ptr<DecList> decs, shared_ptr<Exp> body);
+
+    shared_ptr<Exp> MakeArrayExp(Tiger::location loc, string &typ, shared_ptr<Exp> size, shared_ptr<Exp> init);
 
 
-// TyAST::
-shared_ptr<TyAST> MakeNameTyAST(Tiger::location loc, string &name);
+// Dec::
+    shared_ptr<Dec> MakeFunctionDec(Tiger::location loc, shared_ptr<FunDecList> function);
 
-shared_ptr<TyAST> MakeRecordTyAST(Tiger::location loc, shared_ptr<FieldListAST> record);
+    shared_ptr<Dec> MakeVarDec(Tiger::location loc, const string &var, const string &typ, shared_ptr<Exp> init);
 
-shared_ptr<TyAST> MakeArrayTyAST(Tiger::location loc, string &array);
+    shared_ptr<Dec> MakeTypeDec(Tiger::location loc, shared_ptr<TypeTyList> type);
+
+
+// Ty::
+    shared_ptr<Ty> MakeNameTy(Tiger::location loc, string &name);
+
+    shared_ptr<Ty> MakeRecordTy(Tiger::location loc, shared_ptr<FieldList> record);
+
+    shared_ptr<Ty> MakeArrayTy(Tiger::location loc, string &array);
 
 
 // Make some struct used above
-shared_ptr<FieldAST> MakeFieldAST(Tiger::location loc, string &name, string &typ);
+    shared_ptr<Field> MakeField(Tiger::location loc, string &name, string &typ);
 
-shared_ptr<FieldListAST> MakeFieldListAST(shared_ptr<FieldAST> head, shared_ptr<FieldListAST> tail);
+    shared_ptr<FieldList> MakeFieldList(shared_ptr<Field> head, shared_ptr<FieldList> tail);
 
-shared_ptr<ExpListAST> MakeExpListAST(shared_ptr<ExpAST> head, shared_ptr<ExpListAST> tail);
+    shared_ptr<ExpList> MakeExpList(shared_ptr<Exp> head, shared_ptr<ExpList> tail);
 
-shared_ptr<FunDecAST>
-MakeFunDecAST(Tiger::location loc, string &name, string &result, shared_ptr<FieldListAST> params,
-              shared_ptr<ExpAST> body);
+    shared_ptr<FunDec>
+    MakeFunDec(Tiger::location loc, string &name, string &result, shared_ptr<FieldList> params,
+               shared_ptr<Exp> body);
 
-shared_ptr<FunDecListAST> MakeFunDecListAST(shared_ptr<FunDecAST> head, shared_ptr<FunDecListAST> tail);
+    shared_ptr<FunDecList> MakeFunDecList(shared_ptr<FunDec> head, shared_ptr<FunDecList> tail);
 
-shared_ptr<DecListAST> MakeDecListAST(shared_ptr<DecAST> head, shared_ptr<DecListAST> tail);
+    shared_ptr<DecList> MakeDecList(shared_ptr<Dec> head, shared_ptr<DecList> tail);
 
-shared_ptr<TypeTyAST> MakeTypeTyAST(string &name, shared_ptr<TyAST> ty);
+    shared_ptr<TypeTy> MakeTypeTy(string &name, shared_ptr<Ty> ty);
 
-shared_ptr<TypeTyListAST> MakeTypeTyListAST(shared_ptr<TypeTyAST> head, shared_ptr<TypeTyListAST> tail);
+    shared_ptr<TypeTyList> MakeTypeTyList(shared_ptr<TypeTy> head, shared_ptr<TypeTyList> tail);
 
-shared_ptr<EFieldAST> MakeEFieldAST(string &name, shared_ptr<ExpAST> exp);
+    shared_ptr<EField> MakeEField(string &name, shared_ptr<Exp> exp);
 
-shared_ptr<EFieldListAST> MakeEFieldListAST(shared_ptr<EFieldAST> head, shared_ptr<EFieldListAST> tail);
-
+    shared_ptr<EFieldList> MakeEFieldList(shared_ptr<EField> head, shared_ptr<EFieldList> tail);
+}
 
 #endif //MYCOMPILER_ABSYNTREE_H

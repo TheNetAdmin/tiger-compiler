@@ -121,20 +121,20 @@ namespace Semantic
                                     const std::string &usageType);
     };
 
-    void trasProg(std::shared_ptr<ExpAST> exp);
+    void trasProg(std::shared_ptr<AST::Exp> exp);
 
-    ExpTy transExp(Env::VarEnv &venv, Env::FuncEnv &fenv, shared_ptr<ExpAST> exp) noexcept(true);
+    ExpTy transExp(Env::VarEnv &venv, Env::FuncEnv &fenv, shared_ptr<AST::Exp> exp) noexcept(true);
 
-    ExpTy transVar(Env::VarEnv &venv, Env::FuncEnv &fenv, const shared_ptr<VarAST> &var) noexcept(true);
+    ExpTy transVar(Env::VarEnv &venv, Env::FuncEnv &fenv, const shared_ptr<AST::Var> &var) noexcept(true);
 
 
     void checkCallArgs(Env::VarEnv &venv, Env::FuncEnv &fenv,
-                       const shared_ptr<CallExpAST> usage,
+                       const shared_ptr<AST::CallExp> usage,
                        const shared_ptr<Env::FuncEntry> def);
 
 
     void checkRecordEfields(Env::VarEnv &venv, Env::FuncEnv &fenv,
-                            shared_ptr<RecordExpAST> usage,
+                            shared_ptr<AST::RecordExp> usage,
                             shared_ptr<Env::VarEntry> def);
 
     void assertTypeMatch(const shared_ptr<Type::Type> check,
@@ -150,9 +150,9 @@ namespace Semantic
                             const shared_ptr<Type::Type> assertType,
                             const Tiger::location &loc);
 
-    void transDec(Env::VarEnv &venv, Env::FuncEnv &fenv, const shared_ptr<DecAST> dec);
+    void transDec(Env::VarEnv &venv, Env::FuncEnv &fenv, const shared_ptr<AST::Dec> dec);
 
-    shared_ptr<Type::Type> transTy(Env::VarEnv &venv, const shared_ptr<TyAST> &ty);
+    shared_ptr<Type::Type> transTy(Env::VarEnv &venv, const shared_ptr<AST::Ty> &ty);
 };
 
 #endif //_TIGER_SEMANTIC_H

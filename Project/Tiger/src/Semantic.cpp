@@ -10,7 +10,7 @@
 namespace Semantic
 {
 
-    void trasProg(std::shared_ptr<ExpAST> exp)
+    void trasProg(std::shared_ptr<AST::Exp> exp)
     {
         //DEBUG
         Debugger d("Trans prog");
@@ -24,18 +24,18 @@ namespace Semantic
         expType = transExp(venv, fenv, exp);
     }
 
-    ExpTy transVar(Env::VarEnv &venv, Env::FuncEnv &fenv, const shared_ptr<VarAST> &var) noexcept(true)
+    ExpTy transVar(Env::VarEnv &venv, Env::FuncEnv &fenv, const shared_ptr<AST::Var> &var) noexcept(true)
     {
         //DEBUG
         Debugger d("Trans var");
         switch (var->getClassType())
         {
             // TODO: construct result in each case
-            case SIMPLE_VAR:
+            case AST::SIMPLE_VAR:
             {
                 try
                 {
-                    auto simpleVar = dynamic_pointer_cast<SimpleVarAST>(var);
+                    auto simpleVar = dynamic_pointer_cast<AST::SimpleVar>(var);
                     auto queryResult = venv.find(simpleVar->getSimple());
                     return ExpTy(nullptr, queryResult->type);
                 }
@@ -46,9 +46,9 @@ namespace Semantic
                 }
             }
                 break;
-            case FIELD_VAR:
+            case AST::FIELD_VAR:
             {
-                auto fieldVar = dynamic_pointer_cast<FieldVarAST>(var);
+                auto fieldVar = dynamic_pointer_cast<AST::FieldVar>(var);
                 ExpTy resultTransField = transVar(venv, fenv, fieldVar->getVar());
                 if (!Type::isRecord(resultTransField.type))
                 {
@@ -72,9 +72,9 @@ namespace Semantic
                 }
             }
                 break;
-            case SUBSCRIPT_VAR:
+            case AST::SUBSCRIPT_VAR:
             {
-                auto subscriptVar = dynamic_pointer_cast<SubscriptVarAST>(var);
+                auto subscriptVar = dynamic_pointer_cast<AST::SubscriptVar>(var);
                 ExpTy resultTransSubscript = transVar(venv, fenv, subscriptVar->getVar());
                 if (!Type::isArray(resultTransSubscript.type))
                 {
@@ -106,28 +106,28 @@ namespace Semantic
         }
     }
 
-    ExpTy transExp(Env::VarEnv &venv, Env::FuncEnv &fenv, shared_ptr<ExpAST> exp) noexcept(true)
+    ExpTy transExp(Env::VarEnv &venv, Env::FuncEnv &fenv, shared_ptr<AST::Exp> exp) noexcept(true)
     {
         // DEBUG
         Debugger d("Trans exp");
         auto defaultLoc = exp->getLoc();
         switch (exp->getClassType())
         {
-            case VAR_EXP:
+            case AST::VAR_EXP:
             {
-                auto var = dynamic_pointer_cast<VarExpAST>(exp);
+                auto var = dynamic_pointer_cast<AST::VarExp>(exp);
                 return transVar(venv, fenv, var->getVar());
             }
                 break;
-            case NIL_EXP:
+            case AST::NIL_EXP:
             {
                 // TODO: replace nullptr with translate info
                 return ExpTy(nullptr, Type::NIL);
             }
                 break;
-            case CALL_EXP:
+            case AST::CALL_EXP:
             {
-                auto funcUsage = dynamic_pointer_cast<CallExpAST>(exp);
+                auto funcUsage = dynamic_pointer_cast<AST::CallExp>(exp);
                 string funcName = funcUsage->getFunc();
                 try
                 {
@@ -147,9 +147,9 @@ namespace Semantic
                 return ExpTy(nullptr, Type::VOID);
             }
                 break;
-            case RECORD_EXP:
+            case AST::RECORD_EXP:
             {
-                auto recordUsage = dynamic_pointer_cast<RecordExpAST>(exp);
+                auto recordUsage = dynamic_pointer_cast<AST::RecordExp>(exp);
                 string recordName = recordUsage->getTyp();
                 try
                 {
@@ -177,9 +177,9 @@ namespace Semantic
                 return ExpTy(nullptr, Type::RECORD);
             }
                 break;
-            case ARRAY_EXP:
+            case AST::ARRAY_EXP:
             {
-                auto arrayUsage = dynamic_pointer_cast<ArrayExpAST>(exp);
+                auto arrayUsage = dynamic_pointer_cast<AST::ArrayExp>(exp);
                 string arrayName = arrayUsage->getTyp();
                 try
                 {
@@ -207,10 +207,10 @@ namespace Semantic
                 return ExpTy(nullptr, Type::ARRAY);
             }
                 break;
-            case SEQ_EXP:
+            case AST::SEQ_EXP:
             {
-                auto exps = dynamic_pointer_cast<SeqExpAST>(exp);
-                const std::list<shared_ptr<ExpAST>> expList = *(exps->getSeq());
+                auto exps = dynamic_pointer_cast<AST::SeqExp>(exp);
+                const std::list<shared_ptr<AST::Exp>> expList = *(exps->getSeq());
                 // Check num of exps
                 if (expList.size() == 0)
                 {
@@ -230,9 +230,9 @@ namespace Semantic
             }
                 // run here into error?
                 break;
-            case WHILE_EXP:
+            case AST::WHILE_EXP:
             {
-                auto whileUsage = dynamic_pointer_cast<WhileExpAST>(exp);
+                auto whileUsage = dynamic_pointer_cast<AST::WhileExp>(exp);
                 // Check while's test condition
                 auto whileTest = transExp(venv, fenv, whileUsage->getTest());
                 try
@@ -248,9 +248,9 @@ namespace Semantic
                 return ExpTy(nullptr, Type::VOID);
             }
                 break;
-            case ASSIGN_EXP:
+            case AST::ASSIGN_EXP:
             {
-                auto assignUsage = dynamic_pointer_cast<AssignExpAST>(exp);
+                auto assignUsage = dynamic_pointer_cast<AST::AssignExp>(exp);
                 // Check assign's var
                 auto assignVar = assignUsage->getVar();
                 auto assignVarResult = transVar(venv, fenv, assignVar);
@@ -269,14 +269,14 @@ namespace Semantic
                 return ExpTy(nullptr, Type::VOID);
             }
                 break;
-            case BREAK_EXP:
+            case AST::BREAK_EXP:
             {
                 return ExpTy(nullptr, Type::VOID);
             }
                 break;
-            case FOR_EXP:
+            case AST::FOR_EXP:
             {
-                auto forUsage = dynamic_pointer_cast<ForExpAST>(exp);
+                auto forUsage = dynamic_pointer_cast<AST::ForExp>(exp);
                 // Check low and high range
                 auto forLo = forUsage->getLo();
                 auto forHi = forUsage->getHi();
@@ -293,8 +293,8 @@ namespace Semantic
                 }
                 fenv.beginScope();
                 // Check declaration
-                auto forDec = MakeVarDecAST(defaultLoc, forUsage->getVar(),
-                                            Type::getName(Type::INT), forLo);
+                auto forDec = AST::MakeVarDec(defaultLoc, forUsage->getVar(),
+                                         Type::getName(Type::INT), forLo);
                 transDec(venv, fenv, forDec);
                 // Check body
                 auto forBody = transExp(venv, fenv, forUsage->getBody());
@@ -302,12 +302,12 @@ namespace Semantic
                 // TODO: Handle error?
                 return ExpTy(nullptr, Type::VOID);
             }
-            case LET_EXP:
+            case AST::LET_EXP:
             {
                 fenv.beginScope();
                 venv.beginScope();
                 // Check each exp decs
-                auto letUsage = dynamic_pointer_cast<LetExpAST>(exp);
+                auto letUsage = dynamic_pointer_cast<AST::LetExp>(exp);
                 auto letDecs = letUsage->getDecs();
                 for (auto dec = letDecs->begin(); dec != letDecs->end(); dec++)
                 {
@@ -321,9 +321,9 @@ namespace Semantic
                 return result;
             }
                 break;
-            case OP_EXP:
+            case AST::OP_EXP:
             {
-                auto opUsage = dynamic_pointer_cast<OpExpAST>(exp);
+                auto opUsage = dynamic_pointer_cast<AST::OpExp>(exp);
                 // Check both side of op exp
                 auto opLeft = transExp(venv, fenv, opUsage->getLeft());
                 auto opRight = transExp(venv, fenv, opUsage->getRight());
@@ -333,16 +333,16 @@ namespace Semantic
                 {
                     switch (opUsage->getOp())
                     {
-                        case PLUSOP:
-                        case MINUSOP:
-                        case TIMESOP:
-                        case DIVIDEOP:
+                        case AST::PLUSOP:
+                        case AST::MINUSOP:
+                        case AST::TIMESOP:
+                        case AST::DIVIDEOP:
                             assertTypeMatch(opLeft.type, Type::INT, opUsage->getLeft()->getLoc());
                             assertTypeMatch(opRight.type, Type::INT, opUsage->getRight()->getLoc());
                             return ExpTy(nullptr, Type::INT);
                             break;
-                        case EQOP:
-                        case NEQOP:
+                        case AST::EQOP:
+                        case AST::NEQOP:
                             if (Type::isNil(opLeft.type) && Type::isRecord(opRight.type))
                             {
                                 return ExpTy(nullptr, Type::INT);
@@ -352,13 +352,13 @@ namespace Semantic
                                 return ExpTy(nullptr, Type::INT);
                             }
                             break;
-                        case LTOP:
+                        case AST::LTOP:
                             break;
-                        case LEOP:
+                        case AST::LEOP:
                             break;
-                        case GTOP:
+                        case AST::GTOP:
                             break;
-                        case GEOP:
+                        case AST::GEOP:
                             break;
                     }
                 }
@@ -368,9 +368,9 @@ namespace Semantic
                 }
             }
                 break;
-            case IF_EXP:
+            case AST::IF_EXP:
             {
-                auto ifUsage = dynamic_pointer_cast<IfExpAST>(exp);
+                auto ifUsage = dynamic_pointer_cast<AST::IfExp>(exp);
                 auto ifTestPtr = ifUsage->getTest();
                 auto ifThenPtr = ifUsage->getThen();
                 auto ifElsePtr = ifUsage->getElsee();
@@ -403,11 +403,11 @@ namespace Semantic
                 return ExpTy(nullptr, ifThen.type);
             }
                 break;
-            case STRING_EXP:
+            case AST::STRING_EXP:
             {
                 return ExpTy(nullptr, Type::STRING);
             }
-            case INT_EXP:
+            case AST::INT_EXP:
             {
                 return ExpTy(nullptr, Type::INT);
             }
@@ -422,17 +422,17 @@ namespace Semantic
     }
 
 
-    void transDec(Env::VarEnv &venv, Env::FuncEnv &fenv, const shared_ptr<DecAST> dec)
+    void transDec(Env::VarEnv &venv, Env::FuncEnv &fenv, const shared_ptr<AST::Dec> dec)
     {
         // DEBUG
         Debugger d("Trans dec");
         auto defaultLoc = dec->getLoc();
         switch (dec->getClassType())
         {
-            case VAR_DEC:
+            case AST::VAR_DEC:
             {
 
-                auto varUsage = dynamic_pointer_cast<VarDecAST>(dec);
+                auto varUsage = dynamic_pointer_cast<AST::VarDec>(dec);
                 auto varName = varUsage->getVar();
                 // Check var init
                 auto varInit = transExp(venv, fenv, varUsage->getInit());
@@ -473,9 +473,9 @@ namespace Semantic
                 venv.enter(ve);
             }
                 break;
-            case FUNCTION_DEC:
+            case AST::FUNCTION_DEC:
             {
-                auto funcUsage = dynamic_pointer_cast<FunctionDecAST>(dec);
+                auto funcUsage = dynamic_pointer_cast<AST::FunctionDec>(dec);
                 auto funcList = funcUsage->getFunction();
                 // Add functions' declaration
                 for (auto f = funcList->begin(); f != funcList->end(); f++)
@@ -563,9 +563,9 @@ namespace Semantic
                 }
             }
                 break;
-            case TYPE_DEC:
+            case AST::TYPE_DEC:
             {
-                auto typeUsage = std::dynamic_pointer_cast<TypeDecAST>(dec);
+                auto typeUsage = std::dynamic_pointer_cast<AST::TypeDec>(dec);
                 auto types = typeUsage->getType();
                 for (auto t = types->begin(); t != types->end(); t++)
                 {
@@ -590,14 +590,14 @@ namespace Semantic
         }
     }
 
-    shared_ptr<Type::Type> transTy(Env::VarEnv &venv, const shared_ptr<TyAST> &ty)
+    shared_ptr<Type::Type> transTy(Env::VarEnv &venv, const shared_ptr<AST::Ty> &ty)
     {
         // DEBUG
         switch (ty->getClassType())
         {
-            case NAME_TYPE:
+            case AST::NAME_TYPE:
             {
-                auto nameTy = dynamic_pointer_cast<NameTyAST>(ty);
+                auto nameTy = dynamic_pointer_cast<AST::NameTy>(ty);
                 try
                 {
                     auto t = venv.find(nameTy->getName());
@@ -610,9 +610,9 @@ namespace Semantic
                 return Type::INT;
             }
                 break;
-            case RECORD_TYPE:
+            case AST::RECORD_TYPE:
             {
-                auto recordTy = dynamic_pointer_cast<RecordTyAST>(ty);
+                auto recordTy = dynamic_pointer_cast<AST::RecordTy>(ty);
                 auto fields = recordTy->getRecord();
                 shared_ptr<Type::Record> record  = make_shared<Type::Record>();
                 for (auto field = fields->begin(); field != fields->end(); field++)
@@ -633,10 +633,10 @@ namespace Semantic
                 return record;
             }
                 break;
-            case ARRAY_TYPE:
+            case AST::ARRAY_TYPE:
             {
                 shared_ptr<Type::Array> array = make_shared<Type::Array>();
-                auto arrayTy = dynamic_pointer_cast<ArrayTyAST>(ty);
+                auto arrayTy = dynamic_pointer_cast<AST::ArrayTy>(ty);
                 try
                 {
                     auto t = venv.find(arrayTy->getArray());
@@ -688,7 +688,7 @@ namespace Semantic
     }
 
     void checkRecordEfields(Env::VarEnv &venv, Env::FuncEnv &fenv,
-                            shared_ptr<RecordExpAST> usage,
+                            shared_ptr<AST::RecordExp> usage,
                             shared_ptr<Env::VarEntry> def)
     {
         auto defTypePtr = def->getType();
@@ -725,7 +725,7 @@ namespace Semantic
 
 
     void checkCallArgs(Env::VarEnv &venv, Env::FuncEnv &fenv,
-                       const shared_ptr<CallExpAST> usage,
+                       const shared_ptr<AST::CallExp> usage,
                        const shared_ptr<Env::FuncEntry> def)
     {
         auto uArgs = usage->getArgs();

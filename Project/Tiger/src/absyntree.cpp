@@ -4,556 +4,686 @@
 
 #include "absyntree.h"
 
-// VarAST-------------------------------------
+namespace AST
+{
+// Var-------------------------------------
 
-VarAST::VarAST(Tiger::location loc, VariableType classType) : AST(loc), classType(classType) {}
+    Var::Var(Tiger::location loc, VariableType classType) : AST(loc), classType(classType)
+    {}
 
-VariableType VarAST::getClassType() const {
-    return classType;
-}
+    VariableType Var::getClassType() const
+    {
+        return classType;
+    }
 
-// ExpAST-------------------------------------
+// Exp-------------------------------------
+
+    Exp::Exp(Tiger::location loc, ExpressionType classType) : AST(loc), classType(classType)
+    {}
 
-ExpAST::ExpAST(Tiger::location loc, ExpressionType classType) : AST(loc), classType(classType) {}
+
+    ExpressionType Exp::getClassType()
+    {
+        return classType;
+    }
+
+// Dec---------------------------------------
+    Dec::Dec(Tiger::location loc, DeclarationType classType) : AST(loc), classType(classType)
+    {}
 
 
-ExpressionType ExpAST::getClassType() {
-    return classType;
-}
+    DeclarationType Dec::getClassType()
+    {
+        return classType;
+    }
 
-// DecAST---------------------------------------
-DecAST::DecAST(Tiger::location loc, DeclarationType classType) : AST(loc), classType(classType) {}
+// Ty---------------------------------------
+    Ty::Ty(Tiger::location loc, TypeType classType) : AST(loc), classType(classType)
+    {}
 
 
-DeclarationType DecAST::getClassType() {
-    return classType;
-}
+    TypeType Ty::getClassType()
+    {
+        return classType;
+    }
 
-// TyAST---------------------------------------
-TyAST::TyAST(Tiger::location loc, TypeType classType) : AST(loc), classType(classType) {}
+// Field------------------------------------
+    Field::Field(Tiger::location loc, const string &name, const string &typ, bool escape)
+            : AST(loc), name(name), typ(typ), escape(escape)
+    {}
 
 
-TypeType TyAST::getClassType() {
-    return classType;
-}
+    const string &Field::getName() const
+    {
+        return name;
+    }
 
-// FieldAST------------------------------------
-FieldAST::FieldAST(Tiger::location loc, const string &name, const string &typ, bool escape)
-        : AST(loc), name(name), typ(typ), escape(escape){}
+    const string &Field::getTyp() const
+    {
+        return typ;
+    }
 
+    bool Field::isEscape() const
+    {
+        return escape;
+    }
 
-const string &FieldAST::getName() const {
-    return name;
-}
+    void Field::setEscape(bool escape)
+    {
+        Field::escape = escape;
+    }
 
-const string &FieldAST::getTyp() const {
-    return typ;
-}
+// EField--------------------------------------
+    EField::EField(const string &name, const shared_ptr<Exp> &exp) : name(name), exp(exp)
+    {}
 
-bool FieldAST::isEscape() const {
-    return escape;
-}
+    const string &EField::getName() const
+    {
+        return name;
+    }
+
+    const shared_ptr<Exp> &EField::getExp() const
+    {
+        return exp;
+    }
+
+// FunDec----------------------------------------
+    FunDec::FunDec(Tiger::location loc, const string &name, const string &result, const shared_ptr<FieldList> &params,
+                   const shared_ptr<Exp> &body) : AST(loc), name(name), result(result), params(params),
+                                                  body(body)
+    {}
+
+
+    const string &FunDec::getName() const
+    {
+        return name;
+    }
+
+    const string &FunDec::getResult() const
+    {
+        return result;
+    }
+
+    const shared_ptr<FieldList> &FunDec::getParams() const
+    {
+        return params;
+    }
+
+    const shared_ptr<Exp> &FunDec::getBody() const
+    {
+        return body;
+    }
+
+// TypeTy------------------------------------------
+    TypeTy::TypeTy(const string &name, const shared_ptr<Ty> &ty) : name(name), ty(ty)
+    {}
+
+    const string &TypeTy::getName() const
+    {
+        return name;
+    }
+
+    const shared_ptr<Ty> &TypeTy::getTy() const
+    {
+        return ty;
+    }
+
+// SimpleVar----------------------------------------------
+
+    SimpleVar::SimpleVar(Tiger::location loc, const string &simple) : Var(loc, SIMPLE_VAR), simple(simple)
+    {}
+
+    const string &SimpleVar::getSimple() const
+    {
+        return simple;
+    }
+
+// FieldVar----------------------------------------------
+
+    FieldVar::FieldVar(Tiger::location loc, const shared_ptr<Var> &var, const string &sym) : Var(loc, FIELD_VAR),
+                                                                                             var(var),
+                                                                                             sym(sym)
+    {}
+
+    const shared_ptr<Var> FieldVar::getVar() const
+    {
+        return var;
+    }
+
+    const string &FieldVar::getSym() const
+    {
+        return sym;
+    }
+
+// SubscriptVar-------------------------------------------
+
+    SubscriptVar::SubscriptVar(Tiger::location loc, const shared_ptr<Var> &var,
+                               const shared_ptr<Exp> &exp) : Var(loc, SUBSCRIPT_VAR), var(var), exp(exp)
+    {}
+
+    const shared_ptr<Var> &SubscriptVar::getVar() const
+    {
+        return var;
+    }
+
+    const shared_ptr<Exp> &SubscriptVar::getExp() const
+    {
+        return exp;
+    }
+
+// VarExp------------------------------------------------
+    VarExp::VarExp(Tiger::location loc, const shared_ptr<Var> &var) : Exp(loc, VAR_EXP),
+                                                                      var(var)
+    {}
+
+    const shared_ptr<Var> &VarExp::getVar() const
+    {
+        return var;
+    }
+
+// NilExp-----------------------------------------------
+    NilExp::NilExp(Tiger::location loc) : Exp(loc, NIL_EXP)
+    {}
+
+// IntExp----------------------------------------------
+    IntExp::IntExp(Tiger::location loc, int intt) : Exp(loc, INT_EXP), intt(intt)
+    {}
+
+    int IntExp::getIntt() const
+    {
+        return intt;
+    }
+
+// StringExp------------------------------------------
+    StringExp::StringExp(Tiger::location loc, const string &stringg) : Exp(loc, STRING_EXP),
+                                                                       str(stringg)
+    {}
+
+    const string &StringExp::getStringg() const
+    {
+        return str;
+    }
+
+// CallExp------------------------------------------
+
+    CallExp::CallExp(Tiger::location loc, const string &func, const shared_ptr<ExpList> &args) : Exp(loc, CALL_EXP),
+                                                                                                 func(func),
+                                                                                                 args(args)
+    {}
+
+    const string &CallExp::getFunc() const
+    {
+        return func;
+    }
+
+    const shared_ptr<ExpList> &CallExp::getArgs() const
+    {
+        return args;
+    }
+
+// OpExp--------------------------------------------
+
+    OpExp::OpExp(Tiger::location loc, Operator op, const shared_ptr<Exp> &left,
+                 const shared_ptr<Exp> &right) : Exp(loc, OP_EXP), op(op), left(left), right(right)
+    {}
+
+    Operator OpExp::getOp() const
+    {
+        return op;
+    }
+
+    const shared_ptr<Exp> &OpExp::getLeft() const
+    {
+        return left;
+    }
+
+    const shared_ptr<Exp> &OpExp::getRight() const
+    {
+        return right;
+    }
+
+// RecordExp----------------------------------------
+
+    RecordExp::RecordExp(Tiger::location loc, const string &typ, const shared_ptr<EFieldList> &fields) : Exp(
+            loc, RECORD_EXP), typ(typ), fields(fields)
+    {}
+
+    const string &RecordExp::getTyp() const
+    {
+        return typ;
+    }
+
+    const shared_ptr<EFieldList> &RecordExp::getFields() const
+    {
+        return fields;
+    }
+
+// SeqExp------------------------------------------
+
+    SeqExp::SeqExp(Tiger::location loc, const shared_ptr<ExpList> &seq) : Exp(loc, SEQ_EXP), seq(seq)
+    {}
+
+    const shared_ptr<ExpList> &SeqExp::getSeq() const
+    {
+        return seq;
+    }
+
+// AssignExp--------------------------------------
+
+    AssignExp::AssignExp(Tiger::location loc, const shared_ptr<Var> &var,
+                         const shared_ptr<Exp> &exp) : Exp(loc, ASSIGN_EXP), var(var), exp(exp)
+    {}
+
+    const shared_ptr<Var> &AssignExp::getVar() const
+    {
+        return var;
+    }
+
+    const shared_ptr<Exp> &AssignExp::getExp() const
+    {
+        return exp;
+    }
+
+// IfExp-----------------------------------------
+
+    IfExp::IfExp(Tiger::location loc, const shared_ptr<Exp> &test, const shared_ptr<Exp> &then,
+                 const shared_ptr<Exp> &elsee) : Exp(loc, IF_EXP), test(test), then(then), elsee(elsee)
+    {}
+
+    const shared_ptr<Exp> &IfExp::getTest() const
+    {
+        return test;
+    }
+
+    const shared_ptr<Exp> &IfExp::getThen() const
+    {
+        return then;
+    }
+
+    const shared_ptr<Exp> &IfExp::getElsee() const
+    {
+        return elsee;
+    }
 
-void FieldAST::setEscape(bool escape) {
-    FieldAST::escape = escape;
-}
+// WhileExp-------------------------------------
 
-// EFieldAST--------------------------------------
-EFieldAST::EFieldAST(const string &name, const shared_ptr<ExpAST> &exp) : name(name), exp(exp) {}
+    WhileExp::WhileExp(Tiger::location loc, const shared_ptr<Exp> &test,
+                       const shared_ptr<Exp> &body) : Exp(loc, WHILE_EXP), test(test), body(body)
+    {}
 
-const string &EFieldAST::getName() const {
-    return name;
-}
+    const shared_ptr<Exp> &WhileExp::getTest() const
+    {
+        return test;
+    }
 
-const shared_ptr<ExpAST> &EFieldAST::getExp() const {
-    return exp;
-}
+    const shared_ptr<Exp> &WhileExp::getBody() const
+    {
+        return body;
+    }
 
-// FunDecAST----------------------------------------
-FunDecAST::FunDecAST(Tiger::location loc, const string &name, const string &result, const shared_ptr<FieldListAST> &params,
-                     const shared_ptr<ExpAST> &body) : AST(loc), name(name), result(result), params(params),
-                                                       body(body) {}
+// BreakExp------------------------------------
 
+    BreakExp::BreakExp(Tiger::location loc) : Exp(loc, BREAK_EXP)
+    {}
 
-const string &FunDecAST::getName() const {
-    return name;
-}
+// ForExp--------------------------------------
 
-const string &FunDecAST::getResult() const {
-    return result;
-}
 
-const shared_ptr<FieldListAST> &FunDecAST::getParams() const {
-    return params;
-}
+    ForExp::ForExp(Tiger::location loc, const string &var, const shared_ptr<Exp> &lo, const shared_ptr<Exp> &hi,
+                   const shared_ptr<Exp> &body, bool escape) : Exp(loc, FOR_EXP), var(var), lo(lo), hi(hi),
+                                                               body(body), escape(escape)
+    {}
 
-const shared_ptr<ExpAST> &FunDecAST::getBody() const {
-    return body;
-}
+    const string &ForExp::getVar() const
+    {
+        return var;
+    }
 
-// TypeTyAST------------------------------------------
-TypeTyAST::TypeTyAST(const string &name, const shared_ptr<TyAST> &ty) : name(name), ty(ty) {}
+    const shared_ptr<Exp> &ForExp::getLo() const
+    {
+        return lo;
+    }
 
-const string &TypeTyAST::getName() const {
-    return name;
-}
+    const shared_ptr<Exp> &ForExp::getHi() const
+    {
+        return hi;
+    }
 
-const shared_ptr<TyAST> &TypeTyAST::getTy() const {
-    return ty;
-}
+    const shared_ptr<Exp> &ForExp::getBody() const
+    {
+        return body;
+    }
 
-// SimpleVarAST----------------------------------------------
+    bool ForExp::isEscape() const
+    {
+        return escape;
+    }
 
-SimpleVarAST::SimpleVarAST(Tiger::location loc, const string &simple) : VarAST(loc, SIMPLE_VAR), simple(simple) {}
+    void ForExp::setEscape(bool escape)
+    {
+        ForExp::escape = escape;
+    }
 
-const string &SimpleVarAST::getSimple() const {
-    return simple;
-}
 
-// FieldVarAST----------------------------------------------
+// LetExp--------------------------------------
 
-FieldVarAST::FieldVarAST(Tiger::location loc, const shared_ptr<VarAST> &var, const string &sym) : VarAST(loc, FIELD_VAR), var(var),
-                                                                                      sym(sym) {}
+    LetExp::LetExp(Tiger::location loc, const shared_ptr<DecList> &decs, const shared_ptr<Exp> &body)
+            : Exp(loc, LET_EXP), decs(decs), body(body)
+    {}
 
-const shared_ptr<VarAST> FieldVarAST::getVar() const {
-    return var;
-}
+    const shared_ptr<DecList> &LetExp::getDecs() const
+    {
+        return decs;
+    }
 
-const string &FieldVarAST::getSym() const {
-    return sym;
-}
+    const shared_ptr<Exp> &LetExp::getBody() const
+    {
+        return body;
+    }
 
-// SubscriptVarAST-------------------------------------------
 
-SubscriptVarAST::SubscriptVarAST(Tiger::location loc, const shared_ptr<VarAST> &var,
-                                 const shared_ptr<ExpAST> &exp) : VarAST(loc, SUBSCRIPT_VAR), var(var), exp(exp) {}
+// ArrayExp-----------------------------------
 
-const shared_ptr<VarAST> &SubscriptVarAST::getVar() const {
-    return var;
-}
+    ArrayExp::ArrayExp(Tiger::location loc, const string &typ, const shared_ptr<Exp> &size,
+                       const shared_ptr<Exp> &init) : Exp(loc, ARRAY_EXP), typ(typ), size(size), init(init)
+    {}
 
-const shared_ptr<ExpAST> &SubscriptVarAST::getExp() const {
-    return exp;
-}
+    const string &ArrayExp::getTyp() const
+    {
+        return typ;
+    }
 
-// VarExpAST------------------------------------------------
-VarExpAST::VarExpAST(Tiger::location loc, const shared_ptr<VarAST> &var) : ExpAST(loc, VAR_EXP),
-                                                               var(var) {}
+    const shared_ptr<Exp> &ArrayExp::getSize() const
+    {
+        return size;
+    }
 
-const shared_ptr<VarAST> &VarExpAST::getVar() const {
-    return var;
-}
+    const shared_ptr<Exp> &ArrayExp::getInit() const
+    {
+        return init;
+    }
 
-// NilExpAST-----------------------------------------------
-NilExpAST::NilExpAST(Tiger::location loc) : ExpAST(loc, NIL_EXP) {}
 
-// IntExpAST----------------------------------------------
-IntExpAST::IntExpAST(Tiger::location loc, int intt) : ExpAST(loc, INT_EXP), intt(intt) {}
+// FunctionDec-------------------------------
 
-int IntExpAST::getIntt() const {
-    return intt;
-}
+    FunctionDec::FunctionDec(Tiger::location loc, const shared_ptr<FunDecList> &function) : Dec(loc, FUNCTION_DEC),
+                                                                                            function(function)
+    {}
 
-// StringExpAST------------------------------------------
-StringExpAST::StringExpAST(Tiger::location loc, const string &stringg) : ExpAST(loc, STRING_EXP),
-                                                             stringg(stringg) {}
+    const shared_ptr<FunDecList> &FunctionDec::getFunction() const
+    {
+        return function;
+    }
 
-const string &StringExpAST::getStringg() const {
-    return stringg;
-}
 
-// CallExpAST------------------------------------------
+// VarDec-----------------------------------
 
-CallExpAST::CallExpAST(Tiger::location loc, const string &func, const shared_ptr<ExpListAST> &args) : ExpAST(loc, CALL_EXP), func(func),
-                                                                              args(args) {}
+    VarDec::VarDec(Tiger::location loc, const string &var, const string &typ, const shared_ptr<Exp> &init, bool escape)
+            : Dec(loc, VAR_DEC), var(var), typ(typ), init(init), escape(escape)
+    {}
 
-const string &CallExpAST::getFunc() const {
-    return func;
-}
+    const string &VarDec::getVar() const
+    {
+        return var;
+    }
 
-const shared_ptr<ExpListAST> &CallExpAST::getArgs() const {
-    return args;
-}
+    const string &VarDec::getTyp() const
+    {
+        return typ;
+    }
 
-// OpExpAST--------------------------------------------
+    const shared_ptr<Exp> &VarDec::getInit() const
+    {
+        return init;
+    }
 
-OpExpAST::OpExpAST(Tiger::location loc, Operator op, const shared_ptr<ExpAST> &left,
-                   const shared_ptr<ExpAST> &right) : ExpAST(loc, OP_EXP), op(op), left(left), right(right) {}
+    bool VarDec::isEscape() const
+    {
+        return escape;
+    }
 
-Operator OpExpAST::getOp() const {
-    return op;
-}
+    void VarDec::setEscape(bool escape)
+    {
+        VarDec::escape = escape;
+    }
 
-const shared_ptr<ExpAST> &OpExpAST::getLeft() const {
-    return left;
-}
 
-const shared_ptr<ExpAST> &OpExpAST::getRight() const {
-    return right;
-}
+// TypeDec--------------------------------
 
-// RecordExpAST----------------------------------------
+    TypeDec::TypeDec(Tiger::location loc, const shared_ptr<TypeTyList> &type) : Dec(loc, TYPE_DEC), type(type)
+    {}
 
-RecordExpAST::RecordExpAST(Tiger::location loc, const string &typ, const shared_ptr<EFieldListAST> &fields) : ExpAST(
-        loc, RECORD_EXP), typ(typ), fields(fields) {}
+    const shared_ptr<TypeTyList> &TypeDec::getType() const
+    {
+        return type;
+    }
 
-const string &RecordExpAST::getTyp() const {
-    return typ;
-}
 
-const shared_ptr<EFieldListAST> &RecordExpAST::getFields() const {
-    return fields;
-}
+// NameTy----------------------------------
 
-// SeqExpAST------------------------------------------
+    NameTy::NameTy(Tiger::location loc, const string &name) : Ty(loc, NAME_TYPE), name(name)
+    {}
 
-SeqExpAST::SeqExpAST(Tiger::location loc, const shared_ptr<ExpListAST> &seq) : ExpAST(loc, SEQ_EXP), seq(seq) {}
+    const string &NameTy::getName() const
+    {
+        return name;
+    }
 
-const shared_ptr<ExpListAST> &SeqExpAST::getSeq() const {
-    return seq;
-}
 
-// AssignExpAST--------------------------------------
+// RecordTy--------------------------------
 
-AssignExpAST::AssignExpAST(Tiger::location loc, const shared_ptr<VarAST> &var,
-                           const shared_ptr<ExpAST> &exp) : ExpAST(loc, ASSIGN_EXP), var(var), exp(exp) {}
+    RecordTy::RecordTy(Tiger::location loc, const shared_ptr<FieldList> &record) : Ty(loc, RECORD_TYPE), record(record)
+    {}
 
-const shared_ptr<VarAST> &AssignExpAST::getVar() const {
-    return var;
-}
+    const shared_ptr<FieldList> &RecordTy::getRecord() const
+    {
+        return record;
+    }
 
-const shared_ptr<ExpAST> &AssignExpAST::getExp() const {
-    return exp;
-}
 
-// IfExpAST-----------------------------------------
+// ArrayTy---------------------------------
 
-IfExpAST::IfExpAST(Tiger::location loc, const shared_ptr<ExpAST> &test, const shared_ptr<ExpAST> &then,
-                   const shared_ptr<ExpAST> &elsee) : ExpAST(loc, IF_EXP), test(test), then(then), elsee(elsee) {}
+    ArrayTy::ArrayTy(Tiger::location loc, const string &array) : Ty(loc, ARRAY_TYPE), array(array)
+    {}
 
-const shared_ptr<ExpAST> &IfExpAST::getTest() const {
-    return test;
-}
-
-const shared_ptr<ExpAST> &IfExpAST::getThen() const {
-    return then;
-}
-
-const shared_ptr<ExpAST> &IfExpAST::getElsee() const {
-    return elsee;
-}
-
-// WhileExpAST-------------------------------------
-
-WhileExpAST::WhileExpAST(Tiger::location loc, const shared_ptr<ExpAST> &test,
-                         const shared_ptr<ExpAST> &body) : ExpAST(loc, WHILE_EXP), test(test), body(body) {}
-
-const shared_ptr<ExpAST> &WhileExpAST::getTest() const {
-    return test;
-}
-
-const shared_ptr<ExpAST> &WhileExpAST::getBody() const {
-    return body;
-}
-
-// BreakExpAST------------------------------------
-
-BreakExpAST::BreakExpAST(Tiger::location loc) : ExpAST(loc, BREAK_EXP) {}
-
-// ForExpAST--------------------------------------
-
-
-ForExpAST::ForExpAST(Tiger::location loc, const string &var, const shared_ptr<ExpAST> &lo, const shared_ptr<ExpAST> &hi,
-                     const shared_ptr<ExpAST> &body, bool escape) : ExpAST(loc, FOR_EXP), var(var), lo(lo), hi(hi),
-                                                                    body(body), escape(escape) {}
-
-const string &ForExpAST::getVar() const {
-    return var;
-}
-
-const shared_ptr<ExpAST> &ForExpAST::getLo() const {
-    return lo;
-}
-
-const shared_ptr<ExpAST> &ForExpAST::getHi() const {
-    return hi;
-}
-
-const shared_ptr<ExpAST> &ForExpAST::getBody() const {
-    return body;
-}
-
-bool ForExpAST::isEscape() const {
-    return escape;
-}
-
-void ForExpAST::setEscape(bool escape) {
-    ForExpAST::escape = escape;
-}
-
-
-// LetExpAST--------------------------------------
-
-LetExpAST::LetExpAST(Tiger::location loc, const shared_ptr<DecListAST> &decs, const shared_ptr<ExpAST> &body)
-        : ExpAST(loc, LET_EXP), decs(decs), body(body) {}
-
-const shared_ptr<DecListAST> &LetExpAST::getDecs() const {
-    return decs;
-}
-
-const shared_ptr<ExpAST> &LetExpAST::getBody() const {
-    return body;
-}
-
-
-// ArrayExpAST-----------------------------------
-
-ArrayExpAST::ArrayExpAST(Tiger::location loc, const string &typ, const shared_ptr<ExpAST> &size,
-                         const shared_ptr<ExpAST> &init) : ExpAST(loc, ARRAY_EXP), typ(typ), size(size), init(init) {}
-
-const string &ArrayExpAST::getTyp() const {
-    return typ;
-}
-
-const shared_ptr<ExpAST> &ArrayExpAST::getSize() const {
-    return size;
-}
-
-const shared_ptr<ExpAST> &ArrayExpAST::getInit() const {
-    return init;
-}
-
-
-// FunctionDecAST-------------------------------
-
-FunctionDecAST::FunctionDecAST(Tiger::location loc, const shared_ptr<FunDecListAST> &function) : DecAST(loc, FUNCTION_DEC),
-                                                                         function(function) {}
-
-const shared_ptr<FunDecListAST> &FunctionDecAST::getFunction() const {
-    return function;
-}
-
-
-// VarDecAST-----------------------------------
-
-VarDecAST::VarDecAST(Tiger::location loc, const string &var, const string &typ, const shared_ptr<ExpAST> &init, bool escape)
-        : DecAST(loc, VAR_DEC), var(var), typ(typ), init(init), escape(escape) {}
-
-const string &VarDecAST::getVar() const {
-    return var;
-}
-
-const string &VarDecAST::getTyp() const {
-    return typ;
-}
-
-const shared_ptr<ExpAST> &VarDecAST::getInit() const {
-    return init;
-}
-
-bool VarDecAST::isEscape() const {
-    return escape;
-}
-
-void VarDecAST::setEscape(bool escape) {
-    VarDecAST::escape = escape;
-}
-
-
-// TypeDecAST--------------------------------
-
-TypeDecAST::TypeDecAST(Tiger::location loc, const shared_ptr<TypeTyListAST> &type) : DecAST(loc, TYPE_DEC), type(type) {}
-
-const shared_ptr<TypeTyListAST> &TypeDecAST::getType() const {
-    return type;
-}
-
-
-// NameTyAST----------------------------------
-
-NameTyAST::NameTyAST(Tiger::location loc, const string &name) : TyAST(loc, NAME_TYPE), name(name) {}
-
-const string &NameTyAST::getName() const {
-    return name;
-}
-
-
-// RecordTyAST--------------------------------
-
-RecordTyAST::RecordTyAST(Tiger::location loc, const shared_ptr<FieldListAST> &record) : TyAST(loc, RECORD_TYPE), record(record) {}
-
-const shared_ptr<FieldListAST> &RecordTyAST::getRecord() const {
-    return record;
-}
-
-
-// ArrayTyAST---------------------------------
-
-ArrayTyAST::ArrayTyAST(Tiger::location loc, const string &array) : TyAST(loc, ARRAY_TYPE), array(array) {}
-
-const string &ArrayTyAST::getArray() const {
-    return array;
-}
+    const string &ArrayTy::getArray() const
+    {
+        return array;
+    }
 
 
 // Function used in parser(bison)
 
-shared_ptr<VarAST> MakeSimpleVarAST(Tiger::location loc, string &sym) {
-    return make_shared<SimpleVarAST>(loc, sym);
+    shared_ptr<Var> MakeSimpleVar(Tiger::location loc, string &sym)
+    {
+        return make_shared<SimpleVar>(loc, sym);
+    }
+
+    shared_ptr<Var> MakeFieldVar(Tiger::location loc, shared_ptr<Var> var, string &sym)
+    {
+        return make_shared<FieldVar>(loc, var, sym);
+    }
+
+    shared_ptr<Var> MakeSubscriptVar(Tiger::location loc, shared_ptr<Var> var, shared_ptr<Exp> exp)
+    {
+        return make_shared<SubscriptVar>(loc, var, exp);
+    }
+
+    shared_ptr<Exp> MakeVarExp(Tiger::location loc, shared_ptr<Var> sym)
+    {
+        return make_shared<VarExp>(loc, sym);
+    }
+
+    shared_ptr<Exp> MakeNilExp(Tiger::location loc)
+    {
+        return make_shared<NilExp>(loc);
+    }
+
+    shared_ptr<Exp> MakeIntExp(Tiger::location loc, int i)
+    {
+        return make_shared<IntExp>(loc, i);
+    }
+
+    shared_ptr<Exp> MakeStringExp(Tiger::location loc, string &s)
+    {
+        return make_shared<StringExp>(loc, s);
+    }
+
+    shared_ptr<Exp> MakeCallExp(Tiger::location loc, string &func, shared_ptr<ExpList> args)
+    {
+        return make_shared<CallExp>(loc, func, args);
+    }
+
+    shared_ptr<Exp> MakeOpExp(Tiger::location loc, Operator oper, shared_ptr<Exp> left, shared_ptr<Exp> right)
+    {
+        return make_shared<OpExp>(loc, oper, left, right);
+    }
+
+    shared_ptr<Exp> MakeRecordExp(Tiger::location loc, string &typ, shared_ptr<EFieldList> fields)
+    {
+        return make_shared<RecordExp>(loc, typ, fields);
+    }
+
+    shared_ptr<Exp> MakeSeqExp(Tiger::location loc, shared_ptr<ExpList> seq)
+    {
+        return make_shared<SeqExp>(loc, seq);
+    }
+
+    shared_ptr<Exp> MakeAssignExp(Tiger::location loc, shared_ptr<Var> var, shared_ptr<Exp> exp)
+    {
+        return make_shared<AssignExp>(loc, var, exp);
+    }
+
+    shared_ptr<Exp> MakeIfExp(Tiger::location loc, shared_ptr<Exp> test, shared_ptr<Exp> then, shared_ptr<Exp> elsee)
+    {
+        return make_shared<IfExp>(loc, test, then, elsee);
+    }
+
+    shared_ptr<Exp> MakeWhileExp(Tiger::location loc, shared_ptr<Exp> test, shared_ptr<Exp> body)
+    {
+        return make_shared<WhileExp>(loc, test, body);
+    }
+
+    shared_ptr<Exp>
+    MakeForExp(Tiger::location loc, string &var, shared_ptr<Exp> lo, shared_ptr<Exp> hi, shared_ptr<Exp> body)
+    {
+        return make_shared<ForExp>(loc, var, lo, hi, body, true);
+    }
+
+    shared_ptr<Exp> MakeBreakExp(Tiger::location loc)
+    {
+        return make_shared<BreakExp>(loc);
+    }
+
+    shared_ptr<Exp> MakeLetExp(Tiger::location loc, shared_ptr<DecList> decs, shared_ptr<Exp> body)
+    {
+        return make_shared<LetExp>(loc, decs, body);
+    }
+
+    shared_ptr<Exp> MakeArrayExp(Tiger::location loc, string &typ, shared_ptr<Exp> size, shared_ptr<Exp> init)
+    {
+        return make_shared<ArrayExp>(loc, typ, size, init);
+    }
+
+    shared_ptr<Dec> MakeFunctionDec(Tiger::location loc, shared_ptr<FunDecList> function)
+    {
+        return make_shared<FunctionDec>(loc, function);
+    }
+
+    shared_ptr<Dec> MakeVarDec(Tiger::location loc, const string &var, const string &typ, shared_ptr<Exp> init)
+    {
+        return make_shared<VarDec>(loc, var, typ, init, true);
+    }
+
+    shared_ptr<Dec> MakeTypeDec(Tiger::location loc, shared_ptr<TypeTyList> type)
+    {
+        return make_shared<TypeDec>(loc, type);
+    }
+
+    shared_ptr<Ty> MakeNameTy(Tiger::location loc, string &name)
+    {
+        return make_shared<NameTy>(loc, name);
+    }
+
+    shared_ptr<Ty> MakeRecordTy(Tiger::location loc, shared_ptr<FieldList> record)
+    {
+        return make_shared<RecordTy>(loc, record);
+    }
+
+    shared_ptr<Ty> MakeArrayTy(Tiger::location loc, string &array)
+    {
+        return make_shared<ArrayTy>(loc, array);
+    }
+
+    shared_ptr<Field> MakeField(Tiger::location loc, string &name, string &typ)
+    {
+        return make_shared<Field>(loc, name, typ, true);
+    }
+
+    shared_ptr<FieldList> MakeFieldList(shared_ptr<Field> head, shared_ptr<FieldList> tail)
+    {
+        if (tail == nullptr)
+            tail = make_shared<FieldList>();
+        tail->push_front(head);
+        return tail;
+    }
+
+    shared_ptr<ExpList> MakeExpList(shared_ptr<Exp> head, shared_ptr<ExpList> tail)
+    {
+        if (tail == nullptr)
+            tail = make_shared<ExpList>();
+        tail->push_front(head);
+        return tail;
+    }
+
+    shared_ptr<FunDec>
+    MakeFunDec(Tiger::location loc, string &name, string &result, shared_ptr<FieldList> params, shared_ptr<Exp> body)
+    {
+        return make_shared<FunDec>(loc, name, result, params, body);
+    }
+
+    shared_ptr<FunDecList> MakeFunDecList(shared_ptr<FunDec> head, shared_ptr<FunDecList> tail)
+    {
+        if (tail == nullptr)
+            tail = make_shared<FunDecList>();
+        tail->push_front(head);
+        return tail;
+    }
+
+    shared_ptr<DecList> MakeDecList(shared_ptr<Dec> head, shared_ptr<DecList> tail)
+    {
+        if (tail == nullptr)
+            tail = make_shared<DecList>();
+        tail->push_front(head);
+        return tail;
+    }
+
+
+    shared_ptr<TypeTy> MakeTypeTy(string &name, shared_ptr<Ty> ty)
+    {
+        return make_shared<TypeTy>(name, ty);
+    }
+
+    shared_ptr<TypeTyList> MakeTypeTyList(shared_ptr<TypeTy> head, shared_ptr<TypeTyList> tail)
+    {
+        if (tail == nullptr)
+            tail = make_shared<TypeTyList>();
+        tail->push_front(head);
+        return tail;
+    }
+
+    shared_ptr<EField> MakeEField(string &name, shared_ptr<Exp> exp)
+    {
+        return make_shared<EField>(name, exp);
+    }
+
+    shared_ptr<EFieldList> MakeEFieldList(shared_ptr<EField> head, shared_ptr<EFieldList> tail)
+    {
+        if (tail == nullptr)
+            tail = make_shared<EFieldList>();
+        tail->push_front(head);
+        return tail;
+    }
+
+
 }
-
-shared_ptr<VarAST> MakeFieldVarAST(Tiger::location loc, shared_ptr<VarAST> var, string &sym) {
-    return make_shared<FieldVarAST>(loc, var, sym);
-}
-
-shared_ptr<VarAST> MakeSubscriptVarAST(Tiger::location loc, shared_ptr<VarAST> var, shared_ptr<ExpAST> exp) {
-    return make_shared<SubscriptVarAST>(loc, var, exp);
-}
-
-shared_ptr<ExpAST> MakeVarExpAST(Tiger::location loc, shared_ptr<VarAST> sym) {
-    return make_shared<VarExpAST>(loc, sym);
-}
-
-shared_ptr<ExpAST> MakeNilExpAST(Tiger::location loc) {
-    return make_shared<NilExpAST>(loc);
-}
-
-shared_ptr<ExpAST> MakeIntExpAST(Tiger::location loc, int i) {
-    return make_shared<IntExpAST>(loc, i);
-}
-
-shared_ptr<ExpAST> MakeStringExpAST(Tiger::location loc, string &s) {
-    return make_shared<StringExpAST>(loc, s);
-}
-
-shared_ptr<ExpAST> MakeCallExpAST(Tiger::location loc, string &func, shared_ptr<ExpListAST> args) {
-    return make_shared<CallExpAST>(loc, func, args);
-}
-
-shared_ptr<ExpAST> MakeOpExpAST(Tiger::location loc, Operator oper, shared_ptr<ExpAST> left, shared_ptr<ExpAST> right) {
-    return make_shared<OpExpAST>(loc, oper, left, right);
-}
-
-shared_ptr<ExpAST> MakeRecordExpAST(Tiger::location loc, string &typ, shared_ptr<EFieldListAST> fields) {
-    return make_shared<RecordExpAST>(loc, typ, fields);
-}
-
-shared_ptr<ExpAST> MakeSeqExpAST(Tiger::location loc, shared_ptr<ExpListAST> seq) {
-    return make_shared<SeqExpAST>(loc, seq);
-}
-
-shared_ptr<ExpAST> MakeAssignExpAST(Tiger::location loc, shared_ptr<VarAST> var, shared_ptr<ExpAST> exp) {
-    return make_shared<AssignExpAST>(loc, var, exp);
-}
-
-shared_ptr<ExpAST> MakeIfExpAST(Tiger::location loc, shared_ptr<ExpAST> test, shared_ptr<ExpAST> then, shared_ptr<ExpAST> elsee) {
-    return make_shared<IfExpAST>(loc, test, then, elsee);
-}
-
-shared_ptr<ExpAST> MakeWhileExpAST(Tiger::location loc, shared_ptr<ExpAST> test, shared_ptr<ExpAST> body) {
-    return make_shared<WhileExpAST>(loc, test, body);
-}
-
-shared_ptr<ExpAST>
-MakeForExpAST(Tiger::location loc, string &var, shared_ptr<ExpAST> lo, shared_ptr<ExpAST> hi, shared_ptr<ExpAST> body) {
-    return make_shared<ForExpAST>(loc, var, lo, hi, body, true);
-}
-
-shared_ptr<ExpAST> MakeBreakExpAST(Tiger::location loc) {
-    return make_shared<BreakExpAST>(loc);
-}
-
-shared_ptr<ExpAST> MakeLetExpAST(Tiger::location loc, shared_ptr<DecListAST> decs, shared_ptr<ExpAST> body) {
-    return make_shared<LetExpAST>(loc, decs, body);
-}
-
-shared_ptr<ExpAST> MakeArrayExpAST(Tiger::location loc, string &typ, shared_ptr<ExpAST> size, shared_ptr<ExpAST> init) {
-    return make_shared<ArrayExpAST>(loc, typ, size, init);
-}
-
-shared_ptr<DecAST> MakeFunctionDecAST(Tiger::location loc, shared_ptr<FunDecListAST> function) {
-    return make_shared<FunctionDecAST>(loc, function);
-}
-
-shared_ptr<DecAST> MakeVarDecAST(Tiger::location loc, const string &var, const string &typ, shared_ptr<ExpAST> init)
-{
-    return make_shared<VarDecAST>(loc, var, typ, init, true);
-}
-
-shared_ptr<DecAST> MakeTypeDecAST(Tiger::location loc, shared_ptr<TypeTyListAST> type) {
-    return make_shared<TypeDecAST>(loc, type);
-}
-
-shared_ptr<TyAST> MakeNameTyAST(Tiger::location loc, string &name) {
-    return make_shared<NameTyAST>(loc, name);
-}
-
-shared_ptr<TyAST> MakeRecordTyAST(Tiger::location loc, shared_ptr<FieldListAST> record) {
-    return make_shared<RecordTyAST>(loc, record);
-}
-
-shared_ptr<TyAST> MakeArrayTyAST(Tiger::location loc, string &array) {
-    return make_shared<ArrayTyAST>(loc, array);
-}
-
-shared_ptr<FieldAST> MakeFieldAST(Tiger::location loc, string &name, string &typ) {
-    return make_shared<FieldAST>(loc, name, typ, true);
-}
-
-shared_ptr<FieldListAST> MakeFieldListAST(shared_ptr<FieldAST> head, shared_ptr<FieldListAST> tail) {
-    if (tail == nullptr)
-        tail = make_shared<FieldListAST>();
-    tail->push_front(head);
-    return tail;
-}
-
-shared_ptr<ExpListAST> MakeExpListAST(shared_ptr<ExpAST> head, shared_ptr<ExpListAST> tail) {
-    if (tail == nullptr)
-        tail = make_shared<ExpListAST>();
-    tail->push_front(head);
-    return tail;
-}
-
-shared_ptr<FunDecAST>
-MakeFunDecAST(Tiger::location loc, string &name, string &result, shared_ptr<FieldListAST> params, shared_ptr<ExpAST> body) {
-    return make_shared<FunDecAST>(loc, name, result, params, body);
-}
-
-shared_ptr<FunDecListAST> MakeFunDecListAST(shared_ptr<FunDecAST> head, shared_ptr<FunDecListAST> tail) {
-    if (tail == nullptr)
-        tail = make_shared<FunDecListAST>();
-    tail->push_front(head);
-    return tail;
-}
-
-shared_ptr<DecListAST> MakeDecListAST(shared_ptr<DecAST> head, shared_ptr<DecListAST> tail) {
-    if (tail == nullptr)
-        tail = make_shared<DecListAST>();
-    tail->push_front(head);
-    return tail;
-}
-
-
-shared_ptr<TypeTyAST> MakeTypeTyAST(string &name, shared_ptr<TyAST> ty) {
-   return make_shared<TypeTyAST>(name, ty);
-}
-
-shared_ptr<TypeTyListAST> MakeTypeTyListAST(shared_ptr<TypeTyAST> head, shared_ptr<TypeTyListAST> tail) {
-    if (tail == nullptr)
-        tail = make_shared<TypeTyListAST>();
-    tail->push_front(head);
-    return tail;
-}
-
-shared_ptr<EFieldAST> MakeEFieldAST(string &name, shared_ptr<ExpAST> exp) {
-    return make_shared<EFieldAST>(name, exp);
-}
-
-shared_ptr<EFieldListAST> MakeEFieldListAST(shared_ptr<EFieldAST> head, shared_ptr<EFieldListAST> tail) {
-    if (tail == nullptr)
-        tail = make_shared<EFieldListAST>();
-    tail->push_front(head);
-    return tail;
-}
-
-

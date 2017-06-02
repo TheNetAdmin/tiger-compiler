@@ -27,7 +27,8 @@
 %code
 {
     #include "driver.h"
-    shared_ptr<ExpAST> absyn_root;
+    shared_ptr<AST::Exp> absyn_root;
+    using namespace AST;
 }
 
 %token ENDFILE 0 "END OF FILE"
@@ -53,17 +54,17 @@
   BREAK NIL
   FUNCTION VAR TYPE 
 
-%type <shared_ptr<ExpAST>> exp program funcall seq record array
-%type <shared_ptr<VarAST>> lvalue
-%type <shared_ptr<DecListAST>> decs
-%type <shared_ptr<DecAST>> dec tydecs fundecs vardec
-%type <shared_ptr<FunDecAST>> fundec
-%type <shared_ptr<TypeTyAST>> tydec
-%type <shared_ptr<ExpListAST>> explist args
+%type <shared_ptr<AST::Exp>> exp program funcall seq record array
+%type <shared_ptr<AST::Var>> lvalue
+%type <shared_ptr<AST::DecList>> decs
+%type <shared_ptr<AST::Dec>> dec tydecs fundecs vardec
+%type <shared_ptr<AST::FunDec>> fundec
+%type <shared_ptr<AST::TypeTy>> tydec
+%type <shared_ptr<AST::ExpList>> explist args
 %type <string> id
-%type <shared_ptr<EFieldListAST>> refields
-%type <shared_ptr<TyAST>> ty
-%type <shared_ptr<FieldListAST>> typefields
+%type <shared_ptr<AST::EFieldList>> refields
+%type <shared_ptr<AST::Ty>> ty
+%type <shared_ptr<AST::FieldList>> typefields
 /* et cetera */
 
 %start program
@@ -72,88 +73,88 @@
 
 program:  exp {absyn_root = $1; driver.result = absyn_root;}
 
-exp: lvalue {$$ = MakeVarExpAST(@$, $1);}
+exp: lvalue {$$ = MakeVarExp(@$, $1);}
    | funcall {$$ = $1;}
-   | lvalue ASSIGN exp {$$ = MakeAssignExpAST(@$, $1, $3);} 
-   | NIL {$$ = MakeNilExpAST(@$);}
+   | lvalue ASSIGN exp {$$ = MakeAssignExp(@$, $1, $3);}
+   | NIL {$$ = MakeNilExp(@$);}
    | seq {$$ = $1;}
-   | INT {$$ = MakeIntExpAST(@$, $1);}
-   | STRING {$$ = MakeStringExpAST(@$, $1);}
-   | LET decs IN explist END {$$ = MakeLetExpAST(@$, $2, MakeSeqExpAST(@$, $4));}
-   | IF exp THEN exp ELSE exp {$$ = MakeIfExpAST(@$, $2, $4, $6);}
-   | IF exp THEN exp {$$ = MakeIfExpAST(@$, $2, $4, nullptr);}
-   | exp PLUS exp {$$ = MakeOpExpAST(@$, PLUSOP, $1, $3);} 
-   | exp MINUS exp {$$ = MakeOpExpAST(@$, MINUSOP, $1, $3);} 
-   | exp TIMES exp {$$ = MakeOpExpAST(@$, TIMESOP, $1, $3);}
-   | exp DIVIDE exp {$$ = MakeOpExpAST(@$, DIVIDEOP, $1, $3);}
-   | exp EQ exp {$$ = MakeOpExpAST(@$, EQOP, $1, $3);}
-   | MINUS exp %prec UMINUS {$$ = MakeOpExpAST(@$, MINUSOP, MakeIntExpAST(@$, 0), $2);}
-   | exp NEQ exp {$$ = MakeOpExpAST(@$, NEQOP, $1, $3);}
-   | exp GT exp {$$ = MakeOpExpAST(@$, GTOP, $1, $3);}
-   | exp LT exp {$$ = MakeOpExpAST(@$, LTOP, $1, $3);}
-   | exp GE exp {$$ = MakeOpExpAST(@$, GEOP, $1, $3);}
-   | exp LE exp {$$ = MakeOpExpAST(@$, LEOP, $1, $3);}
-   | exp AND exp {$$ = MakeIfExpAST(@$, $1, $3, MakeIntExpAST(@$, 0));}
-   | exp OR exp {$$ = MakeIfExpAST(@$, $1, MakeIntExpAST(@$,1), $3);}
+   | INT {$$ = MakeIntExp(@$, $1);}
+   | STRING {$$ = MakeStringExp(@$, $1);}
+   | LET decs IN explist END {$$ = MakeLetExp(@$, $2, MakeSeqExp(@$, $4));}
+   | IF exp THEN exp ELSE exp {$$ = MakeIfExp(@$, $2, $4, $6);}
+   | IF exp THEN exp {$$ = MakeIfExp(@$, $2, $4, nullptr);}
+   | exp PLUS exp {$$ = MakeOpExp(@$, PLUSOP, $1, $3);} 
+   | exp MINUS exp {$$ = MakeOpExp(@$, MINUSOP, $1, $3);} 
+   | exp TIMES exp {$$ = MakeOpExp(@$, TIMESOP, $1, $3);}
+   | exp DIVIDE exp {$$ = MakeOpExp(@$, DIVIDEOP, $1, $3);}
+   | exp EQ exp {$$ = MakeOpExp(@$, EQOP, $1, $3);}
+   | MINUS exp %prec UMINUS {$$ = MakeOpExp(@$, MINUSOP, MakeIntExp(@$, 0), $2);}
+   | exp NEQ exp {$$ = MakeOpExp(@$, NEQOP, $1, $3);}
+   | exp GT exp {$$ = MakeOpExp(@$, GTOP, $1, $3);}
+   | exp LT exp {$$ = MakeOpExp(@$, LTOP, $1, $3);}
+   | exp GE exp {$$ = MakeOpExp(@$, GEOP, $1, $3);}
+   | exp LE exp {$$ = MakeOpExp(@$, LEOP, $1, $3);}
+   | exp AND exp {$$ = MakeIfExp(@$, $1, $3, MakeIntExp(@$, 0));}
+   | exp OR exp {$$ = MakeIfExp(@$, $1, MakeIntExp(@$,1), $3);}
    | record {$$ = $1;}
    | array {$$ = $1;}
-   | WHILE exp DO exp {$$ = MakeWhileExpAST(@$, $2, $4);} 
-   | FOR id ASSIGN exp TO exp DO exp {$$ = MakeForExpAST(@$, $2, $4, $6, $8);}
-   | BREAK {$$ = MakeBreakExpAST(@$);} 
+   | WHILE exp DO exp {$$ = MakeWhileExp(@$, $2, $4);}
+   | FOR id ASSIGN exp TO exp DO exp {$$ = MakeForExp(@$, $2, $4, $6, $8);}
+   | BREAK {$$ = MakeBreakExp(@$);}
 
-seq: LPAREN explist RPAREN {$$ = MakeSeqExpAST(@$, $2);} 
+seq: LPAREN explist RPAREN {$$ = MakeSeqExp(@$, $2);}
 
-record: id LBRACE refields RBRACE {$$ = MakeRecordExpAST(@$, $1, $3);}
+record: id LBRACE refields RBRACE {$$ = MakeRecordExp(@$, $1, $3);}
 
-refields: id EQ exp COMMA refields {$$ = MakeEFieldListAST(MakeEFieldAST($1, $3), $5);}
-        | id EQ exp {$$ = MakeEFieldListAST(MakeEFieldAST($1, $3), nullptr);}
+refields: id EQ exp COMMA refields {$$ = MakeEFieldList(MakeEField($1, $3), $5);}
+        | id EQ exp {$$ = MakeEFieldList(MakeEField($1, $3), nullptr);}
         | {$$ = nullptr;}
 
-array: id LBRACK exp RBRACK OF exp {$$ = MakeArrayExpAST(@$, $1, $3, $6);} 
+array: id LBRACK exp RBRACK OF exp {$$ = MakeArrayExp(@$, $1, $3, $6);}
 
 
-decs: dec decs {$$ = MakeDecListAST($1, $2);}
+decs: dec decs {$$ = MakeDecList($1, $2);}
     | {$$ = nullptr;} 
 
 dec: tydecs {$$ = $1;}
    | vardec {$$ = $1;}
    | fundecs {$$ = $1;}
 
-tydecs: tydec tydecs {$$ = MakeTypeDecAST(@$, MakeTypeTyListAST($1, dynamic_pointer_cast<TypeDecAST>($2)->getType()));}
-      | tydec {$$ = MakeTypeDecAST(@$, MakeTypeTyListAST($1, nullptr));}
+tydecs: tydec tydecs {$$ = MakeTypeDec(@$, MakeTypeTyList($1, dynamic_pointer_cast<TypeDec>($2)->getType()));}
+      | tydec {$$ = MakeTypeDec(@$, MakeTypeTyList($1, nullptr));}
    
-tydec: TYPE id EQ ty {$$ = MakeTypeTyAST($2, $4);}
+tydec: TYPE id EQ ty {$$ = MakeTypeTy($2, $4);}
 
-ty:	id {$$ = MakeNameTyAST(@$, $1);} 
-  | LBRACE typefields RBRACE {$$ = MakeRecordTyAST(@$, $2);}
-  | ARRAY OF id {$$ = MakeArrayTyAST(@$, $3);}
+ty:	id {$$ = MakeNameTy(@$, $1);}
+  | LBRACE typefields RBRACE {$$ = MakeRecordTy(@$, $2);}
+  | ARRAY OF id {$$ = MakeArrayTy(@$, $3);}
 
-typefields: id COLON id COMMA typefields {$$ = MakeFieldListAST(MakeFieldAST(@$, $1, $3), $5);}
-          | id COLON id {$$ = MakeFieldListAST(MakeFieldAST(@$, $1, $3), nullptr);}
+typefields: id COLON id COMMA typefields {$$ = MakeFieldList(MakeField(@$, $1, $3), $5);}
+          | id COLON id {$$ = MakeFieldList(MakeField(@$, $1, $3), nullptr);}
 		  | {$$ = nullptr;}
 
-vardec: VAR id ASSIGN exp {string s = "DEBUG"; $$ = MakeVarDecAST(@$, $2, s, $4);} 
-      | VAR id COLON id ASSIGN exp {$$ = MakeVarDecAST(@$, $2, $4, $6);}
+vardec: VAR id ASSIGN exp {string s = "DEBUG"; $$ = MakeVarDec(@$, $2, s, $4);} 
+      | VAR id COLON id ASSIGN exp {$$ = MakeVarDec(@$, $2, $4, $6);}
 
-fundecs: fundec fundecs {$$ = MakeFunctionDecAST(@$, MakeFunDecListAST($1, dynamic_pointer_cast<FunctionDecAST>($2)->getFunction()));}
-	   | fundec {$$ = MakeFunctionDecAST(@$, MakeFunDecListAST($1, nullptr));}
+fundecs: fundec fundecs {$$ = MakeFunctionDec(@$, MakeFunDecList($1, dynamic_pointer_cast<FunctionDec>($2)->getFunction()));}
+	   | fundec {$$ = MakeFunctionDec(@$, MakeFunDecList($1, nullptr));}
 
-fundec: FUNCTION id LPAREN typefields RPAREN EQ exp {string v = "void"; $$ = MakeFunDecAST(@$, $2, v, $4, $7);}
-      | FUNCTION id LPAREN typefields RPAREN COLON id EQ exp {$$ = MakeFunDecAST(@$, $2, $7, $4, $9);}
+fundec: FUNCTION id LPAREN typefields RPAREN EQ exp {string v = "void"; $$ = MakeFunDec(@$, $2, v, $4, $7);}
+      | FUNCTION id LPAREN typefields RPAREN COLON id EQ exp {$$ = MakeFunDec(@$, $2, $7, $4, $9);}
 
-explist: exp SEMICOLON explist {$$ = MakeExpListAST($1, $3);}
-	   | exp {$$ = MakeExpListAST($1, nullptr);}
+explist: exp SEMICOLON explist {$$ = MakeExpList($1, $3);}
+	   | exp {$$ = MakeExpList($1, nullptr);}
 	   | {$$ = nullptr;}
 
-lvalue: id {$$ = MakeSimpleVarAST(@$, $1);}	
-      | lvalue DOT id {$$ = MakeFieldVarAST(@$, $1, $3);}
-	  | id LBRACK exp RBRACK {$$ = MakeSubscriptVarAST(@$, MakeSimpleVarAST(@$, $1), $3);}
-	  | lvalue LBRACK exp RBRACK {$$ = MakeSubscriptVarAST(@$, $1, $3);}
+lvalue: id {$$ = MakeSimpleVar(@$, $1);}	
+      | lvalue DOT id {$$ = MakeFieldVar(@$, $1, $3);}
+	  | id LBRACK exp RBRACK {$$ = MakeSubscriptVar(@$, MakeSimpleVar(@$, $1), $3);}
+	  | lvalue LBRACK exp RBRACK {$$ = MakeSubscriptVar(@$, $1, $3);}
 
-funcall: id LPAREN args RPAREN {$$ = MakeCallExpAST(@$, $1, $3);} 
+funcall: id LPAREN args RPAREN {$$ = MakeCallExp(@$, $1, $3);}
 
-args: exp COMMA args {$$ = MakeExpListAST($1, $3);}
-    | exp {$$ = MakeExpListAST($1, nullptr);}
+args: exp COMMA args {$$ = MakeExpList($1, $3);}
+    | exp {$$ = MakeExpList($1, nullptr);}
 	| {$$ = nullptr;}
 
 id: ID {$$ =$1;}
