@@ -5,6 +5,7 @@
 #include "parser.h"
 #include "location.hh"
 #include "position.hh"
+#include "absyntree.h"
 
 #define YY_DECL \
     Tiger::Parser::symbol_type yylex(Tiger::Driver &driver)
@@ -18,6 +19,7 @@ class Driver
     bool trace_parsing;
     bool trace_scanning;
     std::string filename;
+    shared_ptr<ExpAST> result;
     Driver();
     virtual ~Driver();
     void scan_begin();

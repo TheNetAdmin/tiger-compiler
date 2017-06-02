@@ -60,8 +60,8 @@ namespace Type{
 
     Array::Array(const std::shared_ptr <Type> &array) : array(array) {}
 
-    void Array::setArray(const std::shared_ptr <Type> &array)
-    { Array::array = array; }
+    void Array::setArray(const std::shared_ptr<Type> array)
+    { this->array = array; }
 
     Name::Name(const std::string &name, const std::shared_ptr <Type> &type)
             : name(name), type(type) {}

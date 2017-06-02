@@ -699,7 +699,7 @@ namespace Tiger {
             {
   case 2:
 #line 73 "src/bison/parser.yy" // lalr1.cc:859
-    {absyn_root = yystack_[0].value.as< shared_ptr<ExpAST> > ();}
+    {absyn_root = yystack_[0].value.as< shared_ptr<ExpAST> > (); driver.result = absyn_root;}
 #line 704 "src/parser.cpp" // lalr1.cc:859
     break;
 

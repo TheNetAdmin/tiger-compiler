@@ -4,6 +4,7 @@
 
 #include "Env.h"
 #include "Types.h"
+#include "Debug.h"
 
 namespace Env{
 
@@ -104,6 +105,8 @@ namespace Env{
         {
             if (r_iter->name == name)
             {
+                debugStart(r_iter->name);
+                std::cout << r_iter->type << std::endl;
                 return std::make_shared<VarEntry>(*r_iter);
             }
         }

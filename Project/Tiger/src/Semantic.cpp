@@ -5,6 +5,7 @@
 #include "Semantic.h"
 #include "Error.h"
 #include "Types.h"
+#include "Debug.h"
 
 namespace Semantic
 {
@@ -27,6 +28,7 @@ namespace Semantic
     {
         //DEBUG
         cout << "Trans Var" << endl;
+        cout << var->getClassType() << endl;
         switch (var->getClassType())
         {
             // TODO: construct result in each case
@@ -109,6 +111,7 @@ namespace Semantic
     {
         // DEBUG
         cout << "Trans Exp" << endl;
+        cout << exp->getClassType() << endl;
         auto defaultLoc = exp->getLoc();
         switch (exp->getClassType())
         {
@@ -425,6 +428,7 @@ namespace Semantic
     {
         // DEBUG
         cout << "Trans Dec" << endl;
+        cout << dec->getClassType() << endl;
         auto defaultLoc = dec->getLoc();
         switch (dec->getClassType())
         {
@@ -592,10 +596,12 @@ namespace Semantic
     {
         // DEBUG
         cout << "Trans Ty" << endl;
+        cout << ty->getClassType() << endl;
         switch (ty->getClassType())
         {
             case NAME_TYPE:
             {
+                debugStart("Name type");
                 auto nameTy = dynamic_pointer_cast<NameTyAST>(ty);
                 try
                 {
@@ -611,6 +617,7 @@ namespace Semantic
                 break;
             case RECORD_TYPE:
             {
+                debugStart("Record type");
                 auto recordTy = dynamic_pointer_cast<RecordTyAST>(ty);
                 auto fields = recordTy->getRecord();
                 shared_ptr<Type::Record> record;
@@ -627,18 +634,24 @@ namespace Semantic
                         record->addField((*field)->getName(), Type::NIL);
                     }
 
+
                 }
+                debugEnd("Record type");
                 return record;
             }
                 break;
             case ARRAY_TYPE:
             {
+                debugStart("Array type");
                 auto arrayTy = dynamic_pointer_cast<ArrayTyAST>(ty);
                 shared_ptr<Type::Array> array;
                 try
                 {
                     auto t = venv.find(arrayTy->getArray());
+                    cout << arrayTy->getLoc() << endl;
+                    cout << t->getType() << endl;
                     array->setArray(t->getType());
+                    debugStart("Point");
                 }
                 catch (Env::EntryNotFound &e)
                 {
@@ -759,16 +772,16 @@ namespace Semantic
     ExpTy::ExpTy()
     {}
 
-    ExpTy::ExpTy(const shared_ptr <Translate::Exp> &exp, const shared_ptr <Type::Type> &type)
+    ExpTy::ExpTy(const shared_ptr<Translate::Exp> &exp, const shared_ptr<Type::Type> &type)
             : exp(exp), type(type)
     {}
 
-    void ExpTy::setExp(const shared_ptr <Translate::Exp> &exp)
+    void ExpTy::setExp(const shared_ptr<Translate::Exp> &exp)
     {
         this->exp = exp;
     }
 
-    void ExpTy::setType(const shared_ptr <Type::Type> &type)
+    void ExpTy::setType(const shared_ptr<Type::Type> &type)
     {
         this->type = type;
     }

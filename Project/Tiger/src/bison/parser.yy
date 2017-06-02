@@ -70,7 +70,7 @@
 
 %%
 
-program:  exp {absyn_root = $1;}
+program:  exp {absyn_root = $1; driver.result = absyn_root;}
 
 exp: lvalue {$$ = MakeVarExpAST(@$, $1);}
    | funcall {$$ = $1;}

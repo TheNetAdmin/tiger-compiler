@@ -6,6 +6,8 @@
         "string": "cpp",
         "iostream": "cpp",
         "memory": "cpp",
-        "ios": "cpp"
+        "ios": "cpp",
+        "xlocale": "cpp",
+        "system_error": "cpp"
     }
 }

@@ -76,7 +76,7 @@ class Array : public Type {
 
     Array(const std::shared_ptr<Type> &array);
 
-    void setArray(const std::shared_ptr<Type> &array);
+    void setArray(const std::shared_ptr<Type> array);
 };
 
 class Name : public Type {

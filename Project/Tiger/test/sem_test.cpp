@@ -1,5 +1,6 @@
 #include <iostream>
 #include "../src/driver.h"
+#include "../src/Semantic.h"
 
 int main(int argc, char * argv[]){
     std::cout << "Tiger Compiler" << std::endl;
@@ -12,6 +13,8 @@ int main(int argc, char * argv[]){
         else{
             std::cout << "Openning file: " << argv[i] << std::endl;
             driver.parse(argv[i]);
+            auto result = driver.result;
+            Semantic::trasProg(result);
         }
     }
     return 0;

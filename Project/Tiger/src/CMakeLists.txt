@@ -14,6 +14,6 @@ set(SOURCE_FILES
         position.hh
         scanner.cpp
         stack.hh Semantic.h Semantic.cpp Semantic.h Types.cpp Types.h Translate.cpp Translate.h Env.cpp Env.h Error.cpp Error.h
-        sem_test.cpp)
+        Debug.cpp Debug.h)
 
 add_executable(src ${SOURCE_FILES})
