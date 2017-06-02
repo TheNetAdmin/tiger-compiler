@@ -65,6 +65,7 @@ namespace Env
                   const std::shared_ptr<Type::Type> &argType,
                   const std::shared_ptr<Type::Type> &resultType);
 
+        // TODO: use args==nullptr is invalid, replace with args->size() == 0
         // No argument
         // @name:       function name
         // @resultType: function return type

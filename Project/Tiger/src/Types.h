@@ -9,114 +9,129 @@
 #include <list>
 #include <memory>
 
-namespace Type {
+namespace Type
+{
 
-class EntryNotFound : public std::runtime_error {
-   public:
-    explicit EntryNotFound(const std::string &msg);
-};
+    class EntryNotFound : public std::runtime_error
+    {
+    public:
+        explicit EntryNotFound(const std::string &msg);
+    };
 
-class Type {
-   public:
-    Type();
+    class Type
+    {
+    public:
+        Type();
 
-    virtual ~Type();
-};
+        virtual ~Type();
+    };
 
-class Nil : public Type {
-   public:
-    Nil();
-};
+    class Nil : public Type
+    {
+    public:
+        Nil();
+    };
 
-class Int : public Type {
-   public:
-    Int();
-};
+    class Int : public Type
+    {
+    public:
+        Int();
+    };
 
-class String : public Type {
-   public:
-    String();
-};
+    class String : public Type
+    {
+    public:
+        String();
+    };
 
-class Void : public Type {
-   public:
-    Void();
-};
+    class Void : public Type
+    {
+    public:
+        Void();
+    };
 
-class Field {  // similar to Ty_field
-   public:
-    std::string name;
-    std::shared_ptr<Type> type;
+    class Field
+    {  // similar to Ty_field
+    public:
+        std::string name;
+        std::shared_ptr<Type> type;
 
-    Field(const std::string &name, const std::shared_ptr<Type> &type);
-};
+        Field(const std::string &name, const std::shared_ptr<Type> &type);
+    };
 
     using FieldList = std::list<std::shared_ptr<Field>>;
-class Record : public Type {
-   public:
-    // similar to Ty_fieldList record
-    std::shared_ptr<FieldList> fields;
 
-    Record();
+    class Record : public Type
+    {
+    public:
+        // similar to Ty_fieldList record
+        std::shared_ptr<FieldList> fields;
 
-    Record(std::initializer_list<std::shared_ptr<Field>> fields);
+        Record();
 
-    std::shared_ptr<Field> find(std::string name);
+        Record(std::initializer_list<std::shared_ptr<Field>> fields);
 
-    const std::shared_ptr<FieldList> getFields() const;
+        std::shared_ptr<Field> find(std::string name);
 
-    void addField(const std::string &name, const std::shared_ptr<Type> type);
-};
+        const std::shared_ptr<FieldList> getFields() const;
 
-class Array : public Type {
-   public:
-    std::shared_ptr<Type> array;
+        void addField(const std::string &name, const std::shared_ptr<Type> type);
+    };
 
-    Array();
+    class Array : public Type
+    {
+    public:
+        std::shared_ptr<Type> array;
 
-    Array(const std::shared_ptr<Type> &array);
+        Array();
 
-    void setArray(const std::shared_ptr<Type> array);
-};
+        Array(const std::shared_ptr<Type> &array);
 
-class Name : public Type {
-   public:
-    std::string name;
-    std::shared_ptr<Type> type;
+        void setArray(const std::shared_ptr<Type> &array);
+    };
 
-    Name(const std::string &name, const std::shared_ptr<Type> &type);
-};
+    class Name : public Type
+    {
+    public:
+        std::string name;
+        std::shared_ptr<Type> type;
+
+        Name();
+
+        Name(const std::string &name, const std::shared_ptr<Type> &type);
+    };
 
 // Default types
 
-namespace {
-// Make these static to save space
-std::shared_ptr<Nil> NIL;
-std::shared_ptr<Int> INT;
-std::shared_ptr<String> STRING;
-std::shared_ptr<Void> VOID;
-std::shared_ptr<Record> RECORD;
-std::shared_ptr<Array> ARRAY;
-}
+    namespace
+    {
+        // Make these static to save space
+        std::shared_ptr<Nil> NIL = std::make_shared<Nil>();
+        std::shared_ptr<Int> INT = std::make_shared<Int>();
+        std::shared_ptr<String> STRING = std::make_shared<String>();
+        std::shared_ptr<Void> VOID = std::make_shared<Void>();
+        std::shared_ptr<Record> RECORD = std::make_shared<Record>();
+        std::shared_ptr<Array> ARRAY = std::make_shared<Array>();
+    }
 
-bool isNil(const std::shared_ptr<Type> &t);
+    bool isNil(const std::shared_ptr<Type> &t);
 
-bool isInt(const std::shared_ptr<Type> &t);
+    bool isInt(const std::shared_ptr<Type> &t);
 
-bool isString(const std::shared_ptr<Type> &t);
+    bool isString(const std::shared_ptr<Type> &t);
 
-bool isVoid(const std::shared_ptr<Type> &t);
+    bool isVoid(const std::shared_ptr<Type> &t);
 
-bool isRecord(const std::shared_ptr<Type> &t);
+    bool isRecord(const std::shared_ptr<Type> &t);
 
-bool isArray(const std::shared_ptr<Type> &t);
+    bool isArray(const std::shared_ptr<Type> &t);
 
-bool isName(const std::shared_ptr<Type> &t);
+    bool isName(const std::shared_ptr<Type> &t);
 
-bool match(const std::shared_ptr<Type> &t1, const std::shared_ptr<Type> &t2);
+    bool match(const std::shared_ptr<Type> &t1, const std::shared_ptr<Type> &t2);
 
-// Get type name
-const std::string getName(const std::shared_ptr<Type> &t);
+    // Get type name
+    const std::string getName(const std::shared_ptr<Type> &t);
 };
 
 #endif  // SRC_TYPES_H

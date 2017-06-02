@@ -6,7 +6,8 @@
 #include "Types.h"
 #include "Debug.h"
 
-namespace Env{
+namespace Env
+{
 
     Entry::Entry()
     {
@@ -23,22 +24,24 @@ namespace Env{
     }
 
     VarEntry::VarEntry()
+            : type(std::make_shared<Type::Type>())
     {}
 
-    VarEntry::VarEntry(const std::string &name, const std::shared_ptr <Type::Type> &type)
+    VarEntry::VarEntry(const std::string &name, const std::shared_ptr<Type::Type> &type)
             : Entry(name), type(type)
     {}
 
-    std::shared_ptr <Type::Type> VarEntry::getType() const
+    std::shared_ptr<Type::Type> VarEntry::getType() const
     {
         return type;
     }
 
     FuncEntry::FuncEntry()
+            : args(std::make_shared<ArgList>()), result(std::make_shared<Type::Type>())
     {}
 
-    FuncEntry::FuncEntry(const std::string &name, const std::shared_ptr <Type::Type> &argType,
-                         const std::shared_ptr <Type::Type> &resultType)
+    FuncEntry::FuncEntry(const std::string &name, const std::shared_ptr<Type::Type> &argType,
+                         const std::shared_ptr<Type::Type> &resultType)
             : Entry(name), result(resultType)
     {
         ArgList arg;
@@ -46,27 +49,27 @@ namespace Env{
         args = std::make_shared<ArgList>(arg);
     }
 
-    FuncEntry::FuncEntry(const std::string &name, const std::shared_ptr <Type::Type> &result)
-            : Entry(name), result(result)
+    FuncEntry::FuncEntry(const std::string &name, const std::shared_ptr<Type::Type> &result)
+            : Entry(name), result(result), args(std::make_shared<ArgList>())
     {}
 
-    void FuncEntry::addArg(std::shared_ptr <Type::Type> arg)
+    void FuncEntry::addArg(std::shared_ptr<Type::Type> arg)
     {
         args->push_back(arg);
     }
 
-    const std::shared_ptr <ArgList> FuncEntry::getArgs() const
+    const std::shared_ptr<ArgList> FuncEntry::getArgs() const
     {
         return args;
     }
 
-    const std::shared_ptr <Type::Type> FuncEntry::getResultType() const
+    const std::shared_ptr<Type::Type> FuncEntry::getResultType() const
     {
         return result;
     }
 
-    FuncEntry::FuncEntry(const std::string &name, const std::initializer_list <std::shared_ptr<Type::Type>> &argTypes,
-                         const std::shared_ptr <Type::Type> &resultType)
+    FuncEntry::FuncEntry(const std::string &name, const std::initializer_list<std::shared_ptr<Type::Type>> &argTypes,
+                         const std::shared_ptr<Type::Type> &resultType)
             : Entry(name), result(resultType)
     {
         args = std::make_shared<ArgList>(argTypes);
@@ -98,15 +101,13 @@ namespace Env{
         bindList.push_back(entry);
     }
 
-    std::shared_ptr <VarEntry> VarEnv::find(const std::string &name)
+    std::shared_ptr<VarEntry> VarEnv::find(const std::string &name)
     {
         // TODO: refactor with std::find
         for (auto r_iter = bindList.crbegin(); r_iter != bindList.crend(); r_iter++)
         {
             if (r_iter->name == name)
             {
-                debugStart(r_iter->name);
-                std::cout << r_iter->type << std::endl;
                 return std::make_shared<VarEntry>(*r_iter);
             }
         }
@@ -167,7 +168,7 @@ namespace Env{
         this->bindList.push_back(entry);
     }
 
-    std::shared_ptr <FuncEntry> FuncEnv::find(const std::string &funcName)
+    std::shared_ptr<FuncEntry> FuncEnv::find(const std::string &funcName)
     {
         for (auto r_iter = bindList.crbegin(); r_iter != bindList.crend(); r_iter++)
         {

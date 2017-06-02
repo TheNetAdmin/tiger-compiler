@@ -13,7 +13,7 @@ namespace Semantic
     void trasProg(std::shared_ptr<ExpAST> exp)
     {
         //DEBUG
-        cout << "Trans Prog" << endl;
+        Debugger d("Trans prog");
         ExpTy expType;
         // create default environments
         Env::VarEnv venv;
@@ -24,11 +24,10 @@ namespace Semantic
         expType = transExp(venv, fenv, exp);
     }
 
-    ExpTy transVar(Env::VarEnv &venv, Env::FuncEnv &fenv, const shared_ptr<VarAST> var) noexcept(true)
+    ExpTy transVar(Env::VarEnv &venv, Env::FuncEnv &fenv, const shared_ptr<VarAST> &var) noexcept(true)
     {
         //DEBUG
-        cout << "Trans Var" << endl;
-        cout << var->getClassType() << endl;
+        Debugger d("Trans var");
         switch (var->getClassType())
         {
             // TODO: construct result in each case
@@ -110,8 +109,7 @@ namespace Semantic
     ExpTy transExp(Env::VarEnv &venv, Env::FuncEnv &fenv, shared_ptr<ExpAST> exp) noexcept(true)
     {
         // DEBUG
-        cout << "Trans Exp" << endl;
-        cout << exp->getClassType() << endl;
+        Debugger d("Trans exp");
         auto defaultLoc = exp->getLoc();
         switch (exp->getClassType())
         {
@@ -427,8 +425,7 @@ namespace Semantic
     void transDec(Env::VarEnv &venv, Env::FuncEnv &fenv, const shared_ptr<DecAST> dec)
     {
         // DEBUG
-        cout << "Trans Dec" << endl;
-        cout << dec->getClassType() << endl;
+        Debugger d("Trans dec");
         auto defaultLoc = dec->getLoc();
         switch (dec->getClassType())
         {
@@ -440,7 +437,7 @@ namespace Semantic
                 // Check var init
                 auto varInit = transExp(venv, fenv, varUsage->getInit());
                 // If type name is empty
-                shared_ptr<Type::Type> varType;
+                shared_ptr<Type::Type> varType = make_shared<Type::Type>();
                 if (0 != varUsage->getTyp().size())
                 {
                     try
@@ -485,7 +482,7 @@ namespace Semantic
                 {
                     // Check func return type
                     auto returnTypeName = (*f)->getResult();
-                    shared_ptr<Type::Type> returnType;
+                    shared_ptr<Type::Type> returnType = make_shared<Type::Type>();
                     if (returnTypeName.size() == 0)
                     {
                         returnType = Type::VOID;
@@ -507,7 +504,7 @@ namespace Semantic
                     auto args = (*f)->getParams();
                     for (auto arg = args->begin(); arg != args->end(); arg++)
                     {
-                        shared_ptr<Type::Type> argType;
+                        shared_ptr<Type::Type> argType = make_shared<Type::Type>();
                         try
                         {
                             // TODO: getTyp? getName?
@@ -534,7 +531,7 @@ namespace Semantic
                     for (auto arg = args->begin(); arg != args->end(); arg++)
                     {
                         auto argName = (*arg)->getName();
-                        shared_ptr<Type::Type> argType;
+                        shared_ptr<Type::Type> argType = make_shared<Type::Type>();
                         try
                         {
                             argType = venv.find(argName)->getType();
@@ -580,6 +577,7 @@ namespace Semantic
                 bool isCycle = true;
                 for (auto t = types->begin(); t != types->end(); t++)
                 {
+                    // TODO: wild pointer
                     shared_ptr<Type::Type> result = transTy(venv, (*t)->getTy());
                 }
                 break;
@@ -595,13 +593,10 @@ namespace Semantic
     shared_ptr<Type::Type> transTy(Env::VarEnv &venv, const shared_ptr<TyAST> &ty)
     {
         // DEBUG
-        cout << "Trans Ty" << endl;
-        cout << ty->getClassType() << endl;
         switch (ty->getClassType())
         {
             case NAME_TYPE:
             {
-                debugStart("Name type");
                 auto nameTy = dynamic_pointer_cast<NameTyAST>(ty);
                 try
                 {
@@ -617,10 +612,9 @@ namespace Semantic
                 break;
             case RECORD_TYPE:
             {
-                debugStart("Record type");
                 auto recordTy = dynamic_pointer_cast<RecordTyAST>(ty);
                 auto fields = recordTy->getRecord();
-                shared_ptr<Type::Record> record;
+                shared_ptr<Type::Record> record  = make_shared<Type::Record>();
                 for (auto field = fields->begin(); field != fields->end(); field++)
                 {
                     try
@@ -636,22 +630,18 @@ namespace Semantic
 
 
                 }
-                debugEnd("Record type");
                 return record;
             }
                 break;
             case ARRAY_TYPE:
             {
-                debugStart("Array type");
+                shared_ptr<Type::Array> array = make_shared<Type::Array>();
                 auto arrayTy = dynamic_pointer_cast<ArrayTyAST>(ty);
-                shared_ptr<Type::Array> array;
                 try
                 {
                     auto t = venv.find(arrayTy->getArray());
-                    cout << arrayTy->getLoc() << endl;
-                    cout << t->getType() << endl;
-                    array->setArray(t->getType());
-                    debugStart("Point");
+                    auto type = t->getType();
+                    array->setArray(type);
                 }
                 catch (Env::EntryNotFound &e)
                 {

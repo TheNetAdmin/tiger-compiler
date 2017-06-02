@@ -125,7 +125,7 @@ namespace Semantic
 
     ExpTy transExp(Env::VarEnv &venv, Env::FuncEnv &fenv, shared_ptr<ExpAST> exp) noexcept(true);
 
-    ExpTy transVar(Env::VarEnv &venv, Env::FuncEnv &fenv, const shared_ptr<VarAST> var) noexcept(true);
+    ExpTy transVar(Env::VarEnv &venv, Env::FuncEnv &fenv, const shared_ptr<VarAST> &var) noexcept(true);
 
 
     void checkCallArgs(Env::VarEnv &venv, Env::FuncEnv &fenv,

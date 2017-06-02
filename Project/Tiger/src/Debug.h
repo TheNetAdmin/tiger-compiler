@@ -8,4 +8,13 @@
 
 void debugStart(const std::string &  msg);
 void debugEnd(const std::string & msg);
+
+class Debugger {
+public:
+    std::string name;
+
+    Debugger(const std::string &name);
+
+    virtual ~Debugger();
+};
 #endif //SRC_DEBUG_H
