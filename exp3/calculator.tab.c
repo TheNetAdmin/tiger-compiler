@@ -67,7 +67,7 @@
 #define YYSTYPE double
 #include <stdio.h>
 #include <math.h>
-#include <ctype.h>/*What for?*/
+#include <ctype.h>
 
 #line 73 "calculator.tab.c" /* yacc.c:339  */
 
@@ -1501,6 +1501,7 @@ int yyerror(char * msg)
 int yylex()
 {
     int c;
+    // Remove white spaces
     while((c=getchar()) == ' ' || c == '\t');
     if(c == '.' || isdigit(c))
     {
