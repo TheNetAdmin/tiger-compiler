@@ -4,12 +4,15 @@
 
 #include "Semantic.h"
 #include "Error.h"
+#include "Types.h"
 
 namespace Semantic
 {
 
     void trasProg(std::shared_ptr<ExpAST> exp)
     {
+        //DEBUG
+        cout << "Trans Prog" << endl;
         ExpTy expType;
         // create default environments
         Env::VarEnv venv;
@@ -22,6 +25,8 @@ namespace Semantic
 
     ExpTy transVar(Env::VarEnv &venv, Env::FuncEnv &fenv, const shared_ptr<VarAST> var) noexcept(true)
     {
+        //DEBUG
+        cout << "Trans Var" << endl;
         switch (var->getClassType())
         {
             // TODO: construct result in each case
@@ -102,6 +107,8 @@ namespace Semantic
 
     ExpTy transExp(Env::VarEnv &venv, Env::FuncEnv &fenv, shared_ptr<ExpAST> exp) noexcept(true)
     {
+        // DEBUG
+        cout << "Trans Exp" << endl;
         auto defaultLoc = exp->getLoc();
         switch (exp->getClassType())
         {
@@ -416,6 +423,8 @@ namespace Semantic
 
     void transDec(Env::VarEnv &venv, Env::FuncEnv &fenv, const shared_ptr<DecAST> dec)
     {
+        // DEBUG
+        cout << "Trans Dec" << endl;
         auto defaultLoc = dec->getLoc();
         switch (dec->getClassType())
         {
@@ -581,6 +590,8 @@ namespace Semantic
 
     shared_ptr<Type::Type> transTy(Env::VarEnv &venv, const shared_ptr<TyAST> &ty)
     {
+        // DEBUG
+        cout << "Trans Ty" << endl;
         switch (ty->getClassType())
         {
             case NAME_TYPE:
@@ -745,4 +756,87 @@ namespace Semantic
         // Check pass
     }
 
+    ExpTy::ExpTy()
+    {}
+
+    ExpTy::ExpTy(const shared_ptr <Translate::Exp> &exp, const shared_ptr <Type::Type> &type)
+            : exp(exp), type(type)
+    {}
+
+    void ExpTy::setExp(const shared_ptr <Translate::Exp> &exp)
+    {
+        this->exp = exp;
+    }
+
+    void ExpTy::setType(const shared_ptr <Type::Type> &type)
+    {
+        this->type = type;
+    }
+
+    SemanticError::SemanticError(const Tiger::location &loc, const string &msg)
+            : std::runtime_error(msg), loc(loc)
+    {}
+
+    TypeError::TypeError(const Tiger::location &loc, const string &msg)
+            : SemanticError(loc, msg)
+    {}
+
+    TypeNotMatchError::TypeNotMatchError(const string &etName, const string &atName, const string &declareName,
+                                         const Tiger::location &loc)
+            : TypeError(loc,
+                        "Type mismatch : " + declareName
+                        + " . Except " + etName
+                        + " , but get " + atName)
+    {
+    }
+
+    TypeNotMatchError::TypeNotMatchError(const string &etName, const string &atName, const Tiger::location &loc)
+            : TypeError(loc,
+                        "Type mismatch. Except " + etName
+                        + " , but get " + atName)
+    {}
+
+    TypeMatchError::TypeMatchError(const string &actualTypeName, const Tiger::location &loc)
+            : TypeError(loc,
+                        "Type should not be " + actualTypeName)
+    {}
+
+    MatchError::MatchError(const Tiger::location &loc, const string &msg)
+            : SemanticError(loc, msg)
+    {}
+
+    ArgMatchError::ArgMatchError(const Tiger::location &loc, const string &msg)
+            : MatchError(loc, msg)
+    {}
+
+    ArgTypeNotMatch::ArgTypeNotMatch(const Tiger::location &loc, const string &expectArgType,
+                                     const string &usageArgType)
+            : ArgMatchError(loc,
+                            "Unmatched argument type. Expected " + expectArgType
+                            + " but get " + usageArgType)
+    {}
+
+    ArgNumNotMatch::ArgNumNotMatch(const Tiger::location &loc, const int &expectArgNum, const int &usageArgNum)
+            : ArgMatchError(loc,
+                            "Unmatched argument num. Expected " + std::to_string(expectArgNum)
+                            + " but get " + std::to_string(usageArgNum))
+    {}
+
+    RecordMatchError::RecordMatchError(const Tiger::location &loc, const string &msg)
+            : MatchError(loc, msg)
+    {}
+
+    RecordFieldNumNotMatch::RecordFieldNumNotMatch(const Tiger::location &loc, const int &expectFieldNum,
+                                                   const int &usageFieldNum)
+            : RecordMatchError(loc,
+                               "Unmatched field num. Expected " + std::to_string(expectFieldNum)
+                               + " but get " + std::to_string(usageFieldNum))
+    {}
+
+    RecordTypeNotMatch::RecordTypeNotMatch(const Tiger::location &loc, const std::string &expectType,
+                                           const std::string &usageType)
+            : RecordMatchError(loc,
+                               "Unmatched field type. Expected " + expectType
+                               + " but get " + usageType)
+    {}
 }

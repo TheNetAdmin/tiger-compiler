@@ -5,29 +5,25 @@
 #ifndef SRC_ERROR_H
 #define SRC_ERROR_H
 
-#include "location.hh"
 #include <string>
+#include <iostream>
+#include "location.hh"
 
 namespace Tiger {
-    class Error {
-        location loc;
-        std::string message;
-        bool hasError;
-    public:
-        Error() : hasError(false)
-        {}
+class Error {
+    location loc;
+    std::string message;
+    bool hasError;
 
-        Error(const location &loc, const std::string &message)
-                : loc(loc), message(message), hasError(true)
-        {}
+   public:
+    Error();
 
-        void set(const location &loc, const std::string &message) {
-            this->loc = loc;
-            this->message = message;
-            hasError = true;
-        }
+    Error(const location &loc, const std::string &message);
 
-    };
+    void set(const location &loc, const std::string &message);
+
+    void print();
+};
 }
 
-#endif //SRC_ERROR_H
+#endif  // SRC_ERROR_H

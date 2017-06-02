@@ -26,9 +26,12 @@ OBJ = $(addprefix $(OBJ_PATH)/, $(addsuffix .o, $(notdir $(basename $(SRC)))))
 unit_test:
 	cd test && ./unit_test.sh	
 
-test: $(OBJ)
-	$(CXX) $(CXXSTD) -o $(TEST_PATH)/test $(TEST_PATH)/test.cpp $?
-	cd test && ./unit_test.sh
+semantic_test: $(OBJ)
+	$(CXX) $(CXXSTD) -o $(TEST_PATH)/sem_test $(TEST_PATH)/sem_test.cpp $?
+
+# test: $(OBJ)
+# 	$(CXX) $(CXXSTD) -o $(TEST_PATH)/test $(TEST_PATH)/test.cpp $?
+# 	cd test && ./unit_test.sh
 
 objs: bison flex $(OBJ)
 	@echo $?

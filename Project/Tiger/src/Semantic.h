@@ -20,22 +20,13 @@ namespace Semantic
         std::shared_ptr<Translate::Exp> exp;
         std::shared_ptr<Type::Type> type;
 
-        ExpTy()
-        {}
+        ExpTy();
 
-        ExpTy(const shared_ptr<Translate::Exp> &exp, const shared_ptr<Type::Type> &type)
-                : exp(exp), type(type)
-        {}
+        ExpTy(const shared_ptr<Translate::Exp> &exp, const shared_ptr<Type::Type> &type);
 
-        void setExp(const shared_ptr<Translate::Exp> &exp)
-        {
-            this->exp = exp;
-        }
+        void setExp(const shared_ptr<Translate::Exp> &exp);
 
-        void setType(const shared_ptr<Type::Type> &type)
-        {
-            this->type = type;
-        }
+        void setType(const shared_ptr<Type::Type> &type);
     };
 
     class SemanticError : public std::runtime_error
@@ -43,9 +34,7 @@ namespace Semantic
     public:
         Tiger::location loc;
 
-        explicit SemanticError(const Tiger::location &loc, const string &msg)
-                : std::runtime_error(msg), loc(loc)
-        {}
+        explicit SemanticError(const Tiger::location &loc, const string &msg);
     };
 
     class TypeError : public SemanticError
@@ -56,9 +45,7 @@ namespace Semantic
         string actualTypeName;
 
         explicit TypeError(const Tiger::location &loc,
-                           const string &msg)
-                : SemanticError(loc, msg)
-        {}
+                           const string &msg);
     };
 
     class TypeNotMatchError : public TypeError
@@ -68,39 +55,24 @@ namespace Semantic
         explicit TypeNotMatchError(const string &etName,
                                    const string &atName,
                                    const string &declareName,
-                                   const Tiger::location &loc)
-                : TypeError(loc,
-                            "Type mismatch : " + declareName
-                            + " . Except " + etName
-                            + " , but get " + atName)
-        {
-        }
+                                   const Tiger::location &loc);
 
         explicit TypeNotMatchError(const string &etName,
                                    const string &atName,
-                                   const Tiger::location &loc)
-                : TypeError(loc,
-                            "Type mismatch. Except " + etName
-                            + " , but get " + atName)
-        {}
+                                   const Tiger::location &loc);
     };
 
     class TypeMatchError : public TypeError
     {
     public:
         explicit TypeMatchError(const string &actualTypeName,
-                                const Tiger::location &loc)
-                : TypeError(loc,
-                            "Type should not be " + actualTypeName)
-        {}
+                                const Tiger::location &loc);
     };
 
     class MatchError : public SemanticError
     {
     public:
-        explicit MatchError(const Tiger::location &loc, const string &msg)
-                : SemanticError(loc, msg)
-        {}
+        explicit MatchError(const Tiger::location &loc, const string &msg);
     };
 
     class ArgMatchError : public MatchError
@@ -108,9 +80,7 @@ namespace Semantic
     public:
         Tiger::location loc;
 
-        explicit ArgMatchError(const Tiger::location &loc, const string &msg)
-                : MatchError(loc, msg)
-        {}
+        explicit ArgMatchError(const Tiger::location &loc, const string &msg);
 
     };
 
@@ -119,42 +89,28 @@ namespace Semantic
     public:
         explicit ArgTypeNotMatch(const Tiger::location &loc,
                                  const string &expectArgType,
-                                 const string &usageArgType)
-                : ArgMatchError(loc,
-                                "Unmatched argument type. Expected " + expectArgType
-                                + " but get " + usageArgType)
-        {}
+                                 const string &usageArgType);
     };
 
     class ArgNumNotMatch : public ArgMatchError
     {
     public:
         explicit ArgNumNotMatch(const Tiger::location &loc,
-                                const int &expectArgNum, const int &usageArgNum)
-                : ArgMatchError(loc,
-                                "Unmatched argument num. Expected " + std::to_string(expectArgNum)
-                                + " but get " + std::to_string(usageArgNum))
-        {}
+                                const int &expectArgNum, const int &usageArgNum);
 
     };
 
     class RecordMatchError : public MatchError
     {
     public:
-        explicit RecordMatchError(const Tiger::location &loc, const string &msg)
-                : MatchError(loc, msg)
-        {}
+        explicit RecordMatchError(const Tiger::location &loc, const string &msg);
     };
 
     class RecordFieldNumNotMatch : public RecordMatchError
     {
     public:
         explicit RecordFieldNumNotMatch(const Tiger::location &loc,
-                                        const int &expectFieldNum, const int &usageFieldNum)
-                : RecordMatchError(loc,
-                                   "Unmatched field num. Expected " + std::to_string(expectFieldNum)
-                                   + " but get " + std::to_string(usageFieldNum))
-        {}
+                                        const int &expectFieldNum, const int &usageFieldNum);
     };
 
     class RecordTypeNotMatch : public RecordMatchError
@@ -162,11 +118,7 @@ namespace Semantic
     public:
         explicit RecordTypeNotMatch(const Tiger::location &loc,
                                     const std::string &expectType,
-                                    const std::string &usageType)
-                : RecordMatchError(loc,
-                                   "Unmatched field type. Expected " + expectType
-                                   + " but get " + usageType)
-        {}
+                                    const std::string &usageType);
     };
 
     void trasProg(std::shared_ptr<ExpAST> exp);

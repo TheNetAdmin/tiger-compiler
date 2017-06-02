@@ -19,19 +19,11 @@ namespace Env
     public:
         std::string name;
 
-        Entry()
-        {
-            name = "NotDefined";
-        }
+        Entry();
 
-        Entry(const std::string &name)
-                : name(name)
-        {}
+        Entry(const std::string &name);
 
-        void setName(const std::string &name)
-        {
-            Entry::name = name;
-        }
+        void setName(const std::string &name);
     };
 
     class VarEntry : public Entry
@@ -39,29 +31,22 @@ namespace Env
     public:
         std::shared_ptr<Type::Type> type;
 
-        VarEntry()
-        {}
+        VarEntry();
 
         VarEntry(const std::string &name,
-                 const std::shared_ptr<Type::Type> &type)
-                : Entry(name), type(type)
-        {}
+                 const std::shared_ptr<Type::Type> &type);
 
-        std::shared_ptr<Type::Type> getType() const
-        {
-            return type;
-        }
+        std::shared_ptr<Type::Type> getType() const;
     };
 
+    using ArgList = std::list<std::shared_ptr<Type::Type>>;
     class FuncEntry : public Entry
-    {
+{
     public:
-        using ArgList = std::list<std::shared_ptr<Type::Type>>;
         std::shared_ptr<ArgList> args;
         std::shared_ptr<Type::Type> result;
 
-        FuncEntry()
-        {}
+        FuncEntry();
 
         // Multiple arguments
         // @name:       function name
@@ -69,11 +54,7 @@ namespace Env
         // @resultType: function return type
         FuncEntry(const std::string &name,
                   const std::initializer_list<std::shared_ptr<Type::Type>> &argTypes,
-                  const std::shared_ptr<Type::Type> &resultType)
-                : Entry(name), result(resultType)
-        {
-            args = std::make_shared<ArgList>(argTypes);
-        }
+                  const std::shared_ptr<Type::Type> &resultType);
 
 
         // Only one argument
@@ -82,47 +63,28 @@ namespace Env
         // @resultType: function return type
         FuncEntry(const std::string &name,
                   const std::shared_ptr<Type::Type> &argType,
-                  const std::shared_ptr<Type::Type> &resultType)
-                : Entry(name), result(resultType)
-        {
-            ArgList arg;
-            arg.push_back(argType);
-            args = std::make_shared<ArgList>(arg);
-        }
+                  const std::shared_ptr<Type::Type> &resultType);
 
         // No argument
         // @name:       function name
         // @resultType: function return type
         FuncEntry(const std::string &name,
-                  const std::shared_ptr<Type::Type> &result)
-                : Entry(name), result(result)
-        {}
+                  const std::shared_ptr<Type::Type> &result);
 
-        void addArg(std::shared_ptr<Type::Type> arg)
-        {
-            args->push_back(arg);
-        }
+        void addArg(std::shared_ptr<Type::Type> arg);
 
-        const std::shared_ptr<ArgList> getArgs() const
-        {
-            return args;
-        }
+        const std::shared_ptr<ArgList> getArgs() const;
 
-        const std::shared_ptr<Type::Type> getResultType() const
-        {
-            return result;
-        }
+        const std::shared_ptr<Type::Type> getResultType() const;
     };
 
     class Env
     {
     public:
 
-        Env()
-        {}
+        Env();
 
-        virtual ~Env()
-        {}
+        virtual ~Env();
 
         virtual void setDefaultEnv() = 0;
 
@@ -134,9 +96,7 @@ namespace Env
     class EntryNotFound : public std::runtime_error
     {
     public:
-        explicit EntryNotFound(const std::string &msg)
-                : std::runtime_error(msg)
-        {}
+        explicit EntryNotFound(const std::string &msg);
     };
 
     class VarEnv : public Env
@@ -145,46 +105,17 @@ namespace Env
         std::vector<VarEntry> bindList;
         std::vector<unsigned int> scope;
 
-        VarEnv()
-        {}
+        VarEnv();
 
-        void setDefaultEnv() override
-        {
-            VarEntry intVar("int", Type::INT);
-            enter(intVar);
-            VarEntry stringVar("string", Type::STRING);
-            enter(stringVar);
-        }
+        void setDefaultEnv() override;
 
-        void enter(VarEntry &entry)
-        {
-            bindList.push_back(entry);
-        }
+        void enter(VarEntry &entry);
 
-        std::shared_ptr<VarEntry> find(const std::string &name)
-        {
-            // TODO: refactor with std::find
-            for (auto r_iter = bindList.crbegin(); r_iter != bindList.crend(); r_iter++)
-            {
-                if (r_iter->name == name)
-                {
-                    return std::make_shared<VarEntry>(*r_iter);
-                }
-            }
-            throw EntryNotFound("Var Entry with name " + name + " not found");
-        }
+        std::shared_ptr<VarEntry> find(const std::string &name);
 
-        void beginScope() override
-        {
-            scope.push_back(bindList.size());
-        }
+        void beginScope() override;
 
-        void endScope() override
-        {
-            auto s = scope.back();
-            scope.pop_back();
-            bindList.resize(s);
-        }
+        void endScope() override;
     };
 
     class FuncEnv : public Env
@@ -193,71 +124,17 @@ namespace Env
         std::vector<FuncEntry> bindList;
         std::vector<unsigned int> scope;
 
-        FuncEnv()
-        {}
+        FuncEnv();
 
-        void setDefaultEnv()
-        {
-            // print
-            FuncEntry print("print", Type::STRING, Type::VOID);
-            enter(print);
-            // flush
-            FuncEntry flush("flush", Type::VOID);
-            enter(flush);
-            // getchar
-            FuncEntry getchar("getchar", Type::VOID);
-            enter(getchar);
-            // ord
-            FuncEntry ord("ord", Type::STRING, Type::INT);
-            enter(ord);
-            // chr
-            FuncEntry chr("chr", Type::INT, Type::STRING);
-            enter(chr);
-            // size
-            FuncEntry size("size", Type::STRING, Type::INT);
-            enter(size);
-            // substring
-            FuncEntry substring("substring", {Type::STRING, Type::INT, Type::INT}, Type::STRING);
-            enter(substring);
-            // concat
-            FuncEntry concat("concat", {Type::STRING, Type::STRING}, Type::STRING);
-            enter(concat);
-            // not
-            FuncEntry notFunc("not", Type::INT, Type::INT);
-            enter(notFunc);
-            // exit
-            FuncEntry exit("exit", Type::INT, Type::VOID);
-            enter(exit);
-        }
+        void setDefaultEnv();
 
-        void enter(FuncEntry &entry)
-        {
-            this->bindList.push_back(entry);
-        }
+        void enter(FuncEntry &entry);
 
-        std::shared_ptr<FuncEntry> find(const std::string &funcName)
-        {
-            for (auto r_iter = bindList.crbegin(); r_iter != bindList.crend(); r_iter++)
-            {
-                if (r_iter->name == funcName)
-                {
-                    return std::make_shared<FuncEntry>(*r_iter);
-                }
-            }
-            throw EntryNotFound("Func entry with name " + funcName + " not found");
-        }
+        std::shared_ptr<FuncEntry> find(const std::string &funcName);
 
-        void beginScope() override
-        {
-            scope.push_back(bindList.size());
-        }
+        void beginScope() override;
 
-        void endScope() override
-        {
-            auto s = scope.back();
-            scope.pop_back();
-            bindList.resize(s);
-        }
+        void endScope() override;
     };
 
 }
