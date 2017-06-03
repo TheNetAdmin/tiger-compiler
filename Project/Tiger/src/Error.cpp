@@ -4,12 +4,15 @@
 
 #include "Error.h"
 
-namespace Tiger{
+namespace Tiger
+{
 
-    Error::Error() : hasError(false) {}
+    Error::Error() : hasError(false)
+    {}
 
     Error::Error(const location &loc, const std::string &message)
-            : loc(loc), message(message), hasError(true) {}
+            : loc(loc), message(message), hasError(true)
+    {}
 
     void Error::set(const location &loc, const std::string &message)
     {
@@ -21,5 +24,11 @@ namespace Tiger{
     void Error::print()
     {
         std::cerr << "Error at " << loc << " : " << message << std::endl;
+    }
+
+    Error::Error(const std::string &message)
+            : message(message)
+    {
+
     }
 }

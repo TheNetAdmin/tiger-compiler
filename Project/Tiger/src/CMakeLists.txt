@@ -15,6 +15,7 @@ set(SOURCE_FILES
         scanner.cpp
         stack.hh Semantic.h Semantic.cpp Semantic.h Types.cpp Types.h Translate.cpp Translate.h Env.cpp Env.h Error.cpp Error.h
         Debug.cpp Debug.h
+        BoolList.h Frame.cpp Frame.h IRTree.cpp IRTree.h Translate.cpp Translate.h Temporary.cpp Temporary.h
         ../test/sem_test.cpp
         )
 

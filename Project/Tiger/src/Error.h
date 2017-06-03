@@ -18,6 +18,8 @@ class Error {
    public:
     Error();
 
+    Error(const std::string & message);
+
     Error(const location &loc, const std::string &message);
 
     void set(const location &loc, const std::string &message);
