@@ -123,9 +123,10 @@ namespace Semantic
 
     void transProg(std::shared_ptr<AST::Exp> exp);
 
-    ExpTy transExp(Env::VarEnv &venv, Env::FuncEnv &fenv, shared_ptr<AST::Exp> exp) noexcept(true);
+    ExpTy transExp(shared_ptr<Translate::Level> level, shared_ptr<Translate::Exp> breakExp, Env::VarEnv &venv,
+                   Env::FuncEnv &fenv, shared_ptr<AST::Exp> exp) noexcept(true);
 
-    ExpTy transVar(shared_ptr<Translate::Level> &level, shared_ptr<Translate::Exp> &breakExp, Env::VarEnv &venv,
+    ExpTy transVar(shared_ptr<Translate::Level> level, shared_ptr<Translate::Exp> breakExp, Env::VarEnv &venv,
                    Env::FuncEnv &fenv, const shared_ptr<AST::Var> &var) noexcept(true);
 
 

@@ -40,9 +40,10 @@ namespace Type
         this->fields = std::make_shared<FieldList>(fields);
     }
 
-    std::shared_ptr<Field> Record::find(std::string name)
+    std::shared_ptr<Field> Record::find(std::string name, int &offset)
     {
-        for (auto iter = fields->begin(); iter != fields->end(); iter++)
+        offset = 0;
+        for (auto iter = fields->begin(); iter != fields->end(); iter++, offset++)
         {
             if ((*iter)->name == name)
             {

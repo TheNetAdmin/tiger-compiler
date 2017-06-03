@@ -162,17 +162,10 @@ namespace Translate
     std::shared_ptr<Exp>
     makeReferenceComparisonExp(IR::ComparisonOp op, std::shared_ptr<Exp> left, std::shared_ptr<Exp> right);
 
-//    std::shared_ptr<Exp> makeEqExp(Operator, std::shared_ptr<Exp>, std::shared_ptr<Exp>);
-//
-//    std::shared_ptr<Exp> makeEqStringExp(Operator, std::shared_ptr<Exp>, std::shared_ptr<Exp>);
-//
-//    std::shared_ptr<Exp> makeEqRef(Operator, std::shared_ptr<Exp>, std::shared_ptr<Exp>);
-//
-//    std::shared_ptr<Exp> makeRelExp(Operator, std::shared_ptr<Exp>, std::shared_ptr<Exp>);
 
     std::shared_ptr<Exp> makeIfExp(std::shared_ptr<Exp> test, std::shared_ptr<Exp> then, std::shared_ptr<Exp> elsee);
 
-//    std::shared_ptr<ExpList> makeNewExpList(std::shared_ptr<Exp> head);
+    std::shared_ptr<ExpList> makeExpList();
 
     void procEntyExit(std::shared_ptr<Level>, std::shared_ptr<Exp>);
 

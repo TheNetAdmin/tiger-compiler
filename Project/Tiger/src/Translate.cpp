@@ -592,5 +592,10 @@ namespace Translate
         return stringFragList;
     }
 
+    std::shared_ptr<ExpList> makeExpList()
+    {
+        return std::make_shared<ExpList>();
+    }
+
 
 }

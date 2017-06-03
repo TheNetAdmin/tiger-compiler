@@ -11,6 +11,8 @@
 #include <vector>
 #include <algorithm>
 #include "Types.h"
+#include "Translate.h"
+#include "Temporary.h"
 
 namespace Env
 {
@@ -30,11 +32,12 @@ namespace Env
     {
     public:
         std::shared_ptr<Type::Type> type;
+        std::shared_ptr<Translate::Access> access;
 
         VarEntry();
 
-        VarEntry(const std::string &name,
-                 const std::shared_ptr<Type::Type> &type);
+        VarEntry(const std::string &name, const std::shared_ptr<Type::Type> type,
+                 const std::shared_ptr<Translate::Access> access);
 
         std::shared_ptr<Type::Type> getType() const;
     };
@@ -45,6 +48,8 @@ namespace Env
     public:
         std::shared_ptr<ArgList> args;
         std::shared_ptr<Type::Type> result;
+        std::shared_ptr<Translate::Level> level;
+        std::shared_ptr<Temporary::Label> label;
 
         FuncEntry();
 
@@ -52,25 +57,25 @@ namespace Env
         // @name:       function name
         // @argTypes:   function arguments' types list
         // @resultType: function return type
-        FuncEntry(const std::string &name,
-                  const std::initializer_list<std::shared_ptr<Type::Type>> &argTypes,
-                  const std::shared_ptr<Type::Type> &resultType);
+        FuncEntry(const std::shared_ptr<Translate::Level> level, const std::shared_ptr<Temporary::Label> label,
+                  const std::string &name, const std::initializer_list<std::shared_ptr<Type::Type>> &argTypes,
+                  const std::shared_ptr<Type::Type> resultType);
 
 
         // Only one argument
         // @name:       function name
         // @argType:    function argument type list
         // @resultType: function return type
-        FuncEntry(const std::string &name,
-                  const std::shared_ptr<Type::Type> &argType,
-                  const std::shared_ptr<Type::Type> &resultType);
+        FuncEntry(const std::shared_ptr<Translate::Level> level, const std::shared_ptr<Temporary::Label> label,
+                  const std::string &name, const std::shared_ptr<Type::Type> argType,
+                  const std::shared_ptr<Type::Type> resultType);
 
         // TODO: use args==nullptr is invalid, replace with args->size() == 0
         // No argument
         // @name:       function name
         // @resultType: function return type
-        FuncEntry(const std::string &name,
-                  const std::shared_ptr<Type::Type> &result);
+        FuncEntry(const std::shared_ptr<Translate::Level> level, const std::shared_ptr<Temporary::Label> label,
+                  const std::string &name, const std::shared_ptr<Type::Type> result);
 
         void addArg(std::shared_ptr<Type::Type> arg);
 

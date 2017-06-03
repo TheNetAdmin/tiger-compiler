@@ -71,7 +71,7 @@ namespace Type
 
         Record(std::initializer_list<std::shared_ptr<Field>> fields);
 
-        std::shared_ptr<Field> find(std::string name);
+        std::shared_ptr<Field> find(std::string name, int &offset);
 
         const std::shared_ptr<FieldList> getFields() const;
 

@@ -3,8 +3,6 @@
 //
 
 #include "Env.h"
-#include "Types.h"
-#include "Debug.h"
 
 namespace Env
 {
@@ -24,11 +22,13 @@ namespace Env
     }
 
     VarEntry::VarEntry()
-            : type(std::make_shared<Type::Type>())
+            : type(std::make_shared<Type::Type>()),
+              access(std::make_shared<Translate::Access>())
     {}
 
-    VarEntry::VarEntry(const std::string &name, const std::shared_ptr<Type::Type> &type)
-            : Entry(name), type(type)
+    VarEntry::VarEntry(const std::string &name, const std::shared_ptr<Type::Type> type,
+                       const std::shared_ptr<Translate::Access> access)
+            : Entry(name), type(type), access(access)
     {}
 
     std::shared_ptr<Type::Type> VarEntry::getType() const
@@ -37,20 +37,29 @@ namespace Env
     }
 
     FuncEntry::FuncEntry()
-            : args(std::make_shared<ArgList>()), result(std::make_shared<Type::Type>())
+            : args(std::make_shared<ArgList>()),
+              result(std::make_shared<Type::Type>()),
+              level(std::make_shared<Translate::Level>()),
+              label(std::make_shared<Temporary::Label>())
     {}
 
-    FuncEntry::FuncEntry(const std::string &name, const std::shared_ptr<Type::Type> &argType,
-                         const std::shared_ptr<Type::Type> &resultType)
-            : Entry(name), result(resultType)
+    FuncEntry::FuncEntry(const std::shared_ptr<Translate::Level> level,
+                         const std::shared_ptr<Temporary::Label> label,
+                         const std::string &name,
+                         const std::shared_ptr<Type::Type> argType,
+                         const std::shared_ptr<Type::Type> resultType)
+            : Entry(name), level(level), label(label), result(resultType)
     {
         ArgList arg;
         arg.push_back(argType);
         args = std::make_shared<ArgList>(arg);
     }
 
-    FuncEntry::FuncEntry(const std::string &name, const std::shared_ptr<Type::Type> &result)
-            : Entry(name), result(result), args(std::make_shared<ArgList>())
+    FuncEntry::FuncEntry(const std::shared_ptr<Translate::Level> level,
+                         const std::shared_ptr<Temporary::Label> label,
+                         const std::string &name,
+                         const std::shared_ptr<Type::Type> result)
+            : Entry(name), level(level), label(label), result(result), args(std::make_shared<ArgList>())
     {}
 
     void FuncEntry::addArg(std::shared_ptr<Type::Type> arg)
@@ -68,9 +77,12 @@ namespace Env
         return result;
     }
 
-    FuncEntry::FuncEntry(const std::string &name, const std::initializer_list<std::shared_ptr<Type::Type>> &argTypes,
-                         const std::shared_ptr<Type::Type> &resultType)
-            : Entry(name), result(resultType)
+    FuncEntry::FuncEntry(const std::shared_ptr<Translate::Level> level,
+                         const std::shared_ptr<Temporary::Label> label,
+                         const std::string &name,
+                         const std::initializer_list<std::shared_ptr<Type::Type>> &argTypes,
+                         const std::shared_ptr<Type::Type> resultType)
+            : Entry(name), level(level), label(label), result(resultType)
     {
         args = std::make_shared<ArgList>(argTypes);
     }
@@ -90,9 +102,9 @@ namespace Env
 
     void VarEnv::setDefaultEnv()
     {
-        VarEntry intVar("int", Type::INT);
+        VarEntry intVar("int", Type::INT, std::shared_ptr<Translate::Access>());
         enter(intVar);
-        VarEntry stringVar("string", Type::STRING);
+        VarEntry stringVar("string", Type::STRING, std::shared_ptr<Translate::Access>());
         enter(stringVar);
     }
 
@@ -103,7 +115,6 @@ namespace Env
 
     std::shared_ptr<VarEntry> VarEnv::find(const std::string &name)
     {
-        // TODO: refactor with std::find
         for (auto r_iter = bindList.crbegin(); r_iter != bindList.crend(); r_iter++)
         {
             if (r_iter->name == name)
@@ -132,34 +143,44 @@ namespace Env
     void FuncEnv::setDefaultEnv()
     {
         // print
-        FuncEntry print("print", Type::STRING, Type::VOID);
+        FuncEntry print(Translate::getGlobalLevel(), Temporary::makeLabel(),
+                        "print", Type::STRING, Type::VOID);
         enter(print);
         // flush
-        FuncEntry flush("flush", Type::VOID);
+        FuncEntry flush(Translate::getGlobalLevel(), Temporary::makeLabel(),
+                        "flush", Type::VOID);
         enter(flush);
         // getchar
-        FuncEntry getchar("getchar", Type::VOID);
+        FuncEntry getchar(Translate::getGlobalLevel(), Temporary::makeLabel(),
+                          "getchar", Type::VOID);
         enter(getchar);
         // ord
-        FuncEntry ord("ord", Type::STRING, Type::INT);
+        FuncEntry ord(Translate::getGlobalLevel(), Temporary::makeLabel(),
+                      "ord", Type::STRING, Type::INT);
         enter(ord);
         // chr
-        FuncEntry chr("chr", Type::INT, Type::STRING);
+        FuncEntry chr(Translate::getGlobalLevel(), Temporary::makeLabel(),
+                      "chr", Type::INT, Type::STRING);
         enter(chr);
         // size
-        FuncEntry size("size", Type::STRING, Type::INT);
+        FuncEntry size(Translate::getGlobalLevel(), Temporary::makeLabel(),
+                       "size", Type::STRING, Type::INT);
         enter(size);
         // substring
-        FuncEntry substring("substring", {Type::STRING, Type::INT, Type::INT}, Type::STRING);
+        FuncEntry substring(Translate::getGlobalLevel(), Temporary::makeLabel(),
+                            "substring", {Type::STRING, Type::INT, Type::INT}, Type::STRING);
         enter(substring);
         // concat
-        FuncEntry concat("concat", {Type::STRING, Type::STRING}, Type::STRING);
+        FuncEntry concat(Translate::getGlobalLevel(), Temporary::makeLabel(),
+                         "concat", {Type::STRING, Type::STRING}, Type::STRING);
         enter(concat);
         // not
-        FuncEntry notFunc("not", Type::INT, Type::INT);
+        FuncEntry notFunc(Translate::getGlobalLevel(), Temporary::makeLabel(),
+                          "not", Type::INT, Type::INT);
         enter(notFunc);
         // exit
-        FuncEntry exit("exit", Type::INT, Type::VOID);
+        FuncEntry exit(Translate::getGlobalLevel(), Temporary::makeLabel(),
+                       "exit", Type::INT, Type::VOID);
         enter(exit);
     }
 
