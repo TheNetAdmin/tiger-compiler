@@ -321,7 +321,7 @@ namespace Translate
         procFragList->push_front(procFrag);
     }
 
-    std::shared_ptr<Exp> makeStringExp(std::string &s)
+    std::shared_ptr<Exp> makeStringExp(const std::string &s)
     {
         auto label = Temporary::makeLabel();
         auto frag = Frame::makeStringFrag(label, s);

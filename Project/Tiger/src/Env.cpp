@@ -87,6 +87,16 @@ namespace Env
         args = std::make_shared<ArgList>(argTypes);
     }
 
+    const std::shared_ptr<Translate::Level> FuncEntry::getLevel() const
+    {
+        return level;
+    }
+
+    const std::shared_ptr<Temporary::Label> FuncEntry::getLabel() const
+    {
+        return label;
+    }
+
     Env::Env()
     {}
 

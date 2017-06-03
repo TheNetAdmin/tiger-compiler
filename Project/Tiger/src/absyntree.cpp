@@ -189,7 +189,7 @@ namespace AST
     IntExp::IntExp(Tiger::location loc, int intt) : Exp(loc, INT_EXP), intt(intt)
     {}
 
-    int IntExp::getIntt() const
+    int IntExp::getInt() const
     {
         return intt;
     }
@@ -199,7 +199,7 @@ namespace AST
                                                                        str(stringg)
     {}
 
-    const string &StringExp::getStringg() const
+    const string &StringExp::getString() const
     {
         return str;
     }

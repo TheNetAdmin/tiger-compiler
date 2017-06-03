@@ -122,7 +122,7 @@ namespace Translate
 
     std::shared_ptr<Exp> makeSubscriptVar(std::shared_ptr<Exp> base, std::shared_ptr<Exp> index);
 
-    std::shared_ptr<Exp> makeStringExp(std::string &s);
+    std::shared_ptr<Exp> makeStringExp(const std::string &s);
 
     std::shared_ptr<Exp> makeIntExp(int i);
 

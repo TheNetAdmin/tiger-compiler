@@ -766,67 +766,111 @@ namespace Tiger {
 
   case 13:
 #line 87 "src/bison/parser.yy" // lalr1.cc:859
-    {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeOpExp(yylhs.location, PLUSOP, yystack_[2].value.as< shared_ptr<AST::Exp> > (), yystack_[0].value.as< shared_ptr<AST::Exp> > ());}
+              {
+                  yylhs.value.as<shared_ptr<AST::Exp> >() = MakeOpExp(yylhs.location, PLUS,
+                                                                      yystack_[2].value.as<shared_ptr<AST::Exp> >(),
+                                                                      yystack_[0].value.as<shared_ptr<AST::Exp> >());
+              }
 #line 772 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 14:
 #line 88 "src/bison/parser.yy" // lalr1.cc:859
-    {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeOpExp(yylhs.location, MINUSOP, yystack_[2].value.as< shared_ptr<AST::Exp> > (), yystack_[0].value.as< shared_ptr<AST::Exp> > ());}
+              {
+                  yylhs.value.as<shared_ptr<AST::Exp> >() = MakeOpExp(yylhs.location, MINUS,
+                                                                      yystack_[2].value.as<shared_ptr<AST::Exp> >(),
+                                                                      yystack_[0].value.as<shared_ptr<AST::Exp> >());
+              }
 #line 778 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 15:
 #line 89 "src/bison/parser.yy" // lalr1.cc:859
-    {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeOpExp(yylhs.location, TIMESOP, yystack_[2].value.as< shared_ptr<AST::Exp> > (), yystack_[0].value.as< shared_ptr<AST::Exp> > ());}
+              {
+                  yylhs.value.as<shared_ptr<AST::Exp> >() = MakeOpExp(yylhs.location, TIMES,
+                                                                      yystack_[2].value.as<shared_ptr<AST::Exp> >(),
+                                                                      yystack_[0].value.as<shared_ptr<AST::Exp> >());
+              }
 #line 784 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 16:
 #line 90 "src/bison/parser.yy" // lalr1.cc:859
-    {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeOpExp(yylhs.location, DIVIDEOP, yystack_[2].value.as< shared_ptr<AST::Exp> > (), yystack_[0].value.as< shared_ptr<AST::Exp> > ());}
+              {
+                  yylhs.value.as<shared_ptr<AST::Exp> >() = MakeOpExp(yylhs.location, DIVIDE,
+                                                                      yystack_[2].value.as<shared_ptr<AST::Exp> >(),
+                                                                      yystack_[0].value.as<shared_ptr<AST::Exp> >());
+              }
 #line 790 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 17:
 #line 91 "src/bison/parser.yy" // lalr1.cc:859
-    {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeOpExp(yylhs.location, EQOP, yystack_[2].value.as< shared_ptr<AST::Exp> > (), yystack_[0].value.as< shared_ptr<AST::Exp> > ());}
+              {
+                  yylhs.value.as<shared_ptr<AST::Exp> >() = MakeOpExp(yylhs.location, EQ,
+                                                                      yystack_[2].value.as<shared_ptr<AST::Exp> >(),
+                                                                      yystack_[0].value.as<shared_ptr<AST::Exp> >());
+              }
 #line 796 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 18:
 #line 92 "src/bison/parser.yy" // lalr1.cc:859
-    {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeOpExp(yylhs.location, MINUSOP, MakeIntExp(yylhs.location, 0), yystack_[0].value.as< shared_ptr<AST::Exp> > ());}
+              {
+                  yylhs.value.as<shared_ptr<AST::Exp> >() = MakeOpExp(yylhs.location, MINUS,
+                                                                      MakeIntExp(yylhs.location, 0),
+                                                                      yystack_[0].value.as<shared_ptr<AST::Exp> >());
+              }
 #line 802 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 19:
 #line 93 "src/bison/parser.yy" // lalr1.cc:859
-    {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeOpExp(yylhs.location, NEQOP, yystack_[2].value.as< shared_ptr<AST::Exp> > (), yystack_[0].value.as< shared_ptr<AST::Exp> > ());}
+              {
+                  yylhs.value.as<shared_ptr<AST::Exp> >() = MakeOpExp(yylhs.location, NEQ,
+                                                                      yystack_[2].value.as<shared_ptr<AST::Exp> >(),
+                                                                      yystack_[0].value.as<shared_ptr<AST::Exp> >());
+              }
 #line 808 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 20:
 #line 94 "src/bison/parser.yy" // lalr1.cc:859
-    {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeOpExp(yylhs.location, GTOP, yystack_[2].value.as< shared_ptr<AST::Exp> > (), yystack_[0].value.as< shared_ptr<AST::Exp> > ());}
+              {
+                  yylhs.value.as<shared_ptr<AST::Exp> >() = MakeOpExp(yylhs.location, GT,
+                                                                      yystack_[2].value.as<shared_ptr<AST::Exp> >(),
+                                                                      yystack_[0].value.as<shared_ptr<AST::Exp> >());
+              }
 #line 814 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 21:
 #line 95 "src/bison/parser.yy" // lalr1.cc:859
-    {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeOpExp(yylhs.location, LTOP, yystack_[2].value.as< shared_ptr<AST::Exp> > (), yystack_[0].value.as< shared_ptr<AST::Exp> > ());}
+              {
+                  yylhs.value.as<shared_ptr<AST::Exp> >() = MakeOpExp(yylhs.location, LT,
+                                                                      yystack_[2].value.as<shared_ptr<AST::Exp> >(),
+                                                                      yystack_[0].value.as<shared_ptr<AST::Exp> >());
+              }
 #line 820 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 22:
 #line 96 "src/bison/parser.yy" // lalr1.cc:859
-    {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeOpExp(yylhs.location, GEOP, yystack_[2].value.as< shared_ptr<AST::Exp> > (), yystack_[0].value.as< shared_ptr<AST::Exp> > ());}
+              {
+                  yylhs.value.as<shared_ptr<AST::Exp> >() = MakeOpExp(yylhs.location, GE,
+                                                                      yystack_[2].value.as<shared_ptr<AST::Exp> >(),
+                                                                      yystack_[0].value.as<shared_ptr<AST::Exp> >());
+              }
 #line 826 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 23:
 #line 97 "src/bison/parser.yy" // lalr1.cc:859
-    {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeOpExp(yylhs.location, LEOP, yystack_[2].value.as< shared_ptr<AST::Exp> > (), yystack_[0].value.as< shared_ptr<AST::Exp> > ());}
+              {
+                  yylhs.value.as<shared_ptr<AST::Exp> >() = MakeOpExp(yylhs.location, LE,
+                                                                      yystack_[2].value.as<shared_ptr<AST::Exp> >(),
+                                                                      yystack_[0].value.as<shared_ptr<AST::Exp> >());
+              }
 #line 832 "src/parser.cpp" // lalr1.cc:859
     break;
 

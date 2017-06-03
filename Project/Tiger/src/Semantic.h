@@ -130,14 +130,12 @@ namespace Semantic
                    Env::FuncEnv &fenv, const shared_ptr<AST::Var> &var) noexcept(true);
 
 
-    void checkCallArgs(Env::VarEnv &venv, Env::FuncEnv &fenv,
-                       const shared_ptr<AST::CallExp> usage,
-                       const shared_ptr<Env::FuncEntry> def);
+    void checkCallArgs(shared_ptr<Translate::Level> level, shared_ptr<Translate::Exp> breakExp, Env::VarEnv &venv,
+                       Env::FuncEnv &fenv, const shared_ptr<AST::CallExp> usage, const shared_ptr<Env::FuncEntry> def);
 
 
-    void checkRecordEfields(Env::VarEnv &venv, Env::FuncEnv &fenv,
-                            shared_ptr<AST::RecordExp> usage,
-                            shared_ptr<Env::VarEntry> def);
+    void checkRecordEfields(shared_ptr<Translate::Level> level, shared_ptr<Temporary::Label> breakExp, Env::VarEnv venv,
+                            Env::FuncEnv fenv, shared_ptr<AST::RecordExp> usage, shared_ptr<Env::VarEntry> def);
 
     void assertTypeMatch(const shared_ptr<Type::Type> check,
                          const shared_ptr<Type::Type> base,
@@ -152,7 +150,11 @@ namespace Semantic
                             const shared_ptr<Type::Type> assertType,
                             const Tiger::location &loc);
 
-    void transDec(Env::VarEnv &venv, Env::FuncEnv &fenv, const shared_ptr<AST::Dec> dec);
+    shared_ptr<Translate::Exp> transDec(const shared_ptr<Translate::Level> level,
+                                        const shared_ptr<Translate::Exp> breakExp,
+                                        Env::VarEnv &venv,
+                                        Env::FuncEnv &fenv,
+                                        const shared_ptr<AST::Dec> dec);
 
     shared_ptr<Type::Type> transTy(Env::VarEnv &venv, const shared_ptr<AST::Ty> &ty);
 };

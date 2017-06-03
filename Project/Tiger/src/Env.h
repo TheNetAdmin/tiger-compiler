@@ -43,13 +43,18 @@ namespace Env
     };
 
     using ArgList = std::list<std::shared_ptr<Type::Type>>;
+
     class FuncEntry : public Entry
-{
+    {
     public:
         std::shared_ptr<ArgList> args;
         std::shared_ptr<Type::Type> result;
         std::shared_ptr<Translate::Level> level;
         std::shared_ptr<Temporary::Label> label;
+
+        const std::shared_ptr<Translate::Level> getLevel() const;
+
+        const std::shared_ptr<Temporary::Label> getLabel() const;
 
         FuncEntry();
 
@@ -57,8 +62,10 @@ namespace Env
         // @name:       function name
         // @argTypes:   function arguments' types list
         // @resultType: function return type
-        FuncEntry(const std::shared_ptr<Translate::Level> level, const std::shared_ptr<Temporary::Label> label,
-                  const std::string &name, const std::initializer_list<std::shared_ptr<Type::Type>> &argTypes,
+        FuncEntry(const std::shared_ptr<Translate::Level> level,
+                  const std::shared_ptr<Temporary::Label> label,
+                  const std::string &name,
+                  const std::initializer_list<std::shared_ptr<Type::Type>> &argTypes,
                   const std::shared_ptr<Type::Type> resultType);
 
 
@@ -66,16 +73,20 @@ namespace Env
         // @name:       function name
         // @argType:    function argument type list
         // @resultType: function return type
-        FuncEntry(const std::shared_ptr<Translate::Level> level, const std::shared_ptr<Temporary::Label> label,
-                  const std::string &name, const std::shared_ptr<Type::Type> argType,
+        FuncEntry(const std::shared_ptr<Translate::Level> level,
+                  const std::shared_ptr<Temporary::Label> label,
+                  const std::string &name,
+                  const std::shared_ptr<Type::Type> argType,
                   const std::shared_ptr<Type::Type> resultType);
 
         // TODO: use args==nullptr is invalid, replace with args->size() == 0
         // No argument
         // @name:       function name
         // @resultType: function return type
-        FuncEntry(const std::shared_ptr<Translate::Level> level, const std::shared_ptr<Temporary::Label> label,
-                  const std::string &name, const std::shared_ptr<Type::Type> result);
+        FuncEntry(const std::shared_ptr<Translate::Level> level,
+                  const std::shared_ptr<Temporary::Label> label,
+                  const std::string &name,
+                  const std::shared_ptr<Type::Type> result);
 
         void addArg(std::shared_ptr<Type::Type> arg);
 

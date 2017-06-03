@@ -283,7 +283,7 @@ namespace AST
     public:
         IntExp(Tiger::location loc, int intt);
 
-        int getIntt() const;
+        int getInt() const;
     };
 
 // StringExp - Extend class for all string expression nodes
@@ -294,7 +294,7 @@ namespace AST
     public:
         StringExp(Tiger::location loc, const string &stringg);
 
-        const string &getStringg() const;
+        const string &getString() const;
     };
 
 // CallExp - Extend class for all call expression
@@ -314,8 +314,8 @@ namespace AST
 // OpExp - Extend class for all operation expression
     enum Operator
     {
-        PLUSOP, MINUSOP, TIMESOP, DIVIDEOP,
-        EQOP, NEQOP, LTOP, LEOP, GTOP, GEOP
+        PLUS, MINUS, TIMES, DIVIDE,
+        EQ, NEQ, LT, LE, GT, GE
     };
 
     class OpExp : public Exp

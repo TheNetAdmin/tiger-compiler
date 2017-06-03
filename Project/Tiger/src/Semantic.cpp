@@ -153,7 +153,8 @@ namespace Semantic
                     // Find the definition of the func
                     auto funcDefine = fenv.find(funcName);
                     // Check if the args used match the defined
-                    checkCallArgs(venv, fenv, funcUsage, funcDefine);
+                    checkCallArgs(level, breakExp, venv, fenv,
+                                  funcUsage, funcDefine);
                     // Form the arg list for translate
                     auto funcArgList = Translate::makeExpList();
                     auto funcArgUsage = funcUsage->getArgs();
@@ -163,9 +164,9 @@ namespace Semantic
                         funcArgList->push_front(argTrans.exp);
                     }
                     // Form the call exp for translate
-                    // TODO: modify FuncEntry & VarEntry
-//                    auto func = Translate::makeCallExp(funcDefine->)
-                    return ExpTy(nullptr, funcDefine->getResultType());
+                    auto func = Translate::makeCallExp(funcDefine->getLabel(),
+                                                       funcDefine->getLevel(), level, funcArgList);
+                    return ExpTy(func, funcDefine->getResultType());
                 }
                 catch (Env::EntryNotFound &e)
                 {
@@ -176,7 +177,8 @@ namespace Semantic
                     Tiger::Error(e.loc, e.what());
                 }
                 // default return with error
-                return ExpTy(nullptr, Type::VOID);
+                auto nonValue = Translate::makeNonValueExp();
+                return ExpTy(nonValue, Type::VOID);
             }
                 break;
             case AST::RECORD_EXP:
@@ -189,9 +191,18 @@ namespace Semantic
                     auto recordDefine = venv.find(recordName);
                     assertTypeMatch(recordDefine->getType(), Type::RECORD, recordName, defaultLoc);
                     // Check efields
-                    checkRecordEfields(venv, fenv, recordUsage, recordDefine);
+                    checkRecordEfields(level, breakExp, venv, fenv, recordUsage, recordDefine);
                     // Check pass
-                    return ExpTy(nullptr, recordDefine->getType());
+                    int n = 0;
+                    auto fieldList = Translate::makeExpList();
+                    auto recordUsageField = recordUsage->getFields();
+                    for (auto field = recordUsageField->begin(); field != recordUsageField->end(); field++, n++)
+                    {
+                        auto f = transExp(level, breakExp, venv, fenv, (*field)->getExp());
+                        fieldList->push_front(f.exp);
+                    }
+                    auto record = Translate::makeRecordExp(n, fieldList);
+                    return ExpTy(record, recordDefine->getType());
                 }
                 catch (Env::EntryNotFound &e)
                 {
@@ -206,6 +217,7 @@ namespace Semantic
                     Tiger::Error(e.loc, e.what());
                 }
                 // default return with error
+                auto nonValue = Translate::makeNonValueExp();
                 return ExpTy(nullptr, Type::RECORD);
             }
                 break;
@@ -225,7 +237,8 @@ namespace Semantic
                     auto arrayInit = transExp(<#initializer#>, <#initializer#>, venv, fenv, arrayUsage->getInit());
                     assertTypeMatch(arrayInit.type, Type::ARRAY, defaultLoc);
                     // Check pass
-                    return ExpTy(nullptr, arrayDefine->getType());
+                    auto array = Translate::makeArrayExp(arraySize.exp, arrayInit.exp);
+                    return ExpTy(array, arrayDefine->getType());
                 }
                 catch (Env::EntryNotFound &e)
                 {
@@ -236,59 +249,64 @@ namespace Semantic
                     Tiger::Error(e.loc, e.what());
                 }
                 // default return with error
-                return ExpTy(nullptr, Type::ARRAY);
+                auto nonValue = Translate::makeNonValueExp();
+                return ExpTy(nonValue, Type::ARRAY);
             }
                 break;
             case AST::SEQ_EXP:
             {
                 auto exps = dynamic_pointer_cast<AST::SeqExp>(exp);
-                const std::list<shared_ptr<AST::Exp>> expList = *(exps->getSeq());
+                // TODO: why need a * ?
+                auto expList = exps->getSeq();
                 // Check num of exps
-                if (expList.size() == 0)
+                if (expList->size() == 0)
                 {
-                    return ExpTy(nullptr, Type::VOID);
+                    auto nonValue = Translate::makeNonValueExp();
+                    return ExpTy(nonValue, Type::VOID);
                 }
                 // Check each exp and return last exp's return value
-                auto last_iter = expList.end();
-                last_iter--;
-                for (auto iter = expList.begin(); iter != expList.end(); iter++)
+                auto trExpList = Translate::makeExpList();
+                ExpTy result;
+                for (auto iter = expList->begin(); iter != expList->end(); iter++)
                 {
-                    auto result = transExp(<#initializer#>, <#initializer#>, venv, fenv, (*iter));
-                    if (iter == last_iter)
-                    {
-                        return result;
-                    }
+                    result = transExp(level, breakExp, venv, fenv, (*iter));
+                    trExpList->push_front(result.exp);
                 }
-            }
-                // run here into error?
+                auto seq = Translate::makeSeqExp(trExpList);
+                return ExpTy(seq, result.type);
                 break;
+            }
             case AST::WHILE_EXP:
             {
                 auto whileUsage = dynamic_pointer_cast<AST::WhileExp>(exp);
-                // Check while's test condition
-                auto whileTest = transExp(<#initializer#>, <#initializer#>, venv, fenv, whileUsage->getTest());
                 try
                 {
+                    // Check while's test condition
+                    auto whileTest = transExp(level, breakExp, venv, fenv, whileUsage->getTest());
                     assertTypeMatch(whileTest.type, Type::INT, defaultLoc);
+                    // Check while's body
+                    auto whileBody = transExp(level, breakExp, venv, fenv, whileUsage->getBody());
+                    auto done = Translate::makeDoneExp();
+                    auto whileExp = Translate::makeWhileExp(whileTest.exp, whileBody.exp, done);
+                    return ExpTy(whileExp, Type::VOID);
                 }
                 catch (TypeNotMatchError &e)
                 {
                     Tiger::Error(e.loc, e.what());
                 }
-                // Trans while's body
-                auto whileBody = transExp(<#initializer#>, <#initializer#>, venv, fenv, whileUsage->getBody());
-                return ExpTy(nullptr, Type::VOID);
-            }
+                auto nonValue = Translate::makeNonValueExp();
+                return ExpTy(nonValue, Type::VOID);
                 break;
+            }
             case AST::ASSIGN_EXP:
             {
                 auto assignUsage = dynamic_pointer_cast<AST::AssignExp>(exp);
                 // Check assign's var
                 auto assignVar = assignUsage->getVar();
-                auto assignVarResult = transVar(<#initializer#>, <#initializer#>, venv, fenv, assignVar);
+                auto assignVarResult = transVar(level, breakExp, venv, fenv, assignVar);
                 // Check assign's exp
                 auto assignExp = assignUsage->getExp();
-                auto assignExpResult = transExp(<#initializer#>, <#initializer#>, venv, fenv, assignExp);
+                auto assignExpResult = transExp(level, breakExp, venv, fenv, assignExp);
                 // Check type
                 try
                 {
@@ -298,16 +316,25 @@ namespace Semantic
                 {
                     Tiger::Error err(e.loc, e.what());
                 }
-                return ExpTy(nullptr, Type::VOID);
-            }
+                auto assign = Translate::makeAssignExp(assignVarResult.exp, assignExpResult.exp);
+                return ExpTy(assign, Type::VOID);
                 break;
+            }
             case AST::BREAK_EXP:
             {
-                return ExpTy(nullptr, Type::VOID);
-            }
+                if (breakExp != nullptr)
+                {
+                    return ExpTy(Translate::makeNonValueExp(), Type::VOID);
+                }
+                else
+                {
+                    return ExpTy(Translate::makeBreakExp(breakExp), Type::VOID)
+                }
                 break;
+            }
             case AST::FOR_EXP:
             {
+                // TODO: convert to while inside a let expression
                 auto forUsage = dynamic_pointer_cast<AST::ForExp>(exp);
                 // Check low and high range
                 auto forLo = forUsage->getLo();
@@ -327,134 +354,250 @@ namespace Semantic
                 // Check declaration
                 auto forDec = AST::MakeVarDec(defaultLoc, forUsage->getVar(),
                                               Type::getName(Type::INT), forLo);
-                transDec(venv, fenv, forDec);
+                transDec(shared_ptr<Translate::Level>(), shared_ptr<Temporary::Label>(), venv, fenv,
+                         forDec);
                 // Check body
                 auto forBody = transExp(<#initializer#>, <#initializer#>, venv, fenv, forUsage->getBody());
                 fenv.endScope();
-                // TODO: Handle error?
                 return ExpTy(nullptr, Type::VOID);
+                break;
             }
             case AST::LET_EXP:
             {
+                // Begin scope
                 fenv.beginScope();
                 venv.beginScope();
                 // Check each exp decs
                 auto letUsage = dynamic_pointer_cast<AST::LetExp>(exp);
                 auto letDecs = letUsage->getDecs();
+                auto expList = Translate::makeExpList();
                 for (auto dec = letDecs->begin(); dec != letDecs->end(); dec++)
                 {
-                    transDec(venv, fenv, *dec);
+                    auto result = transDec(shared_ptr<Translate::Level>(), shared_ptr<Temporary::Label>(), venv, fenv,
+                                           *dec);
+                    expList->push_front(result);
                 }
                 // Check let exp body
                 auto letBody = letUsage->getBody();
-                auto result = transExp(<#initializer#>, <#initializer#>, venv, fenv, letBody);
+                auto result = transExp(level, breakExp, venv, fenv, letBody);
+                expList->push_front(result.exp);
+                // End scope
                 venv.endScope();
                 fenv.endScope();
-                return result;
-            }
+                return ExpTy(Translate::makeSeqExp(expList), result.type);
                 break;
+            }
             case AST::OP_EXP:
             {
                 auto opUsage = dynamic_pointer_cast<AST::OpExp>(exp);
                 // Check both side of op exp
-                auto opLeft = transExp(<#initializer#>, <#initializer#>, venv, fenv, opUsage->getLeft());
-                auto opRight = transExp(<#initializer#>, <#initializer#>, venv, fenv, opUsage->getRight());
+                auto opLeft = transExp(level, breakExp, venv, fenv, opUsage->getLeft());
+                auto opRight = transExp(level, breakExp, venv, fenv, opUsage->getRight());
                 // Check type
-                // TODO: need implementation with translate
                 try
                 {
-                    switch (opUsage->getOp())
+                    assertTypeMatch(opLeft.type, opRight.type, opUsage->getLeft()->getLoc());
+                    IR::ArithmeticOp arithOP;
+                    IR::ComparisonOp compOP;
+                    auto opLeftExp = opLeft.exp;
+                    auto opRightExp = opRight.exp;
+                    if (Type::isInt(opLeft.type))
                     {
-                        case AST::PLUSOP:
-                        case AST::MINUSOP:
-                        case AST::TIMESOP:
-                        case AST::DIVIDEOP:
-                            assertTypeMatch(opLeft.type, Type::INT, opUsage->getLeft()->getLoc());
-                            assertTypeMatch(opRight.type, Type::INT, opUsage->getRight()->getLoc());
-                            return ExpTy(nullptr, Type::INT);
-                            break;
-                        case AST::EQOP:
-                        case AST::NEQOP:
-                            if (Type::isNil(opLeft.type) && Type::isRecord(opRight.type))
-                            {
-                                return ExpTy(nullptr, Type::INT);
-                            }
-                            else if (Type::isRecord(opLeft.type) && Type::isNil(opRight.type))
-                            {
-                                return ExpTy(nullptr, Type::INT);
-                            }
-                            break;
-                        case AST::LTOP:
-                            break;
-                        case AST::LEOP:
-                            break;
-                        case AST::GTOP:
-                            break;
-                        case AST::GEOP:
-                            break;
+                        /*
+                         * Op exp type
+                         * 0 : Arithmetic exp
+                         * 1 : Comparison exp
+                         */
+                        int expType = 0;
+                        switch (opUsage->getOp())
+                        {
+                            case AST::PLUS:
+                                arithOP = IR::PLUS;
+                                break;
+                            case AST::MINUS:
+                                arithOP = IR::MINUS;
+                                break;
+                            case AST::TIMES:
+                                arithOP = IR::MUL;
+                                break;
+                            case AST::DIVIDE:
+                                arithOP = IR::DIV;
+                                break;
+                            case AST::EQ:
+                                expType = 1;
+                                compOP = IR::EQ;
+                                break;
+                            case AST::NEQ:
+                                expType = 1;
+                                compOP = IR::NE;
+                                break;
+                            case AST::LT:
+                                expType = 1;
+                                compOP = IR::LT;
+                                break;
+                            case AST::LE:
+                                expType = 1;
+                                compOP = IR::LE;
+                                break;
+                            case AST::GT:
+                                expType = 1;
+                                compOP = IR::GT;
+                                break;
+                            case AST::GE:
+                                expType = 1;
+                                compOP = IR::GE;
+                                break;
+                            default:
+                                expType = 2;
+                                break;
+                        }
+                        if (expType == 0)
+                        {
+                            auto arithExp = Translate::makeArithmeticExp(arithOP, opLeftExp, opRightExp);
+                            return ExpTy(arithExp, Type::INT);
+                        }
+                        else if (expType == 1)
+                        {
+                            auto compExp = Translate::makeIntComparisonExp(compOP, opLeftExp, opRightExp);
+                            return ExpTy(compExp, Type::INT);
+                        }
+                        else
+                        {
+                            Tiger::Error err(opUsage->getLoc(), "Invalid binary operation for int");
+                        }
+                    }
+                    else if (Type::isString(opLeft.type))
+                    {
+                        bool validOP = true;
+                        switch (opUsage->getOp())
+                        {
+                            case AST::EQ:
+                                compOP = IR::EQ;
+                                break;
+                            case AST::NEQ:
+                                compOP = IR::NE;
+                                break;
+                            case AST::LT:
+                                compOP = IR::LT;
+                                break;
+                            case AST::LE:
+                                compOP = IR::LE;
+                                break;
+                            case AST::GT:
+                                compOP = IR::GT;
+                                break;
+                            case AST::GE:
+                                compOP = IR::GE;
+                                break;
+                            default:
+                                validOP = false;
+                                break;
+                        }
+                        if (validOP)
+                        {
+                            auto compExp = Translate::makeStringComparisonExp(compOP, opLeftExp, opRightExp);
+                            return ExpTy(compExp, Type::INT);
+                        }
+                        else
+                        {
+                            Tiger::Error err(opUsage->getLoc(), "Invalid binary operation for string");
+                        }
+                    }
+                    else if (Type::isRecord(opLeft.type) || Type::isArray(opLeft.type))
+                    {
+                        bool validOP = true;
+                        switch (opUsage->getOp())
+                        {
+                            case AST::EQ:
+                                compOP = IR::EQ;
+                                break;
+                            case AST::NEQ:
+                                compOP = IR::NE;
+                                break;
+                            default:
+                                validOP = false;
+                                break;
+                        }
+                        if (validOP)
+                        {
+                            auto compExp = Translate::makeReferenceComparisonExp(compOP, opLeftExp, opRightExp);
+                            return ExpTy(compExp, Type::INT);
+                        }
+                        else
+                        {
+                            Tiger::Error err(opUsage->getLoc(), "Invalid binary operation for reference");
+                        }
                     }
                 }
                 catch (TypeNotMatchError &e)
                 {
-                    Tiger::Error(e.loc, e.what());
+                    Tiger::Error err(e.loc, e.what());
                 }
-            }
+                return ExpTy(Translate::makeNonValueExp(), Type::INT);
                 break;
+            }
             case AST::IF_EXP:
             {
                 auto ifUsage = dynamic_pointer_cast<AST::IfExp>(exp);
                 auto ifTestPtr = ifUsage->getTest();
                 auto ifThenPtr = ifUsage->getThen();
                 auto ifElsePtr = ifUsage->getElsee();
-                // Check if's test condition
-                auto ifTest = transExp(<#initializer#>, <#initializer#>, venv, fenv, ifTestPtr);
                 try
                 {
+                    // Check if's test condition
+                    auto ifTest = transExp(level, breakExp, venv, fenv, ifTestPtr);
                     assertTypeMatch(ifTest.type, Type::INT, ifTestPtr->getLoc());
+                    // Check if's then body
+                    auto ifThen = transExp(level, breakExp, venv, fenv, ifThenPtr);
+                    // Check if's else body
+                    shared_ptr<Translate::Exp> ifExp;
+                    if (ifElsePtr != nullptr)
+                    {
+                        auto ifElse = transExp(level, breakExp, venv, fenv, ifElsePtr);
+                        assertTypeMatch(ifThen.type, ifElse.type, ifThenPtr->getLoc());
+                        ifExp = Translate::makeIfExp(ifTest.exp, ifThen.exp, ifElse.exp);
+                    }
+                    else
+                    {
+                        ifExp = Translate::makeIfExp(ifTest.exp, ifThen.exp, nullptr);
+                    }
+                    return ExpTy(ifExp, ifThen.type);
                 }
                 catch (TypeNotMatchError &e)
                 {
                     Tiger::Error err(e.loc, e.what());
                 }
-                // Check if's then body
-                auto ifThen = transExp(<#initializer#>, <#initializer#>, venv, fenv, ifThenPtr);
-                // Check if's else body
-                if (ifElsePtr != nullptr)
-                {
-                    auto ifElse = transExp(<#initializer#>, <#initializer#>, venv, fenv, ifElsePtr);
-                    try
-                    {
-                        assertTypeMatch(ifThen.type, ifElse.type, ifThenPtr->getLoc());
-                    }
-                    catch (TypeNotMatchError &e)
-                    {
-                        Tiger::Error err(e.loc, e.what());
-                    }
-                }
-                // TODO: use which return?
-                return ExpTy(nullptr, ifThen.type);
+                return ExpTy(nullptr, Type::VOID);
             }
                 break;
             case AST::STRING_EXP:
             {
-                return ExpTy(nullptr, Type::STRING);
+                auto stringUsage = dynamic_pointer_cast<AST::StringExp>(exp);
+                auto stringExp = Translate::makeStringExp(stringUsage->getString());
+                return ExpTy(stringExp, Type::STRING);
             }
             case AST::INT_EXP:
             {
-                return ExpTy(nullptr, Type::INT);
+                auto intUsage = dynamic_pointer_cast<AST::IntExp>(exp);
+                auto intExp = Translate::makeIntExp(intUsage->getInt());
+                return ExpTy(intExp, Type::INT);
             }
             default:
             {
                 // TODO: handle default case
-            }
                 break;
+            }
         }
 
-        return ExpTy();
+        return ExpTy(nullptr, Type::VOID);
     }
 
 
-    void transDec(Env::VarEnv &venv, Env::FuncEnv &fenv, const shared_ptr<AST::Dec> dec)
+    shared_ptr<Translate::Exp> transDec(const shared_ptr<Translate::Level> level,
+                                        const shared_ptr<Translate::Exp> breakExp,
+                                        Env::VarEnv &venv,
+                                        Env::FuncEnv &fenv,
+                                        const shared_ptr<AST::Dec> dec)
     {
         // DEBUG
         Debugger d("Trans dec");
@@ -463,13 +606,13 @@ namespace Semantic
         {
             case AST::VAR_DEC:
             {
-
                 auto varUsage = dynamic_pointer_cast<AST::VarDec>(dec);
                 auto varName = varUsage->getVar();
                 // Check var init
-                auto varInit = transExp(<#initializer#>, <#initializer#>, venv, fenv, varUsage->getInit());
+                auto varInit = transExp(level, breakExp, venv, fenv, varUsage->getInit());
+                auto varAlloc = Translate::allocLocal(level, varUsage->isEscape());
                 // If type name is empty
-                shared_ptr<Type::Type> varType = make_shared<Type::Type>();
+                auto varType = make_shared<Type::Type>();
                 if (0 != varUsage->getTyp().size())
                 {
                     try
@@ -485,7 +628,6 @@ namespace Semantic
                 }
                 else
                 {
-                    // TODO: reconsider the logic
                     try
                     {
                         auto varResult = fenv.find(varUsage->getTyp());
@@ -503,18 +645,21 @@ namespace Semantic
                 }
                 Env::VarEntry ve(varName, varType, shared_ptr<Translate::Access>());
                 venv.enter(ve);
-            }
+                auto simpleVar = Translate::makeSimpleVar(varAlloc, level);
+                return Translate::makeAssignExp(simpleVar, varInit.exp);
                 break;
+            }
             case AST::FUNCTION_DEC:
             {
                 auto funcUsage = dynamic_pointer_cast<AST::FunctionDec>(dec);
                 auto funcList = funcUsage->getFunction();
                 // Add functions' declaration
-                for (auto f = funcList->begin(); f != funcList->end(); f++)
+                for (auto func = funcList->begin(); func != funcList->end(); func++)
                 {
                     // Check func return type
-                    auto returnTypeName = (*f)->getResult();
-                    shared_ptr<Type::Type> returnType = make_shared<Type::Type>();
+                    auto returnTypeName = (*func)->getResult();
+                    auto returnType = make_shared<Type::Type>();
+                    // No return type specified, use void instead
                     if (returnTypeName.size() == 0)
                     {
                         returnType = Type::VOID;
@@ -527,17 +672,17 @@ namespace Semantic
                         }
                         catch (Env::EntryNotFound &e)
                         {
+                            // Return type not defined
                             Tiger::Error err(defaultLoc, e.what());
                             returnType = Type::VOID;
                         }
                     }
-                    Env::FuncEntry fe(shared_ptr<Translate::Level>(), shared_ptr<Temporary::Label>(),(*f)->getName(),
-                            returnType);
-                    // Check and add args
-                    auto args = (*f)->getParams();
+                    Env::FuncEntry funcEntry(level, Temporary::makeLabel(), (*func)->getName(), returnType);
+                    // Check and add args to new function entry
+                    auto args = (*func)->getParams();
                     for (auto arg = args->begin(); arg != args->end(); arg++)
                     {
-                        shared_ptr<Type::Type> argType = make_shared<Type::Type>();
+                        auto argType = make_shared<Type::Type>();
                         try
                         {
                             // TODO: getTyp? getName?
@@ -548,49 +693,40 @@ namespace Semantic
                             Tiger::Error err((*arg)->getLoc(), e.what());
                             argType = Type::INT;
                         }
-                        fe.addArg(argType);
+                        funcEntry.addArg(argType);
                     }
                     // Add func into func environment
-                    fenv.enter(fe);
+                    fenv.enter(funcEntry);
                 }
                 // Traverse all functions' body to check `return type`
                 // Need to form function environment first, then traverse their body
-                for (auto f = funcList->begin(); f != funcList->end(); f++)
+                for (auto func = funcList->begin(); func != funcList->end(); func++)
                 {
-                    // TODO: venv scope?
                     fenv.beginScope();
-                    auto args = (*f)->getParams();
+                    auto funcEntry = fenv.find((*func)->getName());
+                    auto args = funcEntry->getArgs();
                     // Add args into var environment
                     for (auto arg = args->begin(); arg != args->end(); arg++)
                     {
-                        auto argName = (*arg)->getName();
-                        shared_ptr<Type::Type> argType = make_shared<Type::Type>();
-                        try
-                        {
-                            argType = venv.find(argName)->getType();
-                        }
-                        catch (Env::EntryNotFound &e)
-                        {
-                            Tiger::Error err((*arg)->getLoc(), e.what());
-                            argType = Type::INT;
-                        }
+                        auto argName = Type::getName(*arg);
+                        auto argType = *arg;
                         Env::VarEntry argEntry(argName, argType, shared_ptr<Translate::Access>());
                         venv.enter(argEntry);
                     }
                     // Traverse func body
-                    auto func = transExp(<#initializer#>, <#initializer#>, venv, fenv, (*f)->getBody());
+                    auto funcExp = transExp(level, breakExp, venv, fenv, (*func)->getBody());
                     try
                     {
-                        auto returnType = fenv.find((*f)->getName())->getResultType();
-                        assertTypeMatch(func.type, returnType, (*f)->getLoc());
+                        auto returnType = fenv.find((*func)->getName())->getResultType();
+                        assertTypeMatch(funcExp.type, returnType, (*func)->getLoc());
                     }
                     catch (Env::EntryNotFound &e)
                     {
-                        Tiger::Error err((*f)->getLoc(), e.what());
+                        Tiger::Error err((*func)->getLoc(), e.what());
                     }
                     catch (TypeNotMatchError &e)
                     {
-                        Tiger::Error err((*f)->getLoc(), e.what());
+                        Tiger::Error err((*func)->getLoc(), e.what());
                     }
                     fenv.endScope();
                 }
@@ -721,7 +857,10 @@ namespace Semantic
         }
     }
 
-    void checkRecordEfields(Env::VarEnv &venv, Env::FuncEnv &fenv,
+    void checkRecordEfields(shared_ptr<Translate::Level> level,
+                            shared_ptr<Translate::Exp> breakExp,
+                            Env::VarEnv venv,
+                            Env::FuncEnv fenv,
                             shared_ptr<AST::RecordExp> usage,
                             shared_ptr<Env::VarEntry> def)
     {
@@ -744,7 +883,7 @@ namespace Semantic
         for (; (uIter != uEfields->end()) && (dIter != dEfields->end());
                uIter++, dIter++)
         {
-            auto t = transExp(<#initializer#>, <#initializer#>, venv, fenv, (*uIter)->getExp());
+            auto t = transExp(level, breakExp, venv, fenv, (*uIter)->getExp());
             auto dType = (*dIter)->type;
             auto uType = t.type;
             if (!Type::match(dType, uType))
@@ -758,7 +897,10 @@ namespace Semantic
     }
 
 
-    void checkCallArgs(Env::VarEnv &venv, Env::FuncEnv &fenv,
+    void checkCallArgs(shared_ptr<Translate::Level> level,
+                       shared_ptr<Translate::Exp> breakExp,
+                       Env::VarEnv &venv,
+                       Env::FuncEnv &fenv
                        const shared_ptr<AST::CallExp> usage,
                        const shared_ptr<Env::FuncEntry> def)
     {
@@ -779,7 +921,7 @@ namespace Semantic
         for (; (uIter != uArgs->end()) && (dIter != dArgs->end());
                uIter++, dIter++)
         {
-            auto t = transExp(<#initializer#>, <#initializer#>, venv, fenv, (*uIter));
+            auto t = transExp(level, breakExp, venv, fenv, (*uIter));
             auto dType = (*dIter);
             auto uType = t.type;
             if (!Type::match(dType, uType))
