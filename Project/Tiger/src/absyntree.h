@@ -464,7 +464,7 @@ namespace AST
     {
         shared_ptr<FunDecList> function;
     public:
-        FunctionDec(Tiger::location loc, const shared_ptr<FunDecList> &function);
+        FunctionDec(Tiger::location loc, const shared_ptr<FunDecList> function);
 
         const shared_ptr<FunDecList> &getFunction() const;
     };

@@ -1,6 +1,10 @@
 #include <iostream>
+#include <fstream>
 #include "../src/driver.h"
 #include "../src/Semantic.h"
+#include "../src/PrintIRTree.h"
+
+using namespace std;
 
 int main(int argc, char * argv[]){
     std::cout << "Tiger Compiler" << std::endl;
@@ -14,7 +18,12 @@ int main(int argc, char * argv[]){
             std::cout << "Openning file: " << argv[i] << std::endl;
             driver.parse(argv[i]);
             auto result = driver.result;
-            Semantic::transProg(result);
+            auto fragList = Semantic::transProg(result);
+            ofstream of("tiger.txt", ios::out);
+            PrintIRTree printer(fragList);
+            of << "Tiger output" << endl;
+            printer.printIRTreeInFile(of);
+            of.close();
         }
     }
     return 0;

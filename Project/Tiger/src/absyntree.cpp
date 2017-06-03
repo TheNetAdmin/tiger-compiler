@@ -406,8 +406,8 @@ namespace AST
 
 // FunctionDec-------------------------------
 
-    FunctionDec::FunctionDec(Tiger::location loc, const shared_ptr<FunDecList> &function) : Dec(loc, FUNCTION_DEC),
-                                                                                            function(function)
+    FunctionDec::FunctionDec(Tiger::location loc, const shared_ptr<FunDecList> function) : Dec(loc, FUNCTION_DEC),
+                                                                                           function(function)
     {}
 
     const shared_ptr<FunDecList> &FunctionDec::getFunction() const
@@ -587,7 +587,8 @@ namespace AST
 
     shared_ptr<Dec> MakeFunctionDec(Tiger::location loc, shared_ptr<FunDecList> function)
     {
-        return make_shared<FunctionDec>(loc, function);
+        auto func = make_shared<FunctionDec>(loc, function);
+        return func;
     }
 
     shared_ptr<Dec> MakeVarDec(Tiger::location loc, const string &var, const string &typ, shared_ptr<Exp> init)

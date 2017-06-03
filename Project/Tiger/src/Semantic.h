@@ -121,7 +121,7 @@ namespace Semantic
                                     const std::string &usageType);
     };
 
-    void transProg(std::shared_ptr<AST::Exp> exp);
+    shared_ptr<Frame::FragList> transProg(std::shared_ptr<AST::Exp> exp);
 
     ExpTy transExp(shared_ptr<Translate::Level> level, shared_ptr<Translate::Exp> breakExp, Env::TypeEnv &typeEnv,
                    Env::VarEnv &varEnv, shared_ptr<AST::Exp> exp) noexcept(true);

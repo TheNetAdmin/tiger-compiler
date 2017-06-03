@@ -3,6 +3,7 @@
 //
 
 #include "Env.h"
+#include "Debug.h"
 
 namespace Env
 {
@@ -50,6 +51,14 @@ namespace Env
     std::shared_ptr<Type::Type> VarEntry::getType() const
     {
         return type;
+    }
+
+    void VarEntry::dumpInfo()
+    {
+        std::cerr << "Var Entry Dump Info" << std::endl;
+        std::cerr << "Var name : " << name << std::endl;
+        std::cerr << "Var type : " << Type::getName(type) << std::endl;
+        std::cerr << std::endl;
     }
 
     FuncEntry::FuncEntry()
@@ -265,33 +274,22 @@ namespace Env
     std::shared_ptr<VarEntry> VarEnv::findVar(const std::string &varName)
     {
         auto entry = find(varName);
-        if (typeid(entry) != typeid(std::shared_ptr<VarEntry>))
-        {
-            throw EntryNotFound("Var entry not found : " + varName);
-        }
-        else
-        {
-            return std::dynamic_pointer_cast<VarEntry>(entry);
-        }
+        return std::dynamic_pointer_cast<VarEntry>(entry);
     }
 
     std::shared_ptr<FuncEntry> VarEnv::findFunc(const std::string &funcName)
     {
+        Debugger d("Env::VarEntry::findFunc: " + funcName);
         auto entry = find(funcName);
-        if (typeid(entry) != typeid(std::shared_ptr<FuncEntry>))
-        {
-            throw EntryNotFound("Function entry not found : " + funcName);
-        }
-        else
-        {
-            return std::dynamic_pointer_cast<FuncEntry>(entry);
-        }
+        return std::dynamic_pointer_cast<FuncEntry>(entry);
     }
 
     void VarEnv::enterFunc(FuncEntry funcEntry)
     {
         auto funcPtr = std::make_shared<FuncEntry>(funcEntry);
+        funcPtr->dumpInfo();
         enter(funcPtr);
+        std::cerr << bindList.back()->name << std::endl << std::endl;
     }
 
     void VarEnv::enterVar(VarEntry varEntry)

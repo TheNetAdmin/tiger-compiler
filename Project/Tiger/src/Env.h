@@ -53,6 +53,8 @@ namespace Env
                  const std::shared_ptr<Translate::Access> access);
 
         std::shared_ptr<Type::Type> getType() const;
+
+        void dumpInfo();
     };
 
     using ArgList = std::list<std::shared_ptr<Type::Type>>;
@@ -112,6 +114,20 @@ namespace Env
         const std::shared_ptr<ArgList> getArgs() const;
 
         const std::shared_ptr<Type::Type> getResultType() const;
+
+        void dumpInfo()
+        {
+            std::cerr << "Func Entry Dump Info" << std::endl;
+            std::cerr << "Func Name : " << name << std::endl;
+            std::cerr << "Args : ";
+            for (auto arg = args->begin(); arg != args->end(); arg++)
+            {
+                std::cerr << Type::getName(*arg) << " - ";
+            }
+            std::cerr << std::endl;
+            std::cerr << "Return : " << Type::getName(result) << std::endl;
+            std::cerr << std::endl;
+        }
     };
 
     class Env

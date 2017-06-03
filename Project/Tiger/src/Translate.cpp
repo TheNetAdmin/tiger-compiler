@@ -301,7 +301,7 @@ namespace Translate
         std::shared_ptr<Temporary::Temp> nilTemp;
     }
 
-    void procEntyExit(std::shared_ptr<Level> level, std::shared_ptr<Exp> body)
+    void procEntryExit(std::shared_ptr<Level> level, std::shared_ptr<Exp> body)
     {
         auto procBody = unNx(body);
         auto procFrame = level->getFrame();

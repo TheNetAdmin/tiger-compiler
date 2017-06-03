@@ -8,7 +8,7 @@
 namespace Semantic
 {
 
-    void transProg(std::shared_ptr<AST::Exp> exp)
+    shared_ptr<Frame::FragList> transProg(std::shared_ptr<AST::Exp> exp)
     {
         Debugger d("Trans prog");
         ExpTy expType;
@@ -19,6 +19,8 @@ namespace Semantic
         varEnv.setDefaultEnv();
         // traverse program's root exp
         expType = transExp(Translate::getGlobalLevel(), nullptr, typeEnv, varEnv, exp);
+        auto resultList = Translate::getResult();
+        return resultList;
     }
 
     ExpTy transVar(shared_ptr<Translate::Level> level, shared_ptr<Translate::Exp> breakExp, Env::TypeEnv &typeEnv,
@@ -41,7 +43,7 @@ namespace Semantic
                 try
                 {
                     auto simpleVar = dynamic_pointer_cast<AST::SimpleVar>(var);
-                    auto queryResult = typeEnv.find(simpleVar->getSimple());
+                    auto queryResult = varEnv.findVar(simpleVar->getSimple());
                     return ExpTy(nonValue, queryResult->type);
                 }
                 catch (Env::EntryNotFound &e)
@@ -652,6 +654,7 @@ namespace Semantic
             {
                 auto funcUsage = dynamic_pointer_cast<AST::FunctionDec>(dec);
                 auto funcList = funcUsage->getFunction();
+                cout << funcList->front()->getName() << endl;
                 // Add functions' declaration
                 for (auto func = funcList->begin(); func != funcList->end(); func++)
                 {
@@ -700,6 +703,7 @@ namespace Semantic
                     auto funcLabel = Temporary::makeLabel();
                     auto funcLevel = Translate::makeNewLevel(level, funcLabel, formals);
                     Env::FuncEntry funcEntry(funcLevel, funcLabel, (*func)->getName(), argTypeList, returnType);
+                    funcEntry.dumpInfo();
                     varEnv.enterFunc(funcEntry);
                 }
                 // Traverse all functions' body to check `return type`
@@ -707,17 +711,28 @@ namespace Semantic
                 for (auto func = funcList->begin(); func != funcList->end(); func++)
                 {
                     varEnv.beginScope();
-                    auto funcEntry = varEnv.findFunc((*func)->getName());
+                    std::shared_ptr<Env::FuncEntry> funcEntry;
+                    try
+                    {
+                        std::cerr << (*func)->getName() << endl;
+                        auto funcName = (*func)->getName();
+                        funcEntry = varEnv.findFunc(funcName);
+                    }
+                    catch (Env::EntryNotFound &e)
+                    {
+                        Tiger::Error err(e.what());
+                    }
                     // Add args into var environment
-                    auto args = funcEntry->getArgs();
+                    auto args = (*func)->getParams();
                     auto accessList = funcEntry->getLevel()->getFormals();
                     auto access = accessList->begin();
                     for (auto arg = args->begin();
                          (arg != args->end()) && (access != accessList->end()); arg++, access++)
                     {
-                        auto argName = Type::getName(*arg);
-                        auto argType = *arg;
-                        Env::VarEntry argEntry(argName, argType, (*access));
+                        auto argName = (*arg)->getName();
+                        auto argType = typeEnv.find((*arg)->getTyp())->getType();
+                        Env::VarEntry argEntry(argName, Type::INT, (*access));
+                        argEntry.dumpInfo();
                         varEnv.enterVar(argEntry);
                     }
                     // Traverse func body
@@ -737,6 +752,7 @@ namespace Semantic
                         msg += e.what();
                         Tiger::Error err((*func)->getLoc(), msg);
                     }
+                    Translate::procEntryExit(funcEntry->getLevel(), funcExp.exp);
                     varEnv.endScope();
                 }
                 return Translate::makeNonValueExp();

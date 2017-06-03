@@ -8,11 +8,15 @@ namespace Tiger
 {
 
     Error::Error() : hasError(false)
-    {}
+    {
+        print();
+    }
 
     Error::Error(const location &loc, const std::string &message)
             : loc(loc), message(message), hasError(true)
-    {}
+    {
+        print();
+    }
 
     void Error::set(const location &loc, const std::string &message)
     {
@@ -29,6 +33,6 @@ namespace Tiger
     Error::Error(const std::string &message)
             : message(message)
     {
-
+        print();
     }
 }

@@ -167,7 +167,7 @@ namespace Translate
 
     std::shared_ptr<ExpList> makeExpList();
 
-    void procEntyExit(std::shared_ptr<Level>, std::shared_ptr<Exp>);
+    void procEntryExit(std::shared_ptr<Level>, std::shared_ptr<Exp>);
 
     std::shared_ptr<Frame::FragList> getResult();
 
