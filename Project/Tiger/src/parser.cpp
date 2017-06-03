@@ -51,11 +51,11 @@
 // Unqualified %code blocks.
 #line 28 "src/bison/parser.yy" // lalr1.cc:413
 
-    #include "driver.h"
-    shared_ptr<AST::Exp> absyn_root;
+#include "driver.h"
     using namespace AST;
+shared_ptr<AST::Exp> absyn_root;
 
-#line 59 "src/parser.cpp" // lalr1.cc:413
+#line 60 "src/parser.cpp" // lalr1.cc:413
 
 
 #ifndef YY_
@@ -141,7 +141,7 @@
 
 #line 4 "src/bison/parser.yy" // lalr1.cc:479
 namespace Tiger {
-#line 145 "src/parser.cpp" // lalr1.cc:479
+#line 146 "src/parser.cpp" // lalr1.cc:479
 
   /* Return YYSTR after stripping away unnecessary quotes and
      backslashes, so that it's suitable for yyerror.  The heuristic is
@@ -532,7 +532,7 @@ namespace Tiger {
     yyla.location.begin.filename = yyla.location.end.filename = &driver.filename;
 }
 
-#line 536 "src/parser.cpp" // lalr1.cc:741
+#line 537 "src/parser.cpp" // lalr1.cc:741
 
     /* Initialize the stack.  The initial state will be set in
        yynewstate, since the latter expects the semantical and the
@@ -699,409 +699,409 @@ namespace Tiger {
           switch (yyn)
             {
   case 2:
-#line 74 "src/bison/parser.yy" // lalr1.cc:859
+#line 75 "src/bison/parser.yy" // lalr1.cc:859
     {absyn_root = yystack_[0].value.as< shared_ptr<AST::Exp> > (); driver.result = absyn_root;}
-#line 705 "src/parser.cpp" // lalr1.cc:859
+#line 706 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 3:
-#line 76 "src/bison/parser.yy" // lalr1.cc:859
+#line 77 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeVarExp(yylhs.location, yystack_[0].value.as< shared_ptr<AST::Var> > ());}
-#line 711 "src/parser.cpp" // lalr1.cc:859
+#line 712 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 4:
-#line 77 "src/bison/parser.yy" // lalr1.cc:859
+#line 78 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Exp> > () = yystack_[0].value.as< shared_ptr<AST::Exp> > ();}
-#line 717 "src/parser.cpp" // lalr1.cc:859
+#line 718 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 5:
-#line 78 "src/bison/parser.yy" // lalr1.cc:859
+#line 79 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeAssignExp(yylhs.location, yystack_[2].value.as< shared_ptr<AST::Var> > (), yystack_[0].value.as< shared_ptr<AST::Exp> > ());}
-#line 723 "src/parser.cpp" // lalr1.cc:859
+#line 724 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 6:
-#line 79 "src/bison/parser.yy" // lalr1.cc:859
+#line 80 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeNilExp(yylhs.location);}
-#line 729 "src/parser.cpp" // lalr1.cc:859
+#line 730 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 7:
-#line 80 "src/bison/parser.yy" // lalr1.cc:859
+#line 81 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Exp> > () = yystack_[0].value.as< shared_ptr<AST::Exp> > ();}
-#line 735 "src/parser.cpp" // lalr1.cc:859
+#line 736 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 8:
-#line 81 "src/bison/parser.yy" // lalr1.cc:859
+#line 82 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeIntExp(yylhs.location, yystack_[0].value.as< int > ());}
-#line 741 "src/parser.cpp" // lalr1.cc:859
+#line 742 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 9:
-#line 82 "src/bison/parser.yy" // lalr1.cc:859
+#line 83 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeStringExp(yylhs.location, yystack_[0].value.as< string > ());}
-#line 747 "src/parser.cpp" // lalr1.cc:859
+#line 748 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 10:
-#line 83 "src/bison/parser.yy" // lalr1.cc:859
+#line 84 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeLetExp(yylhs.location, yystack_[3].value.as< shared_ptr<AST::DecList> > (), MakeSeqExp(yylhs.location, yystack_[1].value.as< shared_ptr<AST::ExpList> > ()));}
-#line 753 "src/parser.cpp" // lalr1.cc:859
+#line 754 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 11:
-#line 84 "src/bison/parser.yy" // lalr1.cc:859
+#line 85 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeIfExp(yylhs.location, yystack_[4].value.as< shared_ptr<AST::Exp> > (), yystack_[2].value.as< shared_ptr<AST::Exp> > (), yystack_[0].value.as< shared_ptr<AST::Exp> > ());}
-#line 759 "src/parser.cpp" // lalr1.cc:859
+#line 760 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 12:
-#line 85 "src/bison/parser.yy" // lalr1.cc:859
+#line 86 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeIfExp(yylhs.location, yystack_[2].value.as< shared_ptr<AST::Exp> > (), yystack_[0].value.as< shared_ptr<AST::Exp> > (), nullptr);}
-#line 765 "src/parser.cpp" // lalr1.cc:859
+#line 766 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 13:
-#line 86 "src/bison/parser.yy" // lalr1.cc:859
+#line 87 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeOpExp(yylhs.location, PLUSOP, yystack_[2].value.as< shared_ptr<AST::Exp> > (), yystack_[0].value.as< shared_ptr<AST::Exp> > ());}
-#line 771 "src/parser.cpp" // lalr1.cc:859
+#line 772 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 14:
-#line 87 "src/bison/parser.yy" // lalr1.cc:859
+#line 88 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeOpExp(yylhs.location, MINUSOP, yystack_[2].value.as< shared_ptr<AST::Exp> > (), yystack_[0].value.as< shared_ptr<AST::Exp> > ());}
-#line 777 "src/parser.cpp" // lalr1.cc:859
+#line 778 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 15:
-#line 88 "src/bison/parser.yy" // lalr1.cc:859
+#line 89 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeOpExp(yylhs.location, TIMESOP, yystack_[2].value.as< shared_ptr<AST::Exp> > (), yystack_[0].value.as< shared_ptr<AST::Exp> > ());}
-#line 783 "src/parser.cpp" // lalr1.cc:859
+#line 784 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 16:
-#line 89 "src/bison/parser.yy" // lalr1.cc:859
+#line 90 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeOpExp(yylhs.location, DIVIDEOP, yystack_[2].value.as< shared_ptr<AST::Exp> > (), yystack_[0].value.as< shared_ptr<AST::Exp> > ());}
-#line 789 "src/parser.cpp" // lalr1.cc:859
+#line 790 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 17:
-#line 90 "src/bison/parser.yy" // lalr1.cc:859
+#line 91 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeOpExp(yylhs.location, EQOP, yystack_[2].value.as< shared_ptr<AST::Exp> > (), yystack_[0].value.as< shared_ptr<AST::Exp> > ());}
-#line 795 "src/parser.cpp" // lalr1.cc:859
+#line 796 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 18:
-#line 91 "src/bison/parser.yy" // lalr1.cc:859
+#line 92 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeOpExp(yylhs.location, MINUSOP, MakeIntExp(yylhs.location, 0), yystack_[0].value.as< shared_ptr<AST::Exp> > ());}
-#line 801 "src/parser.cpp" // lalr1.cc:859
+#line 802 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 19:
-#line 92 "src/bison/parser.yy" // lalr1.cc:859
+#line 93 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeOpExp(yylhs.location, NEQOP, yystack_[2].value.as< shared_ptr<AST::Exp> > (), yystack_[0].value.as< shared_ptr<AST::Exp> > ());}
-#line 807 "src/parser.cpp" // lalr1.cc:859
+#line 808 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 20:
-#line 93 "src/bison/parser.yy" // lalr1.cc:859
+#line 94 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeOpExp(yylhs.location, GTOP, yystack_[2].value.as< shared_ptr<AST::Exp> > (), yystack_[0].value.as< shared_ptr<AST::Exp> > ());}
-#line 813 "src/parser.cpp" // lalr1.cc:859
+#line 814 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 21:
-#line 94 "src/bison/parser.yy" // lalr1.cc:859
+#line 95 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeOpExp(yylhs.location, LTOP, yystack_[2].value.as< shared_ptr<AST::Exp> > (), yystack_[0].value.as< shared_ptr<AST::Exp> > ());}
-#line 819 "src/parser.cpp" // lalr1.cc:859
+#line 820 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 22:
-#line 95 "src/bison/parser.yy" // lalr1.cc:859
+#line 96 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeOpExp(yylhs.location, GEOP, yystack_[2].value.as< shared_ptr<AST::Exp> > (), yystack_[0].value.as< shared_ptr<AST::Exp> > ());}
-#line 825 "src/parser.cpp" // lalr1.cc:859
+#line 826 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 23:
-#line 96 "src/bison/parser.yy" // lalr1.cc:859
+#line 97 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeOpExp(yylhs.location, LEOP, yystack_[2].value.as< shared_ptr<AST::Exp> > (), yystack_[0].value.as< shared_ptr<AST::Exp> > ());}
-#line 831 "src/parser.cpp" // lalr1.cc:859
+#line 832 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 24:
-#line 97 "src/bison/parser.yy" // lalr1.cc:859
+#line 98 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeIfExp(yylhs.location, yystack_[2].value.as< shared_ptr<AST::Exp> > (), yystack_[0].value.as< shared_ptr<AST::Exp> > (), MakeIntExp(yylhs.location, 0));}
-#line 837 "src/parser.cpp" // lalr1.cc:859
+#line 838 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 25:
-#line 98 "src/bison/parser.yy" // lalr1.cc:859
+#line 99 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeIfExp(yylhs.location, yystack_[2].value.as< shared_ptr<AST::Exp> > (), MakeIntExp(yylhs.location,1), yystack_[0].value.as< shared_ptr<AST::Exp> > ());}
-#line 843 "src/parser.cpp" // lalr1.cc:859
+#line 844 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 26:
-#line 99 "src/bison/parser.yy" // lalr1.cc:859
+#line 100 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Exp> > () = yystack_[0].value.as< shared_ptr<AST::Exp> > ();}
-#line 849 "src/parser.cpp" // lalr1.cc:859
+#line 850 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 27:
-#line 100 "src/bison/parser.yy" // lalr1.cc:859
+#line 101 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Exp> > () = yystack_[0].value.as< shared_ptr<AST::Exp> > ();}
-#line 855 "src/parser.cpp" // lalr1.cc:859
+#line 856 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 28:
-#line 101 "src/bison/parser.yy" // lalr1.cc:859
+#line 102 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeWhileExp(yylhs.location, yystack_[2].value.as< shared_ptr<AST::Exp> > (), yystack_[0].value.as< shared_ptr<AST::Exp> > ());}
-#line 861 "src/parser.cpp" // lalr1.cc:859
+#line 862 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 29:
-#line 102 "src/bison/parser.yy" // lalr1.cc:859
+#line 103 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeForExp(yylhs.location, yystack_[6].value.as< string > (), yystack_[4].value.as< shared_ptr<AST::Exp> > (), yystack_[2].value.as< shared_ptr<AST::Exp> > (), yystack_[0].value.as< shared_ptr<AST::Exp> > ());}
-#line 867 "src/parser.cpp" // lalr1.cc:859
+#line 868 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 30:
-#line 103 "src/bison/parser.yy" // lalr1.cc:859
+#line 104 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeBreakExp(yylhs.location);}
-#line 873 "src/parser.cpp" // lalr1.cc:859
+#line 874 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 31:
-#line 105 "src/bison/parser.yy" // lalr1.cc:859
+#line 106 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeSeqExp(yylhs.location, yystack_[1].value.as< shared_ptr<AST::ExpList> > ());}
-#line 879 "src/parser.cpp" // lalr1.cc:859
+#line 880 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 32:
-#line 107 "src/bison/parser.yy" // lalr1.cc:859
+#line 108 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeRecordExp(yylhs.location, yystack_[3].value.as< string > (), yystack_[1].value.as< shared_ptr<AST::EFieldList> > ());}
-#line 885 "src/parser.cpp" // lalr1.cc:859
+#line 886 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 33:
-#line 109 "src/bison/parser.yy" // lalr1.cc:859
+#line 110 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::EFieldList> > () = MakeEFieldList(MakeEField(yystack_[4].value.as< string > (), yystack_[2].value.as< shared_ptr<AST::Exp> > ()), yystack_[0].value.as< shared_ptr<AST::EFieldList> > ());}
-#line 891 "src/parser.cpp" // lalr1.cc:859
+#line 892 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 34:
-#line 110 "src/bison/parser.yy" // lalr1.cc:859
+#line 111 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::EFieldList> > () = MakeEFieldList(MakeEField(yystack_[2].value.as< string > (), yystack_[0].value.as< shared_ptr<AST::Exp> > ()), nullptr);}
-#line 897 "src/parser.cpp" // lalr1.cc:859
+#line 898 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 35:
-#line 111 "src/bison/parser.yy" // lalr1.cc:859
+#line 112 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::EFieldList> > () = nullptr;}
-#line 903 "src/parser.cpp" // lalr1.cc:859
+#line 904 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 36:
-#line 113 "src/bison/parser.yy" // lalr1.cc:859
+#line 114 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeArrayExp(yylhs.location, yystack_[5].value.as< string > (), yystack_[3].value.as< shared_ptr<AST::Exp> > (), yystack_[0].value.as< shared_ptr<AST::Exp> > ());}
-#line 909 "src/parser.cpp" // lalr1.cc:859
+#line 910 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 37:
-#line 116 "src/bison/parser.yy" // lalr1.cc:859
+#line 117 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::DecList> > () = MakeDecList(yystack_[1].value.as< shared_ptr<AST::Dec> > (), yystack_[0].value.as< shared_ptr<AST::DecList> > ());}
-#line 915 "src/parser.cpp" // lalr1.cc:859
+#line 916 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 38:
-#line 117 "src/bison/parser.yy" // lalr1.cc:859
+#line 118 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::DecList> > () = nullptr;}
-#line 921 "src/parser.cpp" // lalr1.cc:859
+#line 922 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 39:
-#line 119 "src/bison/parser.yy" // lalr1.cc:859
+#line 120 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Dec> > () = yystack_[0].value.as< shared_ptr<AST::Dec> > ();}
-#line 927 "src/parser.cpp" // lalr1.cc:859
+#line 928 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 40:
-#line 120 "src/bison/parser.yy" // lalr1.cc:859
+#line 121 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Dec> > () = yystack_[0].value.as< shared_ptr<AST::Dec> > ();}
-#line 933 "src/parser.cpp" // lalr1.cc:859
+#line 934 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 41:
-#line 121 "src/bison/parser.yy" // lalr1.cc:859
+#line 122 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Dec> > () = yystack_[0].value.as< shared_ptr<AST::Dec> > ();}
-#line 939 "src/parser.cpp" // lalr1.cc:859
+#line 940 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 42:
-#line 123 "src/bison/parser.yy" // lalr1.cc:859
+#line 124 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Dec> > () = MakeTypeDec(yylhs.location, MakeTypeTyList(yystack_[1].value.as< shared_ptr<AST::TypeTy> > (), dynamic_pointer_cast<TypeDec>(yystack_[0].value.as< shared_ptr<AST::Dec> > ())->getType()));}
-#line 945 "src/parser.cpp" // lalr1.cc:859
+#line 946 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 43:
-#line 124 "src/bison/parser.yy" // lalr1.cc:859
+#line 125 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Dec> > () = MakeTypeDec(yylhs.location, MakeTypeTyList(yystack_[0].value.as< shared_ptr<AST::TypeTy> > (), nullptr));}
-#line 951 "src/parser.cpp" // lalr1.cc:859
+#line 952 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 44:
-#line 126 "src/bison/parser.yy" // lalr1.cc:859
+#line 127 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::TypeTy> > () = MakeTypeTy(yystack_[2].value.as< string > (), yystack_[0].value.as< shared_ptr<AST::Ty> > ());}
-#line 957 "src/parser.cpp" // lalr1.cc:859
+#line 958 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 45:
-#line 128 "src/bison/parser.yy" // lalr1.cc:859
+#line 129 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Ty> > () = MakeNameTy(yylhs.location, yystack_[0].value.as< string > ());}
-#line 963 "src/parser.cpp" // lalr1.cc:859
+#line 964 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 46:
-#line 129 "src/bison/parser.yy" // lalr1.cc:859
+#line 130 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Ty> > () = MakeRecordTy(yylhs.location, yystack_[1].value.as< shared_ptr<AST::FieldList> > ());}
-#line 969 "src/parser.cpp" // lalr1.cc:859
+#line 970 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 47:
-#line 130 "src/bison/parser.yy" // lalr1.cc:859
+#line 131 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Ty> > () = MakeArrayTy(yylhs.location, yystack_[0].value.as< string > ());}
-#line 975 "src/parser.cpp" // lalr1.cc:859
+#line 976 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 48:
-#line 132 "src/bison/parser.yy" // lalr1.cc:859
+#line 133 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::FieldList> > () = MakeFieldList(MakeField(yylhs.location, yystack_[4].value.as< string > (), yystack_[2].value.as< string > ()), yystack_[0].value.as< shared_ptr<AST::FieldList> > ());}
-#line 981 "src/parser.cpp" // lalr1.cc:859
+#line 982 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 49:
-#line 133 "src/bison/parser.yy" // lalr1.cc:859
+#line 134 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::FieldList> > () = MakeFieldList(MakeField(yylhs.location, yystack_[2].value.as< string > (), yystack_[0].value.as< string > ()), nullptr);}
-#line 987 "src/parser.cpp" // lalr1.cc:859
+#line 988 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 50:
-#line 134 "src/bison/parser.yy" // lalr1.cc:859
+#line 135 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::FieldList> > () = nullptr;}
-#line 993 "src/parser.cpp" // lalr1.cc:859
+#line 994 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 51:
-#line 136 "src/bison/parser.yy" // lalr1.cc:859
+#line 137 "src/bison/parser.yy" // lalr1.cc:859
     {string s = "DEBUG"; yylhs.value.as< shared_ptr<AST::Dec> > () = MakeVarDec(yylhs.location, yystack_[2].value.as< string > (), s, yystack_[0].value.as< shared_ptr<AST::Exp> > ());}
-#line 999 "src/parser.cpp" // lalr1.cc:859
+#line 1000 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 52:
-#line 137 "src/bison/parser.yy" // lalr1.cc:859
+#line 138 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Dec> > () = MakeVarDec(yylhs.location, yystack_[4].value.as< string > (), yystack_[2].value.as< string > (), yystack_[0].value.as< shared_ptr<AST::Exp> > ());}
-#line 1005 "src/parser.cpp" // lalr1.cc:859
+#line 1006 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 53:
-#line 139 "src/bison/parser.yy" // lalr1.cc:859
+#line 140 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Dec> > () = MakeFunctionDec(yylhs.location, MakeFunDecList(yystack_[1].value.as< shared_ptr<AST::FunDec> > (), dynamic_pointer_cast<FunctionDec>(yystack_[0].value.as< shared_ptr<AST::Dec> > ())->getFunction()));}
-#line 1011 "src/parser.cpp" // lalr1.cc:859
+#line 1012 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 54:
-#line 140 "src/bison/parser.yy" // lalr1.cc:859
+#line 141 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Dec> > () = MakeFunctionDec(yylhs.location, MakeFunDecList(yystack_[0].value.as< shared_ptr<AST::FunDec> > (), nullptr));}
-#line 1017 "src/parser.cpp" // lalr1.cc:859
+#line 1018 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 55:
-#line 142 "src/bison/parser.yy" // lalr1.cc:859
+#line 143 "src/bison/parser.yy" // lalr1.cc:859
     {string v = "void"; yylhs.value.as< shared_ptr<AST::FunDec> > () = MakeFunDec(yylhs.location, yystack_[5].value.as< string > (), v, yystack_[3].value.as< shared_ptr<AST::FieldList> > (), yystack_[0].value.as< shared_ptr<AST::Exp> > ());}
-#line 1023 "src/parser.cpp" // lalr1.cc:859
+#line 1024 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 56:
-#line 143 "src/bison/parser.yy" // lalr1.cc:859
+#line 144 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::FunDec> > () = MakeFunDec(yylhs.location, yystack_[7].value.as< string > (), yystack_[2].value.as< string > (), yystack_[5].value.as< shared_ptr<AST::FieldList> > (), yystack_[0].value.as< shared_ptr<AST::Exp> > ());}
-#line 1029 "src/parser.cpp" // lalr1.cc:859
+#line 1030 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 57:
-#line 145 "src/bison/parser.yy" // lalr1.cc:859
+#line 146 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::ExpList> > () = MakeExpList(yystack_[2].value.as< shared_ptr<AST::Exp> > (), yystack_[0].value.as< shared_ptr<AST::ExpList> > ());}
-#line 1035 "src/parser.cpp" // lalr1.cc:859
+#line 1036 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 58:
-#line 146 "src/bison/parser.yy" // lalr1.cc:859
+#line 147 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::ExpList> > () = MakeExpList(yystack_[0].value.as< shared_ptr<AST::Exp> > (), nullptr);}
-#line 1041 "src/parser.cpp" // lalr1.cc:859
+#line 1042 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 59:
-#line 147 "src/bison/parser.yy" // lalr1.cc:859
+#line 148 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::ExpList> > () = nullptr;}
-#line 1047 "src/parser.cpp" // lalr1.cc:859
+#line 1048 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 60:
-#line 149 "src/bison/parser.yy" // lalr1.cc:859
+#line 150 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Var> > () = MakeSimpleVar(yylhs.location, yystack_[0].value.as< string > ());}
-#line 1053 "src/parser.cpp" // lalr1.cc:859
+#line 1054 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 61:
-#line 150 "src/bison/parser.yy" // lalr1.cc:859
+#line 151 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Var> > () = MakeFieldVar(yylhs.location, yystack_[2].value.as< shared_ptr<AST::Var> > (), yystack_[0].value.as< string > ());}
-#line 1059 "src/parser.cpp" // lalr1.cc:859
+#line 1060 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 62:
-#line 151 "src/bison/parser.yy" // lalr1.cc:859
+#line 152 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Var> > () = MakeSubscriptVar(yylhs.location, MakeSimpleVar(yylhs.location, yystack_[3].value.as< string > ()), yystack_[1].value.as< shared_ptr<AST::Exp> > ());}
-#line 1065 "src/parser.cpp" // lalr1.cc:859
+#line 1066 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 63:
-#line 152 "src/bison/parser.yy" // lalr1.cc:859
+#line 153 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Var> > () = MakeSubscriptVar(yylhs.location, yystack_[3].value.as< shared_ptr<AST::Var> > (), yystack_[1].value.as< shared_ptr<AST::Exp> > ());}
-#line 1071 "src/parser.cpp" // lalr1.cc:859
+#line 1072 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 64:
-#line 154 "src/bison/parser.yy" // lalr1.cc:859
+#line 155 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::Exp> > () = MakeCallExp(yylhs.location, yystack_[3].value.as< string > (), yystack_[1].value.as< shared_ptr<AST::ExpList> > ());}
-#line 1077 "src/parser.cpp" // lalr1.cc:859
+#line 1078 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 65:
-#line 156 "src/bison/parser.yy" // lalr1.cc:859
+#line 157 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::ExpList> > () = MakeExpList(yystack_[2].value.as< shared_ptr<AST::Exp> > (), yystack_[0].value.as< shared_ptr<AST::ExpList> > ());}
-#line 1083 "src/parser.cpp" // lalr1.cc:859
+#line 1084 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 66:
-#line 157 "src/bison/parser.yy" // lalr1.cc:859
+#line 158 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::ExpList> > () = MakeExpList(yystack_[0].value.as< shared_ptr<AST::Exp> > (), nullptr);}
-#line 1089 "src/parser.cpp" // lalr1.cc:859
+#line 1090 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 67:
-#line 158 "src/bison/parser.yy" // lalr1.cc:859
+#line 159 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< shared_ptr<AST::ExpList> > () = nullptr;}
-#line 1095 "src/parser.cpp" // lalr1.cc:859
+#line 1096 "src/parser.cpp" // lalr1.cc:859
     break;
 
   case 68:
-#line 160 "src/bison/parser.yy" // lalr1.cc:859
+#line 161 "src/bison/parser.yy" // lalr1.cc:859
     {yylhs.value.as< string > () =yystack_[0].value.as< string > ();}
-#line 1101 "src/parser.cpp" // lalr1.cc:859
+#line 1102 "src/parser.cpp" // lalr1.cc:859
     break;
 
 
-#line 1105 "src/parser.cpp" // lalr1.cc:859
+#line 1106 "src/parser.cpp" // lalr1.cc:859
             default:
               break;
             }
@@ -1555,13 +1555,13 @@ namespace Tiger {
   const unsigned char
   Parser::yyrline_[] =
   {
-       0,    74,    74,    76,    77,    78,    79,    80,    81,    82,
-      83,    84,    85,    86,    87,    88,    89,    90,    91,    92,
-      93,    94,    95,    96,    97,    98,    99,   100,   101,   102,
-     103,   105,   107,   109,   110,   111,   113,   116,   117,   119,
-     120,   121,   123,   124,   126,   128,   129,   130,   132,   133,
-     134,   136,   137,   139,   140,   142,   143,   145,   146,   147,
-     149,   150,   151,   152,   154,   156,   157,   158,   160
+          0, 75, 75, 77, 78, 79, 80, 81, 82, 83,
+          84, 85, 86, 87, 88, 89, 90, 91, 92, 93,
+          94, 95, 96, 97, 98, 99, 100, 101, 102, 103,
+          104, 106, 108, 110, 111, 112, 114, 117, 118, 120,
+          121, 122, 124, 125, 127, 129, 130, 131, 133, 134,
+          135, 137, 138, 140, 141, 143, 144, 146, 147, 148,
+          150, 151, 152, 153, 155, 157, 158, 159, 161
   };
 
   // Print the state stack on the debug stream.
@@ -1596,8 +1596,8 @@ namespace Tiger {
 
 #line 4 "src/bison/parser.yy" // lalr1.cc:1167
 } // Tiger
-#line 1600 "src/parser.cpp" // lalr1.cc:1167
-#line 162 "src/bison/parser.yy" // lalr1.cc:1168
+#line 1601 "src/parser.cpp" // lalr1.cc:1167
+#line 163 "src/bison/parser.yy" // lalr1.cc:1168
 
 void Tiger::Parser::error (const location_type & l, const string & m)
 {

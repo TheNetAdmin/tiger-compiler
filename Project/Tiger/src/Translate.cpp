@@ -33,6 +33,13 @@ namespace Translate
         return formals;
     }
 
+    void Level::setFormals(const std::shared_ptr<AccessList> &formals)
+    {
+
+        Level::formals = formals;
+
+    }
+
     Access::Access(const std::shared_ptr<Level> &level, const std::shared_ptr<Frame::Access> &access) : level(level),
                                                                                                         access(access)
     {}
@@ -103,6 +110,47 @@ namespace Translate
         return accessList;
     }
 
+    /* STACK - FRAME */
+
+
+
+    static std::shared_ptr<Level> globalLevel = makeNewLevel(nullptr, Temporary::makeLabel(),
+
+                                                             std::make_shared<BoolList>());
+
+
+    std::shared_ptr<Level> getGlobalLevel(void)
+    {
+
+        return globalLevel;
+
+    }
+
+
+    std::shared_ptr<Level> makeNewLevel(std::shared_ptr<Level> parent, std::shared_ptr<Temporary::Label> name,
+
+                                        std::shared_ptr<BoolList> formals)
+    {
+
+        formals->push_front(true);
+
+        auto l = std::make_shared<Level>(parent, name, Frame::makeFrame(name, formals), nullptr);
+
+        l->setFormals(makeFormalAccessList(l));
+
+        return l;
+
+    }
+
+
+    std::shared_ptr<Access> allocLocal(std::shared_ptr<Level> level, bool escape)
+    {
+
+        return std::make_shared<Access>(level, Frame::allocLocalVarible(level->getFrame(), escape));
+
+    }
+
+
     /* IR */
     std::shared_ptr<Exp> makeEx(const std::shared_ptr<IR::Exp> &exp)
     {
@@ -127,6 +175,7 @@ namespace Translate
             tail = std::make_shared<PatchList>();
         }
         tail->push_front(head);
+        return tail;
     }
 
     void doPatch(std::shared_ptr<PatchList> patchList, std::shared_ptr<Temporary::Label> trueLabel,
@@ -165,7 +214,7 @@ namespace Translate
                                                                            IR::makeEseq(
                                                                                    IR::makeLabel(t),
                                                                                    IR::makeTemp(
-                                                                                                           r))))));
+                                                                                           r))))));
             }
             default:
                 Tiger::Error error("something wrong in Translate::unEx");
@@ -259,8 +308,8 @@ namespace Translate
 
     namespace
     {
-        Frame::FragList stringFragList;
-        Frame::FragList procFragList;
+        std::shared_ptr<Frame::FragList> stringFragList = std::make_shared<Frame::FragList>();
+        std::shared_ptr<Frame::FragList> procFragList = std::make_shared<Frame::FragList>();
         std::shared_ptr<Temporary::Temp> nilTemp;
     }
 
@@ -269,14 +318,14 @@ namespace Translate
         auto procBody = unNx(body);
         auto procFrame = level->getFrame();
         auto procFrag = Frame::makeProcFrag(procBody, procFrame);
-        procFragList.push_front(procFrag);
+        procFragList->push_front(procFrag);
     }
 
     std::shared_ptr<Exp> makeStringExp(std::string &s)
     {
         auto label = Temporary::makeLabel();
         auto frag = Frame::makeStringFrag(label, s);
-        stringFragList.push_front(frag);
+        stringFragList->push_front(frag);
         auto name = IR::makeName(label);
         return makeEx(name);
     }
@@ -298,6 +347,7 @@ namespace Translate
             auto eseq = IR::makeEseq(alloc, IR::makeTemp(nilTemp));
             return makeEx(eseq);
         }
+        return makeEx(IR::makeTemp(nilTemp));
     }
 
     std::shared_ptr<Exp>
@@ -366,6 +416,180 @@ namespace Translate
     std::shared_ptr<Exp> makeNonValueExp()
     {
         return makeEx(IR::makeConst(0));
+    }
+
+    std::shared_ptr<Exp> makeWhileExp(std::shared_ptr<Exp> test, std::shared_ptr<Exp> body, std::shared_ptr<Exp> done)
+    {
+        auto testLabel = Temporary::makeLabel();
+        auto bodyLabel = Temporary::makeLabel();
+        auto labelList = std::make_shared<IR::LabelList>();
+        labelList->push_front(testLabel);
+        auto doneLabel = std::dynamic_pointer_cast<IR::Name>(unEx(done))->getLabel();
+        return makeEx(IR::makeEseq(IR::makeJump(IR::makeName(testLabel), labelList),
+                                   IR::makeEseq(IR::makeLabel(bodyLabel),
+                                                IR::makeEseq(unNx(body),
+                                                             IR::makeEseq(IR::makeLabel(testLabel),
+                                                                          IR::makeEseq(
+                                                                                  IR::makeCJump(
+                                                                                          IR::EQ,
+                                                                                          unEx(test),
+                                                                                          IR::makeConst(0),
+                                                                                          doneLabel,
+                                                                                          bodyLabel),
+                                                                                  IR::makeEseq(
+                                                                                          IR::makeLabel(
+                                                                                                  bodyLabel),
+                                                                                          IR::makeConst(
+                                                                                                  0))))))));
+    }
+
+
+    std::shared_ptr<Exp> makeAssignExp(std::shared_ptr<Exp> lval, std::shared_ptr<Exp> exp)
+    {
+        return makeNx(IR::makeMove(unEx(lval), unEx(exp)));
+    }
+
+    std::shared_ptr<Exp> makeBreakExp(std::shared_ptr<Exp> b)
+    {
+        auto breakLabel = std::dynamic_pointer_cast<IR::Name>(unEx(b))->getLabel();
+        auto labelList = std::make_shared<IR::LabelList>();
+        labelList->push_front(breakLabel);
+        return makeNx(IR::makeJump(IR::makeName(breakLabel), labelList));
+    }
+
+    std::shared_ptr<Exp> makeArithmeticExp(IR::ArithmeticOp op, std::shared_ptr<Exp> left, std::shared_ptr<Exp> right)
+    {
+        return makeEx(IR::makeBinop(op, unEx(left), unEx(right)));
+    }
+
+    std::shared_ptr<Exp>
+    makeIntComparisonExp(IR::ComparisonOp op, std::shared_ptr<Exp> left, std::shared_ptr<Exp> right)
+    {
+        auto cond = IR::makeCJump(op, unEx(left), unEx(right), nullptr, nullptr);
+        auto patchList = std::make_shared<PatchList>();
+        patchList->push_front(std::dynamic_pointer_cast<IR::CJump>(cond));
+        return makeCx(patchList, cond);
+    }
+
+    std::shared_ptr<Exp>
+    makeStringComparisonExp(IR::ComparisonOp op, std::shared_ptr<Exp> left, std::shared_ptr<Exp> right)
+    {
+        auto resl = Frame::makeExternalCall(std::string("strcmp"),
+                                            IR::makeExpList(unEx(left),
+                                                            IR::makeExpList(unEx(right), nullptr)));
+        auto zero = IR::makeConst(0);
+        auto cond = IR::makeCJump(op, resl, zero, nullptr, nullptr);
+        auto patchList = std::make_shared<PatchList>();
+        patchList->push_front(std::dynamic_pointer_cast<IR::CJump>(cond));
+        return makeCx(patchList, cond);
+    }
+
+    // TODO notice op must be EQ or NE
+    std::shared_ptr<Exp>
+    makeReferenceComparisonExp(IR::ComparisonOp op, std::shared_ptr<Exp> left, std::shared_ptr<Exp> right)
+    {
+        auto cond = IR::makeCJump(op, unEx(left), unEx(right), nullptr, nullptr);
+        auto patchList = std::make_shared<PatchList>();
+        patchList->push_front(std::dynamic_pointer_cast<IR::CJump>(cond));
+        return makeCx(patchList, cond);
+    }
+
+    std::shared_ptr<Exp> makeIfExp(std::shared_ptr<Exp> test, std::shared_ptr<Exp> then, std::shared_ptr<Exp> elsee)
+    {
+        std::shared_ptr<Exp> result;
+        auto t = Temporary::makeLabel();
+        auto f = Temporary::makeLabel();
+        auto cond = unCx(test);
+        doPatch(cond->getPatchList(), t, f);
+        if (elsee == nullptr)
+        {
+            switch (then->getKind())
+            {
+                case NX:
+                    result = makeNx(IR::makeSeq(cond->getStm(),
+                                                IR::makeSeq(IR::makeLabel(t),
+                                                            IR::makeSeq(std::dynamic_pointer_cast<Nx>(
+                                                                    then)->getNx(),
+                                                                        IR::makeLabel(f)))));
+                    break;
+                case CX:
+                    result = makeNx(IR::makeSeq(cond->getStm(),
+                                                IR::makeSeq(IR::makeLabel(t),
+                                                            IR::makeSeq(std::dynamic_pointer_cast<Cx>(
+                                                                    then)->getStm(),
+                                                                        IR::makeLabel(f)))));
+                    break;
+                case EX:
+                    result = makeNx(IR::makeSeq(cond->getStm(),
+                                                IR::makeSeq(IR::makeLabel(t),
+                                                            IR::makeSeq(unEx(then),
+                                                                        IR::makeLabel(f)))));
+                default:
+                    Tiger::Error error(nullptr, "something wrong in Translate::IfExp no else");
+            }
+        }
+        else
+        {
+            auto r = Temporary::makeTemp();
+            auto join = Temporary::makeLabel();
+            auto labelList = std::make_shared<IR::LabelList>();
+            labelList->push_front(join);
+            auto joinJump = IR::makeJump(IR::makeName(join), labelList);
+            std::shared_ptr<IR::Stm> thenStm;
+            switch (then->getKind())
+            {
+                case EX:
+                    thenStm = IR::makeExp(std::dynamic_pointer_cast<Ex>(then)->getEx());
+                    break;
+                case NX:
+                    thenStm = std::dynamic_pointer_cast<Nx>(then)->getNx();
+                    break;
+                case CX:
+                    thenStm = std::dynamic_pointer_cast<Cx>(then)->getStm();
+                default:
+                    Tiger::Error error(nullptr, "something wrong in Translate::IfExp in else in then");
+            }
+
+            std::shared_ptr<IR::Stm> elseeStm;
+            switch (elsee->getKind())
+            {
+                case EX:
+                    elseeStm = IR::makeExp(std::dynamic_pointer_cast<Ex>(elsee)->getEx());
+                    break;
+                case NX:
+                    elseeStm = std::dynamic_pointer_cast<Nx>(elsee)->getNx();
+                    break;
+                case CX:
+                    elseeStm = std::dynamic_pointer_cast<Cx>(elsee)->getStm();
+                default:
+                    Tiger::Error error(nullptr, "something wrong in Translate::IfExp in else in elsee");
+            }
+            result = makeNx(IR::makeSeq(cond->getStm(),
+                                        IR::makeSeq(IR::makeLabel(t),
+                                                    IR::makeSeq(thenStm,
+                                                                IR::makeSeq(joinJump,
+                                                                            IR::makeSeq(
+                                                                                    IR::makeLabel(
+                                                                                            f),
+                                                                                    IR::makeSeq(
+                                                                                            elseeStm,
+                                                                                            IR::makeSeq(
+                                                                                                    joinJump,
+                                                                                                    IR::makeLabel(
+                                                                                                            join)))))))));
+        }
+        return result;
+    }
+
+
+    std::shared_ptr<Frame::FragList> getResult()
+    {
+        auto iter = procFragList->begin();
+        for (; iter != procFragList->end(); iter++)
+        {
+            stringFragList->push_back(*iter);
+        }
+        return stringFragList;
     }
 
 

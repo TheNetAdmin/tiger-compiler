@@ -1,4 +1,5 @@
 %option noyywrap nounput batch debug noinput
+%option nounistd never-interactive
 %{
     #include <string>
     #include "driver.h"

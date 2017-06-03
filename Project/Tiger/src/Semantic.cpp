@@ -8,9 +8,8 @@
 namespace Semantic
 {
 
-    void trasProg(std::shared_ptr<AST::Exp> exp)
+    void transProg(std::shared_ptr<AST::Exp> exp)
     {
-        //DEBUG
         Debugger d("Trans prog");
         ExpTy expType;
         // create default environments
@@ -22,36 +21,48 @@ namespace Semantic
         expType = transExp(venv, fenv, exp);
     }
 
-    ExpTy transVar(Env::VarEnv &venv, Env::FuncEnv &fenv, const shared_ptr<AST::Var> &var) noexcept(true)
+    ExpTy transVar(shared_ptr<Translate::Level> &level, shared_ptr<Translate::Exp> &breakExp, Env::VarEnv &venv,
+                   Env::FuncEnv &fenv, const shared_ptr<AST::Var> &var)
     {
-        //DEBUG
         Debugger d("Trans var");
+        if (var == nullptr)
+        {
+            return ExpTy(Translate::makeNonValueExp(), Type::VOID);
+        }
+        // TODO: construct result in each case
         switch (var->getClassType())
         {
-            // TODO: construct result in each case
             case AST::SIMPLE_VAR:
             {
+                /*
+                 * Format: var var-id (a);
+                 */
+                auto nonValue = Translate::makeNonValueExp();
                 try
                 {
                     auto simpleVar = dynamic_pointer_cast<AST::SimpleVar>(var);
                     auto queryResult = venv.find(simpleVar->getSimple());
-                    return ExpTy(nullptr, queryResult->type);
+                    return ExpTy(nonValue, queryResult->type);
                 }
                 catch (Env::EntryNotFound &e)
                 {
                     Tiger::Error err(var->getLoc(), "Variable not defined");
-                    return ExpTy(nullptr, Type::INT);
+                    return ExpTy(nonValue, Type::INT);
                 }
-            }
                 break;
+            }
             case AST::FIELD_VAR:
             {
+                /*
+                 * Format: var record (a.b)
+                 */
                 auto fieldVar = dynamic_pointer_cast<AST::FieldVar>(var);
-                ExpTy resultTransField = transVar(venv, fenv, fieldVar->getVar());
+                auto nonValue = Translate::makeNonValueExp();
+                ExpTy resultTransField = transVar(level, breakExp, venv, fenv, fieldVar->getVar());
                 if (!Type::isRecord(resultTransField.type))
                 {
                     Tiger::Error err(var->getLoc(), "Not a record variable");
-                    return ExpTy(nullptr, Type::RECORD);
+                    return ExpTy(nonValue, Type::RECORD);
                 }
                 else
                 {
@@ -60,20 +71,22 @@ namespace Semantic
                     {
                         auto field = recordVar->find(fieldVar->getSym());
                         // TODO: actual type?
+                        auto fieldVar = Translate::makeFieldVar(resultTransField.type,);
                         return ExpTy(nullptr, field->type);
                     }
                     catch (Type::EntryNotFound &e)
                     {
                         Tiger::Error err(var->getLoc(), "No such field in record : " + fieldVar->getSym());
-                        return ExpTy(nullptr, Type::RECORD);
+                        return ExpTy(nonValue, Type::RECORD);
                     }
                 }
-            }
                 break;
+            }
             case AST::SUBSCRIPT_VAR:
             {
                 auto subscriptVar = dynamic_pointer_cast<AST::SubscriptVar>(var);
-                ExpTy resultTransSubscript = transVar(venv, fenv, subscriptVar->getVar());
+                ExpTy resultTransSubscript = transVar(<#initializer#>, <#initializer#>, venv, fenv,
+                                                      subscriptVar->getVar());
                 if (!Type::isArray(resultTransSubscript.type))
                 {
                     Tiger::Error err(var->getLoc(), "Not an array variable");
@@ -104,7 +117,7 @@ namespace Semantic
         }
     }
 
-    ExpTy transExp(Env::VarEnv &venv, Env::FuncEnv &fenv, shared_ptr<AST::Exp> exp) noexcept(true)
+    ExpTy transExp(Env::VarEnv &venv, Env::FuncEnv &fenv, shared_ptr<AST::Exp> exp)
     {
         // DEBUG
         Debugger d("Trans exp");
@@ -114,7 +127,7 @@ namespace Semantic
             case AST::VAR_EXP:
             {
                 auto var = dynamic_pointer_cast<AST::VarExp>(exp);
-                return transVar(venv, fenv, var->getVar());
+                return transVar(<#initializer#>, <#initializer#>, venv, fenv, var->getVar());
             }
                 break;
             case AST::NIL_EXP:
@@ -251,7 +264,7 @@ namespace Semantic
                 auto assignUsage = dynamic_pointer_cast<AST::AssignExp>(exp);
                 // Check assign's var
                 auto assignVar = assignUsage->getVar();
-                auto assignVarResult = transVar(venv, fenv, assignVar);
+                auto assignVarResult = transVar(<#initializer#>, <#initializer#>, venv, fenv, assignVar);
                 // Check assign's exp
                 auto assignExp = assignUsage->getExp();
                 auto assignExpResult = transExp(venv, fenv, assignExp);

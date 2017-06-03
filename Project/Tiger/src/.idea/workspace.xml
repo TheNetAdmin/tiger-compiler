@@ -12,15 +12,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="75a7cc3b-0d77-46d8-bd67-9edca75856f2" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/IRTree.cpp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/IRTree.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.vs/Tiger/v15/ipch/AutoPCH/ABSYNTREE-81a62078/ABSYNTREE.ipch" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.vs/Tiger/v15/.suo" afterPath="$PROJECT_DIR$/.vs/Tiger/v15/.suo" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.vs/Tiger/v15/Browse.VC.db" afterPath="$PROJECT_DIR$/.vs/Tiger/v15/Browse.VC.db" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dictionaries/PrinceXuan.xml" afterPath="$PROJECT_DIR$/.idea/dictionaries/PrinceXuan.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CMakeLists.txt" afterPath="$PROJECT_DIR$/CMakeLists.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Frame.cpp" afterPath="$PROJECT_DIR$/Frame.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Frame.h" afterPath="$PROJECT_DIR$/Frame.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Semantic.cpp" afterPath="$PROJECT_DIR$/Semantic.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Semantic.h" afterPath="$PROJECT_DIR$/Semantic.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Translate.cpp" afterPath="$PROJECT_DIR$/Translate.cpp" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Translate.h" afterPath="$PROJECT_DIR$/Translate.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/absyntree.cpp" afterPath="$PROJECT_DIR$/absyntree.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/absyntree.h" afterPath="$PROJECT_DIR$/absyntree.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bison/parser.yy" afterPath="$PROJECT_DIR$/bison/parser.yy" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/flex/scanner.l" afterPath="$PROJECT_DIR$/flex/scanner.l" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/parser.cpp" afterPath="$PROJECT_DIR$/parser.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/scanner.cpp" afterPath="$PROJECT_DIR$/scanner.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../test/sem_test.cpp" afterPath="$PROJECT_DIR$/../test/sem_test.cpp" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -36,33 +43,26 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="600">
-      <file leaf-file-name="Frame.h" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Frame.h">
+      <file leaf-file-name="Semantic.cpp" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Semantic.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="495">
-              <caret line="77" column="29" lean-forward="false" selection-start-line="77" selection-start-column="29" selection-end-line="77" selection-end-column="29" />
+            <state relative-caret-position="145">
+              <caret line="89" column="54" lean-forward="false" selection-start-line="89" selection-start-column="54" selection-end-line="89" selection-end-column="54" />
               <folding>
                 <element signature="e#0#2#0" expanded="false" />
-                <element signature="e#296#788#1" expanded="false" />
-                <element signature="e#796#846#1" expanded="false" />
-                <element signature="e#853#1030#1" expanded="false" />
-                <element signature="e#1038#1180#1" expanded="false" />
-                <element signature="e#1188#1417#1" expanded="false" />
-                <element signature="e#1639#1699#1" expanded="false" />
-                <element signature="e#1706#1854#1" expanded="false" />
-                <element signature="e#1861#2191#1" expanded="false" />
-                <element signature="e#2198#2533#1" expanded="false" />
+                <element signature="e#46#67#0" expanded="true" />
+                <element signature="e#4404#16939#0" expanded="false" />
+                <element signature="e#16946#23862#0" expanded="false" />
+                <element signature="e#23868#26094#0" expanded="false" />
+                <element signature="e#26101#26442#0" expanded="false" />
+                <element signature="e#26448#26847#0" expanded="false" />
+                <element signature="e#26853#27182#0" expanded="false" />
+                <element signature="e#27188#28510#0" expanded="false" />
+                <element signature="e#28517#29684#0" expanded="false" />
+                <element signature="e#29852#29946#0" expanded="false" />
+                <element signature="e#29952#30046#0" expanded="false" />
+                <element signature="e#30306#30678#0" expanded="false" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="IR.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/IR.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-597">
-              <caret line="198" column="47" lean-forward="false" selection-start-line="198" selection-start-column="47" selection-end-line="198" selection-end-column="47" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -70,10 +70,42 @@
       <file leaf-file-name="Translate.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Translate.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="4" column="9" lean-forward="true" selection-start-line="4" selection-start-column="9" selection-end-line="4" selection-end-column="9" />
+            <state relative-caret-position="3678">
+              <caret line="488" column="23" lean-forward="false" selection-start-line="488" selection-start-column="23" selection-end-line="488" selection-end-column="23" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Translate.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Translate.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="272">
+              <caret line="22" column="10" lean-forward="false" selection-start-line="22" selection-start-column="10" selection-end-line="22" selection-end-column="10" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Types.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Types.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="295">
+              <caret line="63" column="10" lean-forward="false" selection-start-line="63" selection-start-column="10" selection-end-line="63" selection-end-column="10" />
               <folding>
-                <element signature="e#40#62#0" expanded="true" />
+                <element signature="e#0#2#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Semantic.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Semantic.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="295">
+              <caret line="127" column="0" lean-forward="false" selection-start-line="127" selection-start-column="0" selection-end-line="127" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#2#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -127,7 +159,6 @@
         <option value="$PROJECT_DIR$/Env.cpp" />
         <option value="$PROJECT_DIR$/Debug.h" />
         <option value="$PROJECT_DIR$/Debug.cpp" />
-        <option value="$PROJECT_DIR$/absyntree.h" />
         <option value="$PROJECT_DIR$/absyntree.cpp" />
         <option value="$PROJECT_DIR$/driver.h" />
         <option value="$PROJECT_DIR$/Semantic.h" />
@@ -138,13 +169,14 @@
         <option value="$PROJECT_DIR$/Error.h" />
         <option value="$PROJECT_DIR$/Error.cpp" />
         <option value="$PROJECT_DIR$/IRTree.cpp" />
-        <option value="$PROJECT_DIR$/Translate.h" />
-        <option value="$PROJECT_DIR$/Translate.cpp" />
         <option value="$PROJECT_DIR$/IRTree.h" />
         <option value="$PROJECT_DIR$/Frame.h" />
         <option value="$PROJECT_DIR$/Frame.cpp" />
-        <option value="$PROJECT_DIR$/Semantic.cpp" />
         <option value="$PROJECT_DIR$/IR.cpp" />
+        <option value="$PROJECT_DIR$/absyntree.h" />
+        <option value="$PROJECT_DIR$/Semantic.cpp" />
+        <option value="$PROJECT_DIR$/Translate.h" />
+        <option value="$PROJECT_DIR$/Translate.cpp" />
       </list>
     </option>
   </component>
@@ -156,9 +188,9 @@
   </component>
   <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
   <component name="ProjectFrameBounds">
-    <option name="y" value="-4" />
-    <option name="width" value="2560" />
-    <option name="height" value="1084" />
+    <option name="x" value="1273" />
+    <option name="width" value="1294" />
+    <option name="height" value="1047" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -207,7 +239,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="settings.editor.selected.configurable" value="vcs.Git" />
+    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.C/C++" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="SearchEverywhereHistoryKey" value="exp&#9;null&#9;null" />
   </component>
@@ -453,7 +485,10 @@
       <workItem from="1496396686924" duration="5541000" />
       <workItem from="1496413268702" duration="104000" />
       <workItem from="1496413382103" duration="1602000" />
-      <workItem from="1496475403832" duration="2320000" />
+      <workItem from="1496475403832" duration="2439000" />
+      <workItem from="1496478003415" duration="857000" />
+      <workItem from="1496479413584" duration="21000" />
+      <workItem from="1496480102392" duration="3618000" />
     </task>
     <task id="LOCAL-00001" summary="Remove Type::FieldList">
       <created>1496219984705</created>
@@ -476,11 +511,18 @@
       <option name="project" value="LOCAL" />
       <updated>1496330319721</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Refactor new codes">
+      <created>1496477773865</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1496477773865</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="113842000" />
+    <option name="totallyTimeSpent" value="118457000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -492,18 +534,18 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="-4" width="2560" height="1084" extended-state="6" />
+    <frame x="1273" y="0" width="1294" height="1047" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32708332" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3263965" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.328125" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32916668" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32916668" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24205914" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3291474" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16521049" sideWeight="0.49583334" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27708334" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1726094" sideWeight="0.49583334" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27601314" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.16521049" sideWeight="0.50416666" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.41979167" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -519,16 +561,45 @@
   <component name="TypeScriptGeneratedFilesManager">
     <option name="processedProjectFiles" value="true" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="RECENTLY_FILTERED_USER_GROUPS">
+                <collection />
+              </option>
+              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+                <collection />
+              </option>
+              <option name="COLUMN_ORDER">
+                <list>
+                  <option value="0" />
+                  <option value="1" />
+                  <option value="2" />
+                  <option value="3" />
+                </list>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="CHECK_NEW_TODO" value="false" />
     <MESSAGE value="Remove Type::FieldList" />
     <MESSAGE value="Processing semantic analysis, data structure stable" />
     <MESSAGE value="Semantic analysis code complete, wait test" />
-    <option name="LAST_COMMIT_MESSAGE" value="Semantic analysis code complete, wait test" />
+    <MESSAGE value="Refactor new codes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor new codes" />
+    <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
@@ -647,27 +718,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file:///usr/include/c++/5/ext/atomicity.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="219">
-          <caret line="101" column="0" lean-forward="false" selection-start-line="101" selection-start-column="0" selection-end-line="101" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/include/c++/5/bits/shared_ptr_base.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="866" column="0" lean-forward="false" selection-start-line="866" selection-start-column="0" selection-end-line="866" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/include/c++/5/bits/shared_ptr.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="393">
-          <caret line="106" column="0" lean-forward="false" selection-start-line="106" selection-start-column="0" selection-end-line="106" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file:///usr/include/c++/5/ext/atomicity.h" />
+    <entry file="file:///usr/include/c++/5/bits/shared_ptr_base.h" />
+    <entry file="file:///usr/include/c++/5/bits/shared_ptr.h" />
     <entry file="file://$PROJECT_DIR$/Env.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-619">
@@ -678,18 +731,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file:///usr/include/c++/5/bits/stl_vector.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="653" column="6" lean-forward="false" selection-start-line="653" selection-start-column="6" selection-end-line="653" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file:///usr/include/c++/5/bits/stl_vector.h" />
     <entry file="file://$PROJECT_DIR$/Types.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="358">
           <caret line="84" column="5" lean-forward="false" selection-start-line="84" selection-start-column="5" selection-end-line="84" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -703,65 +749,19 @@
         </state>
       </provider>
     </entry>
-    <entry file="file:///usr/include/x86_64-linux-gnu/c++/5/bits/gthr-default.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="251" column="0" lean-forward="false" selection-start-line="251" selection-start-column="0" selection-end-line="251" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Types.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1545">
-          <caret line="103" column="16" lean-forward="false" selection-start-line="103" selection-start-column="16" selection-end-line="103" selection-end-column="16" />
-          <folding>
-            <element signature="e#0#2#0" expanded="false" />
-            <element signature="e#87#106#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file:///usr/include/x86_64-linux-gnu/c++/5/bits/gthr-default.h" />
     <entry file="file://$PROJECT_DIR$/Env.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1455">
           <caret line="97" column="0" lean-forward="false" selection-start-line="97" selection-start-column="0" selection-end-line="97" selection-end-column="0" />
-          <folding>
-            <element signature="e#46#62#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Debug.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" column="38" lean-forward="false" selection-start-line="15" selection-start-column="38" selection-end-line="15" selection-end-column="38" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Semantic.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2280">
-          <caret line="152" column="40" lean-forward="false" selection-start-line="152" selection-start-column="40" selection-end-line="152" selection-end-column="40" />
-          <folding>
-            <element signature="e#0#2#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/absyntree.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="90" column="10" lean-forward="false" selection-start-line="90" selection-start-column="10" selection-end-line="90" selection-end-column="10" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/Debug.h" />
     <entry file="file://$PROJECT_DIR$/bison/parser.yy">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
           <caret line="29" column="36" lean-forward="false" selection-start-line="29" selection-start-column="36" selection-end-line="29" selection-end-column="36" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -769,9 +769,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
           <caret line="7" column="22" lean-forward="false" selection-start-line="7" selection-start-column="22" selection-end-line="7" selection-end-column="22" />
-          <folding>
-            <element signature="e#43#60#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -779,39 +776,16 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="300">
           <caret line="20" column="0" lean-forward="false" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Temporary.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="22" column="19" lean-forward="false" selection-start-line="22" selection-start-column="19" selection-end-line="22" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Temporary.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="25" column="35" lean-forward="false" selection-start-line="25" selection-start-column="35" selection-end-line="25" selection-end-column="35" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/include/c++/5/ext/new_allocator.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="206">
-          <caret line="119" column="6" lean-forward="false" selection-start-line="119" selection-start-column="6" selection-end-line="119" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/Temporary.h" />
+    <entry file="file://$PROJECT_DIR$/Temporary.cpp" />
+    <entry file="file:///usr/include/c++/5/ext/new_allocator.h" />
     <entry file="file://$PROJECT_DIR$/Error.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
           <caret line="20" column="6" lean-forward="false" selection-start-line="20" selection-start-column="6" selection-end-line="20" selection-end-column="6" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -819,111 +793,84 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="435">
           <caret line="29" column="29" lean-forward="false" selection-start-line="29" selection-start-column="29" selection-end-line="29" selection-end-column="29" />
-          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Debug.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="23" column="64" lean-forward="false" selection-start-line="23" selection-start-column="64" selection-end-line="23" selection-end-column="64" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/Debug.cpp" />
     <entry file="file://$PROJECT_DIR$/absyntree.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2227">
           <caret line="666" column="51" lean-forward="false" selection-start-line="666" selection-start-column="51" selection-end-line="666" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/BoolList.h" />
+    <entry file="file://$PROJECT_DIR$/IR.h" />
+    <entry file="file://$PROJECT_DIR$/Frame.cpp" />
+    <entry file="file://$PROJECT_DIR$/Frame.h" />
+    <entry file="file://$PROJECT_DIR$/IR.cpp" />
+    <entry file="file://$PROJECT_DIR$/absyntree.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1074">
+          <caret line="47" column="11" lean-forward="false" selection-start-line="47" selection-start-column="11" selection-end-line="47" selection-end-column="11" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Semantic.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="295">
+          <caret line="127" column="0" lean-forward="false" selection-start-line="127" selection-start-column="0" selection-end-line="127" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#2#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Types.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="295">
+          <caret line="63" column="10" lean-forward="false" selection-start-line="63" selection-start-column="10" selection-end-line="63" selection-end-column="10" />
+          <folding>
+            <element signature="e#0#2#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Translate.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="222">
-          <caret line="57" column="56" lean-forward="false" selection-start-line="57" selection-start-column="56" selection-end-line="57" selection-end-column="56" />
+        <state relative-caret-position="272">
+          <caret line="22" column="10" lean-forward="false" selection-start-line="22" selection-start-column="10" selection-end-line="22" selection-end-column="10" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/BoolList.h">
+    <entry file="file://$PROJECT_DIR$/Translate.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="26" lean-forward="true" selection-start-line="8" selection-start-column="26" selection-end-line="8" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/IR.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="208" column="55" lean-forward="true" selection-start-line="208" selection-start-column="55" selection-end-line="208" selection-end-column="55" />
-          <folding>
-            <element signature="e#83#100#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Frame.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="427">
-          <caret line="206" column="20" lean-forward="false" selection-start-line="206" selection-start-column="20" selection-end-line="206" selection-end-column="20" />
+        <state relative-caret-position="3678">
+          <caret line="488" column="23" lean-forward="false" selection-start-line="488" selection-start-column="23" selection-end-line="488" selection-end-column="23" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Semantic.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2441">
-          <caret line="575" column="69" lean-forward="false" selection-start-line="575" selection-start-column="69" selection-end-line="575" selection-end-column="69" />
+        <state relative-caret-position="145">
+          <caret line="89" column="54" lean-forward="false" selection-start-line="89" selection-start-column="54" selection-end-line="89" selection-end-column="54" />
           <folding>
             <element signature="e#0#2#0" expanded="false" />
-            <element signature="e#25361#25702#0" expanded="false" />
-            <element signature="e#25708#26107#0" expanded="false" />
-            <element signature="e#26113#26442#0" expanded="false" />
-            <element signature="e#26448#27770#0" expanded="false" />
-            <element signature="e#27777#28944#0" expanded="false" />
-            <element signature="e#29112#29206#0" expanded="false" />
-            <element signature="e#29212#29306#0" expanded="false" />
-            <element signature="e#29566#29938#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Translate.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="9" lean-forward="true" selection-start-line="4" selection-start-column="9" selection-end-line="4" selection-end-column="9" />
-          <folding>
-            <element signature="e#40#62#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/IR.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-597">
-          <caret line="198" column="47" lean-forward="false" selection-start-line="198" selection-start-column="47" selection-end-line="198" selection-end-column="47" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Frame.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="495">
-          <caret line="77" column="29" lean-forward="false" selection-start-line="77" selection-start-column="29" selection-end-line="77" selection-end-column="29" />
-          <folding>
-            <element signature="e#0#2#0" expanded="false" />
-            <element signature="e#296#788#1" expanded="false" />
-            <element signature="e#796#846#1" expanded="false" />
-            <element signature="e#853#1030#1" expanded="false" />
-            <element signature="e#1038#1180#1" expanded="false" />
-            <element signature="e#1188#1417#1" expanded="false" />
-            <element signature="e#1639#1699#1" expanded="false" />
-            <element signature="e#1706#1854#1" expanded="false" />
-            <element signature="e#1861#2191#1" expanded="false" />
-            <element signature="e#2198#2533#1" expanded="false" />
+            <element signature="e#46#67#0" expanded="true" />
+            <element signature="e#4404#16939#0" expanded="false" />
+            <element signature="e#16946#23862#0" expanded="false" />
+            <element signature="e#23868#26094#0" expanded="false" />
+            <element signature="e#26101#26442#0" expanded="false" />
+            <element signature="e#26448#26847#0" expanded="false" />
+            <element signature="e#26853#27182#0" expanded="false" />
+            <element signature="e#27188#28510#0" expanded="false" />
+            <element signature="e#28517#29684#0" expanded="false" />
+            <element signature="e#29852#29946#0" expanded="false" />
+            <element signature="e#29952#30046#0" expanded="false" />
+            <element signature="e#30306#30678#0" expanded="false" />
           </folding>
         </state>
       </provider>

@@ -42,11 +42,11 @@ namespace AST
     using TypeTyList = list<shared_ptr<TypeTy>>;
 
 // Base class
-    class AST
+    class ASTNode
     {
         Tiger::location loc;
     public:
-        AST(Tiger::location &loc)
+        ASTNode(Tiger::location &loc)
         {
             this->loc = loc;
         }
@@ -65,7 +65,7 @@ namespace AST
         SIMPLE_VAR, FIELD_VAR, SUBSCRIPT_VAR
     };
 
-    class Var : public AST
+    class Var : public ASTNode
     {
         VariableType classType;
 
@@ -88,7 +88,7 @@ namespace AST
         IF_EXP, WHILE_EXP, FOR_EXP, BREAK_EXP, LET_EXP, ARRAY_EXP
     };
 
-    class Exp : public AST
+    class Exp : public ASTNode
     {
         ExpressionType classType;
 
@@ -109,7 +109,7 @@ namespace AST
         FUNCTION_DEC, VAR_DEC, TYPE_DEC
     };
 
-    class Dec : public AST
+    class Dec : public ASTNode
     {
         DeclarationType classType;
 
@@ -129,7 +129,7 @@ namespace AST
         NAME_TYPE, RECORD_TYPE, ARRAY_TYPE
     };
 
-    class Ty : public AST
+    class Ty : public ASTNode
     {
         TypeType classType;
 
@@ -148,7 +148,7 @@ namespace AST
 // Some class used in extend class
 
 // Field - Class used in RecordTy
-    class Field : public AST
+    class Field : public ASTNode
     {
         string name, typ;
         bool escape;
@@ -182,7 +182,7 @@ namespace AST
     };
 
 // FunDec - Class used in FunctionDec
-    class FunDec : public AST
+    class FunDec : public ASTNode
     {
         string name, result;
         shared_ptr<FieldList> params;

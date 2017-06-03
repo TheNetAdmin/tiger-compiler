@@ -121,11 +121,12 @@ namespace Semantic
                                     const std::string &usageType);
     };
 
-    void trasProg(std::shared_ptr<AST::Exp> exp);
+    void transProg(std::shared_ptr<AST::Exp> exp);
 
     ExpTy transExp(Env::VarEnv &venv, Env::FuncEnv &fenv, shared_ptr<AST::Exp> exp) noexcept(true);
 
-    ExpTy transVar(Env::VarEnv &venv, Env::FuncEnv &fenv, const shared_ptr<AST::Var> &var) noexcept(true);
+    ExpTy transVar(shared_ptr<Translate::Level> &level, shared_ptr<Translate::Exp> &breakExp, Env::VarEnv &venv,
+                   Env::FuncEnv &fenv, const shared_ptr<AST::Var> &var) noexcept(true);
 
 
     void checkCallArgs(Env::VarEnv &venv, Env::FuncEnv &fenv,

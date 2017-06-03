@@ -26,9 +26,10 @@
 
 %code
 {
+    #include "absyntree.h"
     #include "driver.h"
-    shared_ptr<AST::Exp> absyn_root;
     using namespace AST;
+    shared_ptr<AST::Exp> absyn_root;
 }
 
 %token ENDFILE 0 "END OF FILE"

@@ -8,7 +8,7 @@ namespace AST
 {
 // Var-------------------------------------
 
-    Var::Var(Tiger::location loc, VariableType classType) : AST(loc), classType(classType)
+    Var::Var(Tiger::location loc, VariableType classType) : ASTNode(loc), classType(classType)
     {}
 
     VariableType Var::getClassType() const
@@ -18,7 +18,7 @@ namespace AST
 
 // Exp-------------------------------------
 
-    Exp::Exp(Tiger::location loc, ExpressionType classType) : AST(loc), classType(classType)
+    Exp::Exp(Tiger::location loc, ExpressionType classType) : ASTNode(loc), classType(classType)
     {}
 
 
@@ -28,7 +28,7 @@ namespace AST
     }
 
 // Dec---------------------------------------
-    Dec::Dec(Tiger::location loc, DeclarationType classType) : AST(loc), classType(classType)
+    Dec::Dec(Tiger::location loc, DeclarationType classType) : ASTNode(loc), classType(classType)
     {}
 
 
@@ -38,7 +38,7 @@ namespace AST
     }
 
 // Ty---------------------------------------
-    Ty::Ty(Tiger::location loc, TypeType classType) : AST(loc), classType(classType)
+    Ty::Ty(Tiger::location loc, TypeType classType) : ASTNode(loc), classType(classType)
     {}
 
 
@@ -49,7 +49,7 @@ namespace AST
 
 // Field------------------------------------
     Field::Field(Tiger::location loc, const string &name, const string &typ, bool escape)
-            : AST(loc), name(name), typ(typ), escape(escape)
+            : ASTNode(loc), name(name), typ(typ), escape(escape)
     {}
 
 
@@ -89,7 +89,7 @@ namespace AST
 
 // FunDec----------------------------------------
     FunDec::FunDec(Tiger::location loc, const string &name, const string &result, const shared_ptr<FieldList> &params,
-                   const shared_ptr<Exp> &body) : AST(loc), name(name), result(result), params(params),
+                   const shared_ptr<Exp> &body) : ASTNode(loc), name(name), result(result), params(params),
                                                   body(body)
     {}
 
