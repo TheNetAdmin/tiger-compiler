@@ -21,6 +21,12 @@ namespace Env
         Entry::name = name;
     }
 
+    TypeEntry::TypeEntry(const std::string &name, const std::shared_ptr<Type::Type> type)
+            : name(name), type(type)
+    {
+
+    }
+
     VarEntry::VarEntry()
             : type(std::make_shared<Type::Type>()),
               access(std::make_shared<Translate::Access>())
@@ -107,32 +113,118 @@ namespace Env
             : std::runtime_error(msg)
     {}
 
+    TypeEnv::TypeEnv()
+    {}
+
+    void TypeEnv::setDefaultEnv()
+    {
+        TypeEntry intVar("int", Type::INT);
+        enter(std::make_shared<TypeEntry>(intVar));
+        TypeEntry stringVar("string", Type::STRING);
+        enter(std::make_shared<TypeEntry>(stringVar));
+    }
+
+    void TypeEnv::enter(std::shared_ptr<TypeEntry> entry)
+    {
+        bindList.push_back(entry);
+    }
+
+    std::shared_ptr<TypeEntry> TypeEnv::find(const std::string &name)
+    {
+        for (auto r_iter = bindList.crbegin(); r_iter != bindList.crend(); r_iter++)
+        {
+            if ((*r_iter)->name == name)
+            {
+                return std::make_shared<TypeEntry>(*r_iter);
+            }
+        }
+        throw EntryNotFound("Var Entry with name " + name + " not found");
+    }
+
+    void TypeEnv::beginScope()
+    {
+        scope.push_back(bindList.size());
+    }
+
+    void TypeEnv::endScope()
+    {
+        auto s = scope.back();
+        scope.pop_back();
+        bindList.resize(s);
+    }
+
     VarEnv::VarEnv()
     {}
 
     void VarEnv::setDefaultEnv()
     {
-        VarEntry intVar("int", Type::INT, std::shared_ptr<Translate::Access>());
-        enter(intVar);
-        VarEntry stringVar("string", Type::STRING, std::shared_ptr<Translate::Access>());
-        enter(stringVar);
+        // print
+        FuncEntry print(Translate::getGlobalLevel(),
+                        Temporary::makeLabel(),
+                        "print", Type::STRING, Type::VOID);
+        enter(std::make_shared<FuncEntry>(print));
+        // flush
+        FuncEntry flush(Translate::getGlobalLevel(),
+                        Temporary::makeLabel(),
+                        "flush", Type::VOID);
+        enter(std::make_shared<FuncEntry>(flush));
+        // getchar
+        FuncEntry getchar(Translate::getGlobalLevel(),
+                          Temporary::makeLabel(),
+                          "getchar", Type::VOID);
+        enter(std::make_shared<FuncEntry>(getchar));
+        // ord
+        FuncEntry ord(Translate::getGlobalLevel(),
+                      Temporary::makeLabel(),
+                      "ord", Type::STRING, Type::INT);
+        enter(std::make_shared<FuncEntry>(ord));
+        // chr
+        FuncEntry chr(Translate::getGlobalLevel(),
+                      Temporary::makeLabel(),
+                      "chr", Type::INT, Type::STRING);
+        enter(std::make_shared<FuncEntry>(chr));
+        // size
+        FuncEntry size(Translate::getGlobalLevel(),
+                       Temporary::makeLabel(),
+                       "size", Type::STRING, Type::INT);
+        enter(std::make_shared<FuncEntry>(size));
+        // substring
+        FuncEntry substring(Translate::getGlobalLevel(),
+                            Temporary::makeLabel(),
+                            "substring", {Type::STRING, Type::INT, Type::INT}, Type::STRING);
+        enter(std::make_shared<FuncEntry>(substring));
+        // concat
+        FuncEntry concat(Translate::getGlobalLevel(),
+                         Temporary::makeLabel(),
+                         "concat", {Type::STRING, Type::STRING}, Type::STRING);
+        enter(std::make_shared<FuncEntry>(concat));
+        // not
+        FuncEntry notFunc(Translate::getGlobalLevel(),
+                          Temporary::makeLabel(),
+                          "not", Type::INT, Type::INT);
+        enter(std::make_shared<FuncEntry>(notFunc));
+        // exit
+        FuncEntry exit(Translate::getGlobalLevel(),
+                       Temporary::makeLabel(),
+                       "exit", Type::INT, Type::VOID);
+        enter(std::make_shared<FuncEntry>(exit));
     }
 
-    void VarEnv::enter(VarEntry &entry)
+    void VarEnv::enter(std::shared_ptr<Entry> entry)
     {
-        bindList.push_back(entry);
+        this->bindList.push_back(entry);
     }
 
-    std::shared_ptr<VarEntry> VarEnv::find(const std::string &name)
+    std::shared_ptr<Entry> VarEnv::find(const std::string &entryName)
     {
         for (auto r_iter = bindList.crbegin(); r_iter != bindList.crend(); r_iter++)
         {
-            if (r_iter->name == name)
+            if ((*r_iter)->name == entryName)
             {
-                return std::make_shared<VarEntry>(*r_iter);
+                return (*r_iter);
             }
         }
-        throw EntryNotFound("Var Entry with name " + name + " not found");
+        throw EntryNotFound("Entry with name " + entryName + " not found");
     }
 
     void VarEnv::beginScope()
@@ -147,79 +239,30 @@ namespace Env
         bindList.resize(s);
     }
 
-    FuncEnv::FuncEnv()
-    {}
-
-    void FuncEnv::setDefaultEnv()
+    std::shared_ptr<VarEntry> VarEnv::findVar(const std::string &varName)
     {
-        // print
-        FuncEntry print(Translate::getGlobalLevel(), Temporary::makeLabel(),
-                        "print", Type::STRING, Type::VOID);
-        enter(print);
-        // flush
-        FuncEntry flush(Translate::getGlobalLevel(), Temporary::makeLabel(),
-                        "flush", Type::VOID);
-        enter(flush);
-        // getchar
-        FuncEntry getchar(Translate::getGlobalLevel(), Temporary::makeLabel(),
-                          "getchar", Type::VOID);
-        enter(getchar);
-        // ord
-        FuncEntry ord(Translate::getGlobalLevel(), Temporary::makeLabel(),
-                      "ord", Type::STRING, Type::INT);
-        enter(ord);
-        // chr
-        FuncEntry chr(Translate::getGlobalLevel(), Temporary::makeLabel(),
-                      "chr", Type::INT, Type::STRING);
-        enter(chr);
-        // size
-        FuncEntry size(Translate::getGlobalLevel(), Temporary::makeLabel(),
-                       "size", Type::STRING, Type::INT);
-        enter(size);
-        // substring
-        FuncEntry substring(Translate::getGlobalLevel(), Temporary::makeLabel(),
-                            "substring", {Type::STRING, Type::INT, Type::INT}, Type::STRING);
-        enter(substring);
-        // concat
-        FuncEntry concat(Translate::getGlobalLevel(), Temporary::makeLabel(),
-                         "concat", {Type::STRING, Type::STRING}, Type::STRING);
-        enter(concat);
-        // not
-        FuncEntry notFunc(Translate::getGlobalLevel(), Temporary::makeLabel(),
-                          "not", Type::INT, Type::INT);
-        enter(notFunc);
-        // exit
-        FuncEntry exit(Translate::getGlobalLevel(), Temporary::makeLabel(),
-                       "exit", Type::INT, Type::VOID);
-        enter(exit);
-    }
-
-    void FuncEnv::enter(FuncEntry &entry)
-    {
-        this->bindList.push_back(entry);
-    }
-
-    std::shared_ptr<FuncEntry> FuncEnv::find(const std::string &funcName)
-    {
-        for (auto r_iter = bindList.crbegin(); r_iter != bindList.crend(); r_iter++)
+        auto entry = find(varName);
+        if (typeid(entry) != typeid(std::shared_ptr<VarEntry>))
         {
-            if (r_iter->name == funcName)
-            {
-                return std::make_shared<FuncEntry>(*r_iter);
-            }
+            throw EntryNotFound("Var entry not found : " + varName);
         }
-        throw EntryNotFound("Func entry with name " + funcName + " not found");
+        else
+        {
+            return std::dynamic_pointer_cast<VarEntry>(entry);
+        }
     }
 
-    void FuncEnv::beginScope()
+    std::shared_ptr<FuncEntry> VarEnv::findFunc(const std::string &funcName)
     {
-        scope.push_back(bindList.size());
+        auto entry = find(funcName);
+        if (typeid(entry) != typeid(std::shared_ptr<FuncEntry>))
+        {
+            throw EntryNotFound("Function entry not found : " + funcName);
+        }
+        else
+        {
+            return std::dynamic_pointer_cast<FuncEntry>(entry);
+        }
     }
 
-    void FuncEnv::endScope()
-    {
-        auto s = scope.back();
-        scope.pop_back();
-        bindList.resize(s);
-    }
 }

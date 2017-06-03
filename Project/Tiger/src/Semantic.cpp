@@ -13,16 +13,16 @@ namespace Semantic
         Debugger d("Trans prog");
         ExpTy expType;
         // create default environments
-        Env::VarEnv venv;
+        Env::TypeEnv venv;
         venv.setDefaultEnv();
-        Env::FuncEnv fenv;
+        Env::VarEnv fenv;
         fenv.setDefaultEnv();
         // traverse program's root exp
         expType = transExp(Translate::getGlobalLevel(), nullptr, venv, fenv, exp);
     }
 
-    ExpTy transVar(shared_ptr<Translate::Level> level, shared_ptr<Translate::Exp> breakExp, Env::VarEnv &venv,
-                   Env::FuncEnv &fenv, const shared_ptr<AST::Var> &var)
+    ExpTy transVar(shared_ptr<Translate::Level> level, shared_ptr<Translate::Exp> breakExp, Env::TypeEnv &venv,
+                   Env::VarEnv &fenv, const shared_ptr<AST::Var> &var)
     {
         Debugger d("Trans var");
         if (var == nullptr)
@@ -120,8 +120,8 @@ namespace Semantic
         }
     }
 
-    ExpTy transExp(shared_ptr<Translate::Level> level, shared_ptr<Translate::Exp> breakExp, Env::VarEnv &venv,
-                   Env::FuncEnv &fenv, shared_ptr<AST::Exp> exp)
+    ExpTy transExp(shared_ptr<Translate::Level> level, shared_ptr<Translate::Exp> breakExp, Env::TypeEnv &venv,
+                   Env::VarEnv &fenv, shared_ptr<AST::Exp> exp)
     {
         // DEBUG
         Debugger d("Trans exp");
@@ -595,8 +595,8 @@ namespace Semantic
 
     shared_ptr<Translate::Exp> transDec(const shared_ptr<Translate::Level> level,
                                         const shared_ptr<Translate::Exp> breakExp,
-                                        Env::VarEnv &venv,
-                                        Env::FuncEnv &fenv,
+                                        Env::TypeEnv &venv,
+                                        Env::VarEnv &fenv,
                                         const shared_ptr<AST::Dec> dec)
     {
         // DEBUG
@@ -677,7 +677,7 @@ namespace Semantic
                             returnType = Type::VOID;
                         }
                     }
-                    Env::FuncEntry funcEntry(level, Temporary::makeLabel(), (*func)->getName(), returnType);
+                    Env::Entry funcEntry(level, Temporary::makeLabel(), (*func)->getName(), returnType);
                     // Check and add args to new function entry
                     auto args = (*func)->getParams();
                     for (auto arg = args->begin(); arg != args->end(); arg++)
@@ -760,7 +760,7 @@ namespace Semantic
         }
     }
 
-    shared_ptr<Type::Type> transTy(Env::VarEnv &venv, const shared_ptr<AST::Ty> &ty)
+    shared_ptr<Type::Type> transTy(Env::TypeEnv &venv, const shared_ptr<AST::Ty> &ty)
     {
         // DEBUG
         switch (ty->getClassType())
@@ -859,8 +859,8 @@ namespace Semantic
 
     void checkRecordEfields(shared_ptr<Translate::Level> level,
                             shared_ptr<Translate::Exp> breakExp,
-                            Env::VarEnv venv,
-                            Env::FuncEnv fenv,
+                            Env::TypeEnv venv,
+                            Env::VarEnv fenv,
                             shared_ptr<AST::RecordExp> usage,
                             shared_ptr<Env::VarEntry> def)
     {
@@ -899,10 +899,10 @@ namespace Semantic
 
     void checkCallArgs(shared_ptr<Translate::Level> level,
                        shared_ptr<Translate::Exp> breakExp,
-                       Env::VarEnv &venv,
-                       Env::FuncEnv &fenv
+                       Env::TypeEnv &venv,
+                       Env::VarEnv &fenv
                        const shared_ptr<AST::CallExp> usage,
-                       const shared_ptr<Env::FuncEntry> def)
+                       const shared_ptr<Env::Entry> def)
     {
         auto uArgs = usage->getArgs();
         auto dArgs = def->getArgs();

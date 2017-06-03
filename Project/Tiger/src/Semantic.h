@@ -123,19 +123,20 @@ namespace Semantic
 
     void transProg(std::shared_ptr<AST::Exp> exp);
 
-    ExpTy transExp(shared_ptr<Translate::Level> level, shared_ptr<Translate::Exp> breakExp, Env::VarEnv &venv,
-                   Env::FuncEnv &fenv, shared_ptr<AST::Exp> exp) noexcept(true);
+    ExpTy transExp(shared_ptr<Translate::Level> level, shared_ptr<Translate::Exp> breakExp, Env::TypeEnv &venv,
+                   Env::VarEnv &fenv, shared_ptr<AST::Exp> exp) noexcept(true);
 
-    ExpTy transVar(shared_ptr<Translate::Level> level, shared_ptr<Translate::Exp> breakExp, Env::VarEnv &venv,
-                   Env::FuncEnv &fenv, const shared_ptr<AST::Var> &var) noexcept(true);
-
-
-    void checkCallArgs(shared_ptr<Translate::Level> level, shared_ptr<Translate::Exp> breakExp, Env::VarEnv &venv,
-                       Env::FuncEnv &fenv, const shared_ptr<AST::CallExp> usage, const shared_ptr<Env::FuncEntry> def);
+    ExpTy transVar(shared_ptr<Translate::Level> level, shared_ptr<Translate::Exp> breakExp, Env::TypeEnv &venv,
+                   Env::VarEnv &fenv, const shared_ptr<AST::Var> &var) noexcept(true);
 
 
-    void checkRecordEfields(shared_ptr<Translate::Level> level, shared_ptr<Temporary::Label> breakExp, Env::VarEnv venv,
-                            Env::FuncEnv fenv, shared_ptr<AST::RecordExp> usage, shared_ptr<Env::VarEntry> def);
+    void checkCallArgs(shared_ptr<Translate::Level> level, shared_ptr<Translate::Exp> breakExp, Env::TypeEnv &venv,
+                       Env::VarEnv &fenv, const shared_ptr<AST::CallExp> usage, const shared_ptr<Env::Entry> def);
+
+
+    void
+    checkRecordEfields(shared_ptr<Translate::Level> level, shared_ptr<Temporary::Label> breakExp, Env::TypeEnv venv,
+                       Env::VarEnv fenv, shared_ptr<AST::RecordExp> usage, shared_ptr<Env::VarEntry> def);
 
     void assertTypeMatch(const shared_ptr<Type::Type> check,
                          const shared_ptr<Type::Type> base,
@@ -152,11 +153,11 @@ namespace Semantic
 
     shared_ptr<Translate::Exp> transDec(const shared_ptr<Translate::Level> level,
                                         const shared_ptr<Translate::Exp> breakExp,
-                                        Env::VarEnv &venv,
-                                        Env::FuncEnv &fenv,
+                                        Env::TypeEnv &venv,
+                                        Env::VarEnv &fenv,
                                         const shared_ptr<AST::Dec> dec);
 
-    shared_ptr<Type::Type> transTy(Env::VarEnv &venv, const shared_ptr<AST::Ty> &ty);
+    shared_ptr<Type::Type> transTy(Env::TypeEnv &venv, const shared_ptr<AST::Ty> &ty);
 };
 
 #endif //_TIGER_SEMANTIC_H

@@ -17,12 +17,6 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Env.h" afterPath="$PROJECT_DIR$/Env.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Semantic.cpp" afterPath="$PROJECT_DIR$/Semantic.cpp" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Semantic.h" afterPath="$PROJECT_DIR$/Semantic.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Translate.cpp" afterPath="$PROJECT_DIR$/Translate.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Translate.h" afterPath="$PROJECT_DIR$/Translate.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/absyntree.cpp" afterPath="$PROJECT_DIR$/absyntree.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/absyntree.h" afterPath="$PROJECT_DIR$/absyntree.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bison/parser.yy" afterPath="$PROJECT_DIR$/bison/parser.yy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/parser.cpp" afterPath="$PROJECT_DIR$/parser.cpp" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -37,123 +31,84 @@
     <favorites_list name="src" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="600">
-      <file leaf-file-name="Semantic.cpp" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Semantic.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="530">
-              <caret line="704" column="38" lean-forward="true" selection-start-line="704" selection-start-column="38" selection-end-line="704" selection-end-column="38" />
-              <folding>
-                <element signature="e#0#2#0" expanded="false" />
-                <element signature="e#46#67#0" expanded="true" />
-                <element signature="e#35169#35510#0" expanded="false" />
-                <element signature="e#35921#36250#0" expanded="false" />
-                <element signature="e#39250#39344#0" expanded="false" />
-                <element signature="e#39350#39444#0" expanded="false" />
-                <element signature="e#39704#40076#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Semantic.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Semantic.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="686">
-              <caret line="155" column="45" lean-forward="false" selection-start-line="155" selection-start-column="45" selection-end-line="155" selection-end-column="45" />
-              <folding>
-                <element signature="e#0#2#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Env.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Env.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="346">
-              <caret line="49" column="28" lean-forward="false" selection-start-line="49" selection-start-column="28" selection-end-line="49" selection-end-column="28" />
-              <folding>
-                <element signature="e#0#2#0" expanded="false" />
-                <element signature="e#83#100#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Env.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Env.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="394">
-              <caret line="201" column="20" lean-forward="true" selection-start-line="201" selection-start-column="20" selection-end-line="201" selection-end-column="20" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="absyntree.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/absyntree.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="295">
-              <caret line="106" column="25" lean-forward="false" selection-start-line="106" selection-start-column="25" selection-end-line="106" selection-end-column="25" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="absyntree.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/absyntree.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="295">
-              <caret line="36" column="41" lean-forward="false" selection-start-line="36" selection-start-column="41" selection-end-line="36" selection-end-column="41" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Types.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Types.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="20" column="10" lean-forward="false" selection-start-line="20" selection-start-column="10" selection-end-line="20" selection-end-column="10" />
-              <folding>
-                <element signature="e#0#2#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Translate.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Translate.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="295">
-              <caret line="114" column="44" lean-forward="false" selection-start-line="114" selection-start-column="44" selection-end-line="114" selection-end-column="44" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Translate.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Translate.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="295">
-              <caret line="323" column="33" lean-forward="false" selection-start-line="323" selection-start-column="33" selection-end-line="323" selection-end-column="33" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="IR.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/IR.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="295">
-              <caret line="27" column="9" lean-forward="false" selection-start-line="27" selection-start-column="9" selection-end-line="27" selection-end-column="9" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <splitter split-orientation="horizontal" split-proportion="0.59006214">
+      <split-first>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="600">
+          <file leaf-file-name="Semantic.cpp" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/Semantic.cpp">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="296">
+                  <caret line="627" column="17" lean-forward="true" selection-start-line="627" selection-start-column="17" selection-end-line="627" selection-end-column="17" />
+                  <folding>
+                    <element signature="e#0#2#0" expanded="false" />
+                    <element signature="e#46#67#0" expanded="true" />
+                    <element signature="e#35166#35507#0" expanded="false" />
+                    <element signature="e#35918#36247#0" expanded="false" />
+                    <element signature="e#39243#39337#0" expanded="false" />
+                    <element signature="e#39343#39437#0" expanded="false" />
+                    <element signature="e#39697#40069#0" expanded="false" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="Semantic.h" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/Semantic.h">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="686">
+                  <caret line="155" column="45" lean-forward="false" selection-start-line="155" selection-start-column="45" selection-end-line="155" selection-end-column="45" />
+                  <folding>
+                    <element signature="e#0#2#0" expanded="false" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="Env.h" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/Env.h">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="743">
+                  <caret line="169" column="0" lean-forward="false" selection-start-line="169" selection-start-column="0" selection-end-line="169" selection-end-column="0" />
+                  <folding>
+                    <element signature="e#0#2#0" expanded="false" />
+                    <element signature="e#260#428#1" expanded="false" />
+                    <element signature="e#623#1011#1" expanded="false" />
+                    <element signature="e#1079#3025#1" expanded="false" />
+                    <element signature="e#3032#3226#1" expanded="false" />
+                    <element signature="e#3233#3360#1" expanded="false" />
+                    <element signature="e#3367#3788#1" expanded="false" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="IR.h" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/IR.h">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="295">
+                  <caret line="27" column="9" lean-forward="false" selection-start-line="27" selection-start-column="9" selection-end-line="27" selection-end-column="9" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf>
+          <file leaf-file-name="Env.cpp" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/Env.cpp">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="2482">
+                  <caret line="146" column="5" lean-forward="true" selection-start-line="146" selection-start-column="5" selection-end-line="146" selection-end-column="5" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-second>
+    </splitter>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
@@ -171,6 +126,7 @@
       <find>AST</find>
       <find>explist</find>
       <find>offset</find>
+      <find>varentry</find>
     </findStrings>
     <replaceStrings>
       <replace>loc</replace>
@@ -216,11 +172,11 @@
         <option value="$PROJECT_DIR$/Types.h" />
         <option value="$PROJECT_DIR$/Types.cpp" />
         <option value="$PROJECT_DIR$/Translate.h" />
-        <option value="$PROJECT_DIR$/Env.h" />
-        <option value="$PROJECT_DIR$/Env.cpp" />
         <option value="$PROJECT_DIR$/Translate.cpp" />
         <option value="$PROJECT_DIR$/Semantic.h" />
         <option value="$PROJECT_DIR$/Semantic.cpp" />
+        <option value="$PROJECT_DIR$/Env.h" />
+        <option value="$PROJECT_DIR$/Env.cpp" />
       </list>
     </option>
   </component>
@@ -230,11 +186,12 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
+  <component name="OCFindUsagesOptions" text="false" ivars="false" properties="true" derivedClasses="false" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="1511" />
-    <option name="width" value="1056" />
-    <option name="height" value="1047" />
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="2576" />
+    <option name="height" value="1056" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -532,7 +489,7 @@
       <workItem from="1496475403832" duration="2439000" />
       <workItem from="1496478003415" duration="857000" />
       <workItem from="1496479413584" duration="21000" />
-      <workItem from="1496480102392" duration="18510000" />
+      <workItem from="1496480102392" duration="20589000" />
     </task>
     <task id="LOCAL-00001" summary="Remove Type::FieldList">
       <created>1496219984705</created>
@@ -576,11 +533,18 @@
       <option name="project" value="LOCAL" />
       <updated>1496488675097</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Processing semantic analysis, prepare new typeEnv and valueEnv">
+      <created>1496499595399</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1496499595399</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="133349000" />
+    <option name="totallyTimeSpent" value="135428000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -592,7 +556,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="1511" y="0" width="1056" height="1047" extended-state="0" />
+    <frame x="-8" y="-8" width="2576" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -602,8 +566,8 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32916668" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24205914" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3291474" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.21172962" sideWeight="0.49583334" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27601314" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.07591415" sideWeight="0.49583334" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27272728" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.16521049" sideWeight="0.50416666" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.41979167" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -658,7 +622,8 @@
     <MESSAGE value="Refactor new codes" />
     <MESSAGE value="Update Translate.cpp from branch translate-features" />
     <MESSAGE value="Update data structures" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update data structures" />
+    <MESSAGE value="Processing semantic analysis, prepare new typeEnv and valueEnv" />
+    <option name="LAST_COMMIT_MESSAGE" value="Processing semantic analysis, prepare new typeEnv and valueEnv" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />
@@ -905,38 +870,43 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Env.h">
+    <entry file="file://$PROJECT_DIR$/Semantic.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="346">
-          <caret line="49" column="28" lean-forward="false" selection-start-line="49" selection-start-column="28" selection-end-line="49" selection-end-column="28" />
+        <state relative-caret-position="296">
+          <caret line="627" column="17" lean-forward="true" selection-start-line="627" selection-start-column="17" selection-end-line="627" selection-end-column="17" />
           <folding>
             <element signature="e#0#2#0" expanded="false" />
-            <element signature="e#83#100#0" expanded="true" />
+            <element signature="e#46#67#0" expanded="true" />
+            <element signature="e#35166#35507#0" expanded="false" />
+            <element signature="e#35918#36247#0" expanded="false" />
+            <element signature="e#39243#39337#0" expanded="false" />
+            <element signature="e#39343#39437#0" expanded="false" />
+            <element signature="e#39697#40069#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Env.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="743">
+          <caret line="169" column="0" lean-forward="false" selection-start-line="169" selection-start-column="0" selection-end-line="169" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#2#0" expanded="false" />
+            <element signature="e#260#428#1" expanded="false" />
+            <element signature="e#623#1011#1" expanded="false" />
+            <element signature="e#1079#3025#1" expanded="false" />
+            <element signature="e#3032#3226#1" expanded="false" />
+            <element signature="e#3233#3360#1" expanded="false" />
+            <element signature="e#3367#3788#1" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Env.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="394">
-          <caret line="201" column="20" lean-forward="true" selection-start-line="201" selection-start-column="20" selection-end-line="201" selection-end-column="20" />
+        <state relative-caret-position="2482">
+          <caret line="146" column="5" lean-forward="true" selection-start-line="146" selection-start-column="5" selection-end-line="146" selection-end-column="5" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Semantic.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="530">
-          <caret line="704" column="38" lean-forward="true" selection-start-line="704" selection-start-column="38" selection-end-line="704" selection-end-column="38" />
-          <folding>
-            <element signature="e#0#2#0" expanded="false" />
-            <element signature="e#46#67#0" expanded="true" />
-            <element signature="e#35169#35510#0" expanded="false" />
-            <element signature="e#35921#36250#0" expanded="false" />
-            <element signature="e#39250#39344#0" expanded="false" />
-            <element signature="e#39350#39444#0" expanded="false" />
-            <element signature="e#39704#40076#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>

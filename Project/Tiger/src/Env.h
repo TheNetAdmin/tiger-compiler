@@ -28,6 +28,14 @@ namespace Env
         void setName(const std::string &name);
     };
 
+    class TypeEntry : public Entry
+    {
+    public:
+        std::shared_ptr<Type::Type> type;
+
+        TypeEntry(const std::string &name, const std::shared_ptr<Type::Type> type);
+    };
+
     class VarEntry : public Entry
     {
     public:
@@ -36,7 +44,8 @@ namespace Env
 
         VarEntry();
 
-        VarEntry(const std::string &name, const std::shared_ptr<Type::Type> type,
+        VarEntry(const std::string &name,
+                 const std::shared_ptr<Type::Type> type,
                  const std::shared_ptr<Translate::Access> access);
 
         std::shared_ptr<Type::Type> getType() const;
@@ -116,43 +125,48 @@ namespace Env
         explicit EntryNotFound(const std::string &msg);
     };
 
-    class VarEnv : public Env
+    class TypeEnv : public Env
     { // same as "tenv"
     public:
-        std::vector<VarEntry> bindList;
+        std::vector<std::shared_ptr<TypeEntry>> bindList;
+        std::vector<unsigned int> scope;
+
+        TypeEnv();
+
+        void setDefaultEnv() override;
+
+        void enter(std::shared_ptr<TypeEntry> entry);
+
+        std::shared_ptr<TypeEntry> find(const std::string &name);
+
+        void beginScope() override;
+
+        void endScope() override;
+    };
+
+    class VarEnv : public Env
+    {
+    public:
+        std::vector<std::shared_ptr<Entry>> bindList;
         std::vector<unsigned int> scope;
 
         VarEnv();
 
-        void setDefaultEnv() override;
-
-        void enter(VarEntry &entry);
-
-        std::shared_ptr<VarEntry> find(const std::string &name);
-
-        void beginScope() override;
-
-        void endScope() override;
-    };
-
-    class FuncEnv : public Env
-    {
-    public:
-        std::vector<FuncEntry> bindList;
-        std::vector<unsigned int> scope;
-
-        FuncEnv();
-
         void setDefaultEnv();
 
-        void enter(FuncEntry &entry);
+        void enter(std::shared_ptr<Entry> entry);
 
-        std::shared_ptr<FuncEntry> find(const std::string &funcName);
+        std::shared_ptr<Entry> find(const std::string &entryName);
+
+        std::shared_ptr<VarEntry> findVar(const std::string &varName);
+
+        std::shared_ptr<FuncEntry> findFunc(const std::string &funcName);
 
         void beginScope() override;
 
         void endScope() override;
     };
+
 
 }
 #endif //SRC_ENV_H
