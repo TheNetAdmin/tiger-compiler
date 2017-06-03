@@ -3,8 +3,6 @@
 //
 
 #include "Semantic.h"
-#include "Error.h"
-#include "Types.h"
 #include "Debug.h"
 
 namespace Semantic
@@ -294,7 +292,7 @@ namespace Semantic
                 fenv.beginScope();
                 // Check declaration
                 auto forDec = AST::MakeVarDec(defaultLoc, forUsage->getVar(),
-                                         Type::getName(Type::INT), forLo);
+                                              Type::getName(Type::INT), forLo);
                 transDec(venv, fenv, forDec);
                 // Check body
                 auto forBody = transExp(venv, fenv, forUsage->getBody());
@@ -614,7 +612,7 @@ namespace Semantic
             {
                 auto recordTy = dynamic_pointer_cast<AST::RecordTy>(ty);
                 auto fields = recordTy->getRecord();
-                shared_ptr<Type::Record> record  = make_shared<Type::Record>();
+                shared_ptr<Type::Record> record = make_shared<Type::Record>();
                 for (auto field = fields->begin(); field != fields->end(); field++)
                 {
                     try

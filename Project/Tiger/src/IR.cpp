@@ -1,11 +1,12 @@
-#include "IRTree.h"
+#include "IR.h"
 
 //
 // Created by Chege on 2017/6/1.
 //
-namespace IRTree
+namespace IR
 {
-    Stm::Stm(StmType type) : stmType(type)
+    Stm::Stm(StmType type)
+            : stmType(type)
     {
     }
 
@@ -14,7 +15,8 @@ namespace IRTree
         return stmType;
     }
 
-    Exp::Exp(ExpType expType) : Stm(EXP), expType(expType)
+    Exp::Exp(ExpType expType)
+            : Stm(EXP), expType(expType)
     {
     }
 
@@ -23,8 +25,8 @@ namespace IRTree
         return expType;
     }
 
-    Seq::Seq(const std::shared_ptr<Stm> &left,
-             const std::shared_ptr<Stm> &right) : Stm(SEQ), left(left), right(right)
+    Seq::Seq(const std::shared_ptr<Stm> &left, const std::shared_ptr<Stm> &right)
+            : Stm(SEQ), left(left), right(right)
     {
     }
 
@@ -38,7 +40,8 @@ namespace IRTree
         return right;
     }
 
-    Label::Label(const std::shared_ptr<Temporary::Label> &label) : Stm(LABEL), label(label)
+    Label::Label(const std::shared_ptr<Temporary::Label> &label)
+            : Stm(LABEL), label(label)
     {
     }
 
@@ -47,8 +50,8 @@ namespace IRTree
         return label;
     }
 
-    Jump::Jump(const std::shared_ptr<Exp> &exp,
-               const std::shared_ptr<LabelList> &labels) : Stm(JUMP), exp(exp), labels(labels)
+    Jump::Jump(const std::shared_ptr<Exp> &exp, const std::shared_ptr<LabelList> &labels)
+            : Stm(JUMP), exp(exp), labels(labels)
     {
     }
 
@@ -64,10 +67,9 @@ namespace IRTree
 
     CJump::CJump(ComparisonOp op, const std::shared_ptr<Exp> &left,
                  const std::shared_ptr<Exp> &right, const std::shared_ptr<Temporary::Label> &labelTrue,
-                 const std::shared_ptr<Temporary::Label> &labelFalse) : Stm(CJUMP), op(op), left(left),
-                                                                        right(right),
-                                                                        labelTrue(labelTrue),
-                                                                        labelFalse(labelFalse)
+                 const std::shared_ptr<Temporary::Label> &labelFalse)
+            : Stm(CJUMP), op(op), left(left), right(right),
+              labelTrue(labelTrue), labelFalse(labelFalse)
     {
     }
 
@@ -121,9 +123,8 @@ namespace IRTree
         return src;
     }
 
-    Binop::Binop(ArithmeticOp op, const std::shared_ptr<Exp> &left,
-                 const std::shared_ptr<Exp> &right) : Exp(BINOP), op(op), left(left),
-                                                      right(right)
+    Binop::Binop(ArithmeticOp op, const std::shared_ptr<Exp> &left, const std::shared_ptr<Exp> &right)
+            : Exp(BINOP), op(op), left(left), right(right)
     {
     }
 
@@ -151,7 +152,8 @@ namespace IRTree
         return exp;
     }
 
-    Temp::Temp(const std::shared_ptr<Temporary::Temp> &temp) : Exp(TEMP), temp(temp)
+    Temp::Temp(const std::shared_ptr<Temporary::Temp> &temp)
+            : Exp(TEMP), temp(temp)
     {
     }
 
@@ -160,8 +162,8 @@ namespace IRTree
         return temp;
     }
 
-    Eseq::Eseq(const std::shared_ptr<Stm> &stm,
-               const std::shared_ptr<Exp> &exp) : Exp(ESEQ), stm(stm), exp(exp)
+    Eseq::Eseq(const std::shared_ptr<Stm> &stm, const std::shared_ptr<Exp> &exp)
+            : Exp(ESEQ), stm(stm), exp(exp)
     {
     }
 
@@ -175,7 +177,8 @@ namespace IRTree
         return exp;
     }
 
-    Name::Name(const std::shared_ptr<Temporary::Label> &label) : Exp(NAME), label(label)
+    Name::Name(const std::shared_ptr<Temporary::Label> &label)
+            : Exp(NAME), label(label)
     {
     }
 
@@ -193,9 +196,10 @@ namespace IRTree
         return constt;
     }
 
-    Call::Call(const std::shared_ptr<Exp> &fun,
-               const std::shared_ptr<ExpList> &args) : Exp(CALL), fun(fun), args(args)
+    Call::Call(const std::shared_ptr<Exp> &fun, const std::shared_ptr<ExpList> &args)
+            : Exp(CALL), fun(fun), args(args)
     {
+
     }
 
     const std::shared_ptr<Exp> Call::getFun() const

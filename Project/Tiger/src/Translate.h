@@ -7,7 +7,7 @@
 
 #include <memory>
 #include <list>
-#include "IRTree.h"
+#include "IR.h"
 #include "Temporary.h"
 #include "Frame.h"
 #include "BoolList.h"
@@ -24,17 +24,17 @@ namespace Translate
     {
         std::shared_ptr<Level> parent;
         std::shared_ptr<Temporary::Label> name;
-        std::shared_ptr<Frame::FFrame> frame;
+        std::shared_ptr<Frame::Frame> frame;
         std::shared_ptr<AccessList> formals;
     public:
         Level(const std::shared_ptr<Level> &parent, const std::shared_ptr<Temporary::Label> &name,
-              const std::shared_ptr<Frame::FFrame> &frame, const std::shared_ptr<AccessList> &formals);
+              const std::shared_ptr<Frame::Frame> &frame, const std::shared_ptr<AccessList> &formals);
 
         const std::shared_ptr<Level> getParent() const;
 
         const std::shared_ptr<Temporary::Label> getName() const;
 
-        const std::shared_ptr<Frame::FFrame> getFrame() const;
+        const std::shared_ptr<Frame::Frame> getFrame() const;
 
         const std::shared_ptr<AccessList> getFormals() const;
     };
@@ -42,13 +42,13 @@ namespace Translate
     class Access
     {
         std::shared_ptr<Level> level;
-        std::shared_ptr<Frame::FAccess> access;
+        std::shared_ptr<Frame::Access> access;
     public:
-        Access(const std::shared_ptr<Level> &level, const std::shared_ptr<Frame::FAccess> &access);
+        Access(const std::shared_ptr<Level> &level, const std::shared_ptr<Frame::Access> &access);
 
         const std::shared_ptr<Level> getLevel() const;
 
-        const std::shared_ptr<Frame::FAccess> getAccess() const;
+        const std::shared_ptr<Frame::Access> getAccess() const;
     };
 
 
@@ -79,35 +79,35 @@ namespace Translate
 
     class Ex : public Exp
     {
-        std::shared_ptr<IRTree::Exp> ex;
+        std::shared_ptr<IR::Exp> ex;
     public:
-        Ex(const std::shared_ptr<IRTree::Exp> &ex);
+        Ex(const std::shared_ptr<IR::Exp> &ex);
 
-        const std::shared_ptr<IRTree::Exp> getEx() const;
+        const std::shared_ptr<IR::Exp> getEx() const;
     };
 
     class Nx : public Exp
     {
-        std::shared_ptr<IRTree::Stm> nx;
+        std::shared_ptr<IR::Stm> nx;
     public:
-        Nx(const std::shared_ptr<IRTree::Stm> &nx);
+        Nx(const std::shared_ptr<IR::Stm> &nx);
 
-        const std::shared_ptr<IRTree::Stm> getNx() const;
+        const std::shared_ptr<IR::Stm> getNx() const;
     };
 
-    typedef std::list<std::shared_ptr<IRTree::CJump>> PatchList;
+    typedef std::list<std::shared_ptr<IR::CJump>> PatchList;
 
     class Cx : public Exp
     {
         std::shared_ptr<PatchList> patchList;
-        std::shared_ptr<IRTree::Stm> stm;
+        std::shared_ptr<IR::Stm> stm;
     public:
 
-        Cx(const std::shared_ptr<PatchList> &patchList, const std::shared_ptr<IRTree::Stm> &stm);
+        Cx(const std::shared_ptr<PatchList> &patchList, const std::shared_ptr<IR::Stm> &stm);
 
         const std::shared_ptr<PatchList> getPatchList() const;
 
-        const std::shared_ptr<IRTree::Stm> getStm() const;
+        const std::shared_ptr<IR::Stm> getStm() const;
     };
 
     typedef std::list<std::shared_ptr<Exp>> ExpList;
@@ -149,16 +149,16 @@ namespace Translate
     std::shared_ptr<Exp> makeBreakExp(std::shared_ptr<Exp> b);
 
     std::shared_ptr<Exp>
-    makeArithmeticExp(IRTree::ArithmeticOp op, std::shared_ptr<Exp> left, std::shared_ptr<Exp> right);
+    makeArithmeticExp(IR::ArithmeticOp op, std::shared_ptr<Exp> left, std::shared_ptr<Exp> right);
 
     std::shared_ptr<Exp>
-    makeIntComparisonExp(IRTree::ComparisonOp op, std::shared_ptr<Exp> left, std::shared_ptr<Exp> right);
+    makeIntComparisonExp(IR::ComparisonOp op, std::shared_ptr<Exp> left, std::shared_ptr<Exp> right);
 
     std::shared_ptr<Exp>
-    makeStringComparisonExp(IRTree::ComparisonOp op, std::shared_ptr<Exp> left, std::shared_ptr<Exp> right);
+    makeStringComparisonExp(IR::ComparisonOp op, std::shared_ptr<Exp> left, std::shared_ptr<Exp> right);
 
     std::shared_ptr<Exp>
-    makeReferenceComparisonExp(IRTree::ComparisonOp op, std::shared_ptr<Exp> left, std::shared_ptr<Exp> right);
+    makeReferenceComparisonExp(IR::ComparisonOp op, std::shared_ptr<Exp> left, std::shared_ptr<Exp> right);
 
 //    std::shared_ptr<Exp> makeEqExp(Operator, std::shared_ptr<Exp>, std::shared_ptr<Exp>);
 //
@@ -174,9 +174,9 @@ namespace Translate
 
     void procEntyExit(std::shared_ptr<Level>, std::shared_ptr<Exp>);
 
-    std::shared_ptr<Frame::FFragList> getResult();
+    std::shared_ptr<Frame::FragList> getResult();
 
-    std::shared_ptr<Exp> makeEx(const std::shared_ptr<IRTree::Exp> &ex);
+    std::shared_ptr<Exp> makeEx(const std::shared_ptr<IR::Exp> &ex);
 }
 
 #endif //SRC_TRANSLATE_H

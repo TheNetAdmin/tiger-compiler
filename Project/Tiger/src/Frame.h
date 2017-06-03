@@ -9,28 +9,28 @@
 #include <list>
 #include <string>
 #include "Temporary.h"
-#include "IRTree.h"
+#include "IR.h"
 #include "BoolList.h"
 
 namespace Frame
 {
 
-    class FAccess;
+    class Access;
 
-    typedef std::list<std::shared_ptr<FAccess>> FAccessList;
+    using AccessList= std::list<std::shared_ptr<Access>>;
 
-    class FFrame
+    class Frame
     {
         std::shared_ptr<Temporary::Label> name;
-        std::shared_ptr<FAccessList> formals;
+        std::shared_ptr<AccessList> formals;
         int local_count;
     public:
-        FFrame(const std::shared_ptr<Temporary::Label> &name, const std::shared_ptr<FAccessList> &formals,
-               int local_count);
+        Frame(const std::shared_ptr<Temporary::Label> &name, const std::shared_ptr<AccessList> &formals,
+              int local_count);
 
         const std::shared_ptr<Temporary::Label> getName() const;
 
-        const std::shared_ptr<FAccessList> getFormals() const;
+        const std::shared_ptr<AccessList> getFormals() const;
 
         int getLocal_count() const;
 
@@ -38,104 +38,108 @@ namespace Frame
     };
 
 
-    enum FAccessType
+    enum AccessType
     {
         INFRAME, INREG
     };
 
-    class FAccess
+    class Access
     {
-        FAccessType accessType;
+        AccessType accessType;
     public:
-        FAccess(FAccessType accessType);
+        Access(AccessType accessType);
 
-        virtual ~FAccess();
+        virtual ~Access();
 
-        FAccessType getAccessType() const;
+        AccessType getAccessType() const;
     };
 
 
-    class FAccessFrame : public FAccess
+    class AccessFrame : public Access
     {
         int offset;
     public:
-        FAccessFrame(int offset);
+        AccessFrame(int offset);
 
         int getOffset() const;
     };
 
 
-    class FAccessReg : public FAccess
+    class AccessReg : public Access
     {
         std::shared_ptr<Temporary::Temp> reg;
     public:
-        FAccessReg(const std::shared_ptr<Temporary::Temp> &reg);
+        AccessReg(const std::shared_ptr<Temporary::Temp> &reg);
 
         const std::shared_ptr<Temporary::Temp> getReg() const;
     };
 
 
-    std::shared_ptr<FFrame> makeFrame(std::shared_ptr<Temporary::Label> name, std::shared_ptr<BoolList> formals);
+    std::shared_ptr<Frame> makeFrame(std::shared_ptr<Temporary::Label> name, std::shared_ptr<BoolList> formals);
 
-    std::shared_ptr<FAccess> allocLocalVarible(std::shared_ptr<FFrame> f, bool escape);
+    std::shared_ptr<Access> allocLocalVarible(std::shared_ptr<Frame> f, bool escape);
 
     /* IR */
-    enum FFragType
+    enum FragType
     {
         F_STRING_FRAG, F_PROC_FRAG
     };
 
-    class FFrag
+    class Frag
     {
-        FFragType kind;
+        FragType kind;
     public:
-        FFrag(FFragType kind);
+        Frag(FragType kind);
 
-        virtual ~FFrag();;
+        virtual ~Frag();;
 
-        FFragType getKind() const;
+        FragType getKind() const;
     };
 
-    class FStringFrag : public FFrag
+    class StringFrag : public Frag
     {
         std::shared_ptr<Temporary::Label> label;
         std::string str;
     public:
-        FStringFrag(const std::shared_ptr<Temporary::Label> &label, const std::string &str);
+        StringFrag(const std::shared_ptr<Temporary::Label> &label, const std::string &str);
 
         const std::shared_ptr<Temporary::Label> getLabel() const;
 
         const std::string getStr() const;
     };
 
-    class FProcFrag : public FFrag
+    class ProcFrag : public Frag
     {
-        std::shared_ptr<IRTree::Stm> body;
-        std::shared_ptr<FFrame> frame;
+        std::shared_ptr<IR::Stm> body;
+        std::shared_ptr<Frame> frame;
     public:
-        FProcFrag(const std::shared_ptr<IRTree::Stm> &body, const std::shared_ptr<FFrame> &frame);
+        ProcFrag(const std::shared_ptr<IR::Stm> &body, const std::shared_ptr<Frame> &frame);
 
-        const std::shared_ptr<IRTree::Stm> getBody() const;
+        const std::shared_ptr<IR::Stm> getBody() const;
 
-        const std::shared_ptr<FFrame> getFrame() const;
+        const std::shared_ptr<Frame> getFrame() const;
     };
 
-    typedef std::list<std::shared_ptr<FFrag>> FFragList;
+    using FragList = std::list<std::shared_ptr<Frag>>;
 
-    extern const int F_WORD_SIZE;
 
-    std::shared_ptr<FFrag> makeFStringFrag(std::shared_ptr<Temporary::Label> label, std::string &str);
+    namespace
+    {
+        const int WORD_SIZE = 4;
+        const int MAX_REG = 6;
+    }
 
-    std::shared_ptr<FFrag> makeFProcFrag(std::shared_ptr<IRTree::Stm> body, std::shared_ptr<FFrame> frame);
+    std::shared_ptr<Frag> makeStringFrag(std::shared_ptr<Temporary::Label> label, std::string &str);
 
-    std::shared_ptr<FFragList> makeFFragList(std::shared_ptr<FFrag> head, std::shared_ptr<FFragList> tail);
+    std::shared_ptr<Frag> makeProcFrag(std::shared_ptr<IR::Stm> body, std::shared_ptr<Frame> frame);
 
-    std::shared_ptr<Temporary::Temp> getFFP();
+    std::shared_ptr<FragList> makeFragList(std::shared_ptr<Frag> head, std::shared_ptr<FragList> tail);
 
-    std::shared_ptr<IRTree::Exp> getFVarible(std::shared_ptr<FAccess> access, std::shared_ptr<IRTree::Exp> framePtr);
+    std::shared_ptr<Temporary::Temp> getFP();
 
-    std::shared_ptr<IRTree::Exp> makeFExternalCall(std::string str, std::shared_ptr<IRTree::ExpList> args);
-//    std::shared_ptr<IRTree::Stm> FProcEntryExit
+    std::shared_ptr<IR::Exp> getVariable(std::shared_ptr<Access> access, std::shared_ptr<IR::Exp> framePtr);
+
+    std::shared_ptr<IR::Exp> makeExternalCall(std::string str, std::shared_ptr<IR::ExpList> args);
 
 }
 

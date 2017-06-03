@@ -10,7 +10,7 @@
 #include <string>
 #include "Temporary.h"
 
-namespace IRTree
+namespace IR
 {
 
     class Stm;
