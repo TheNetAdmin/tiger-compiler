@@ -17,6 +17,6 @@ set(SOURCE_FILES
         Debug.cpp Debug.h
         BoolList.h Frame.cpp Frame.h IR.cpp IR.h Translate.cpp Translate.h Temporary.cpp Temporary.h
         ../test/sem_test.cpp
-        )
+        PrintIRTree.cpp PrintIRTree.h)
 
 add_executable(src ${SOURCE_FILES})
