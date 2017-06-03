@@ -116,7 +116,7 @@ namespace Frame
     /* IR */
 
 
-    std::shared_ptr<Frag> makeStringFrag(std::shared_ptr<Temporary::Label> label, std::string &str)
+    std::shared_ptr<Frag> makeStringFrag(std::shared_ptr<Temporary::Label> label, const std::string &str)
     {
         return std::make_shared<StringFrag>(label, str);
     }

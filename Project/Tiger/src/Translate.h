@@ -38,7 +38,7 @@ namespace Translate
 
         const std::shared_ptr<AccessList> getFormals() const;
 
-        void Level::setFormals(const std::shared_ptr<AccessList> &formals);
+        void setFormals(const std::shared_ptr<AccessList> &formals);
     };
 
     class Access

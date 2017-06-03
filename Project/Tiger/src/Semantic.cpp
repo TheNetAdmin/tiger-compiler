@@ -13,16 +13,16 @@ namespace Semantic
         Debugger d("Trans prog");
         ExpTy expType;
         // create default environments
-        Env::TypeEnv venv;
-        venv.setDefaultEnv();
-        Env::VarEnv fenv;
-        fenv.setDefaultEnv();
+        Env::TypeEnv typeEnv;
+        typeEnv.setDefaultEnv();
+        Env::VarEnv varEnv;
+        varEnv.setDefaultEnv();
         // traverse program's root exp
-        expType = transExp(Translate::getGlobalLevel(), nullptr, venv, fenv, exp);
+        expType = transExp(Translate::getGlobalLevel(), nullptr, typeEnv, varEnv, exp);
     }
 
-    ExpTy transVar(shared_ptr<Translate::Level> level, shared_ptr<Translate::Exp> breakExp, Env::TypeEnv &venv,
-                   Env::VarEnv &fenv, const shared_ptr<AST::Var> &var)
+    ExpTy transVar(shared_ptr<Translate::Level> level, shared_ptr<Translate::Exp> breakExp, Env::TypeEnv &typeEnv,
+                   Env::VarEnv &varEnv, const shared_ptr<AST::Var> &var) noexcept(true)
     {
         Debugger d("Trans var");
         if (var == nullptr)
@@ -41,7 +41,7 @@ namespace Semantic
                 try
                 {
                     auto simpleVar = dynamic_pointer_cast<AST::SimpleVar>(var);
-                    auto queryResult = venv.find(simpleVar->getSimple());
+                    auto queryResult = typeEnv.find(simpleVar->getSimple());
                     return ExpTy(nonValue, queryResult->type);
                 }
                 catch (Env::EntryNotFound &e)
@@ -58,7 +58,7 @@ namespace Semantic
                  */
                 auto nonValue = Translate::makeNonValueExp();
                 auto fieldVar = dynamic_pointer_cast<AST::FieldVar>(var);
-                ExpTy resultTransField = transVar(level, breakExp, venv, fenv, fieldVar->getVar());
+                ExpTy resultTransField = transVar(level, breakExp, typeEnv, varEnv, fieldVar->getVar());
                 if (!Type::isRecord(resultTransField.type))
                 {
                     Tiger::Error err(var->getLoc(), "Not a record variable");
@@ -86,7 +86,7 @@ namespace Semantic
             {
                 auto nonValue = Translate::makeNonValueExp();
                 auto subscriptVar = dynamic_pointer_cast<AST::SubscriptVar>(var);
-                ExpTy resultTransSubscript = transVar(<#initializer#>, <#initializer#>, venv, fenv,
+                ExpTy resultTransSubscript = transVar(level, breakExp, typeEnv, varEnv,
                                                       subscriptVar->getVar());
                 if (!Type::isArray(resultTransSubscript.type))
                 {
@@ -95,7 +95,7 @@ namespace Semantic
                 }
                 else
                 {
-                    ExpTy resultTransExp = transExp(level, breakExp, venv, fenv, subscriptVar->getExp());
+                    ExpTy resultTransExp = transExp(level, breakExp, typeEnv, varEnv, subscriptVar->getExp());
                     if (!Type::isInt(resultTransExp.type))
                     {
                         Tiger::Error err(var->getLoc(), "Int required in subscription");
@@ -120,8 +120,8 @@ namespace Semantic
         }
     }
 
-    ExpTy transExp(shared_ptr<Translate::Level> level, shared_ptr<Translate::Exp> breakExp, Env::TypeEnv &venv,
-                   Env::VarEnv &fenv, shared_ptr<AST::Exp> exp)
+    ExpTy transExp(shared_ptr<Translate::Level> level, shared_ptr<Translate::Exp> breakExp, Env::TypeEnv &typeEnv,
+                   Env::VarEnv &varEnv, shared_ptr<AST::Exp> exp) noexcept(true)
     {
         // DEBUG
         Debugger d("Trans exp");
@@ -135,7 +135,7 @@ namespace Semantic
             case AST::VAR_EXP:
             {
                 auto var = dynamic_pointer_cast<AST::VarExp>(exp);
-                return transVar(level, breakExp, venv, fenv, var->getVar());
+                return transVar(level, breakExp, typeEnv, varEnv, var->getVar());
             }
                 break;
             case AST::NIL_EXP:
@@ -151,16 +151,16 @@ namespace Semantic
                 try
                 {
                     // Find the definition of the func
-                    auto funcDefine = fenv.find(funcName);
+                    auto funcDefine = varEnv.findFunc(funcName);
                     // Check if the args used match the defined
-                    checkCallArgs(level, breakExp, venv, fenv,
+                    checkCallArgs(level, breakExp, typeEnv, varEnv,
                                   funcUsage, funcDefine);
                     // Form the arg list for translate
                     auto funcArgList = Translate::makeExpList();
                     auto funcArgUsage = funcUsage->getArgs();
                     for (auto arg = funcArgUsage->begin(); arg != funcArgUsage->end(); arg++)
                     {
-                        auto argTrans = transExp(level, breakExp, venv, fenv, (*arg));
+                        auto argTrans = transExp(level, breakExp, typeEnv, varEnv, (*arg));
                         funcArgList->push_front(argTrans.exp);
                     }
                     // Form the call exp for translate
@@ -188,17 +188,17 @@ namespace Semantic
                 try
                 {
                     // Check definition
-                    auto recordDefine = venv.find(recordName);
+                    auto recordDefine = typeEnv.find(recordName);
                     assertTypeMatch(recordDefine->getType(), Type::RECORD, recordName, defaultLoc);
                     // Check efields
-                    checkRecordEfields(level, breakExp, venv, fenv, recordUsage, recordDefine);
+                    checkRecordEfields(level, breakExp, typeEnv, varEnv, recordUsage, recordDefine);
                     // Check pass
                     int n = 0;
                     auto fieldList = Translate::makeExpList();
                     auto recordUsageField = recordUsage->getFields();
                     for (auto field = recordUsageField->begin(); field != recordUsageField->end(); field++, n++)
                     {
-                        auto f = transExp(level, breakExp, venv, fenv, (*field)->getExp());
+                        auto f = transExp(level, breakExp, typeEnv, varEnv, (*field)->getExp());
                         fieldList->push_front(f.exp);
                     }
                     auto record = Translate::makeRecordExp(n, fieldList);
@@ -228,13 +228,13 @@ namespace Semantic
                 try
                 {
                     // Check definition
-                    auto arrayDefine = venv.find(arrayName);
+                    auto arrayDefine = typeEnv.find(arrayName);
                     assertTypeMatch(arrayDefine->getType(), Type::ARRAY, arrayName, defaultLoc);
                     // Check size
-                    auto arraySize = transExp(<#initializer#>, <#initializer#>, venv, fenv, arrayUsage->getSize());
+                    auto arraySize = transExp(level, breakExp, typeEnv, varEnv, arrayUsage->getSize());
                     assertTypeMatch(arraySize.type, Type::INT, defaultLoc);
                     // Check init
-                    auto arrayInit = transExp(<#initializer#>, <#initializer#>, venv, fenv, arrayUsage->getInit());
+                    auto arrayInit = transExp(level, breakExp, typeEnv, varEnv, arrayUsage->getInit());
                     assertTypeMatch(arrayInit.type, Type::ARRAY, defaultLoc);
                     // Check pass
                     auto array = Translate::makeArrayExp(arraySize.exp, arrayInit.exp);
@@ -269,7 +269,7 @@ namespace Semantic
                 ExpTy result;
                 for (auto iter = expList->begin(); iter != expList->end(); iter++)
                 {
-                    result = transExp(level, breakExp, venv, fenv, (*iter));
+                    result = transExp(level, breakExp, typeEnv, varEnv, (*iter));
                     trExpList->push_front(result.exp);
                 }
                 auto seq = Translate::makeSeqExp(trExpList);
@@ -282,10 +282,10 @@ namespace Semantic
                 try
                 {
                     // Check while's test condition
-                    auto whileTest = transExp(level, breakExp, venv, fenv, whileUsage->getTest());
+                    auto whileTest = transExp(level, breakExp, typeEnv, varEnv, whileUsage->getTest());
                     assertTypeMatch(whileTest.type, Type::INT, defaultLoc);
                     // Check while's body
-                    auto whileBody = transExp(level, breakExp, venv, fenv, whileUsage->getBody());
+                    auto whileBody = transExp(level, breakExp, typeEnv, varEnv, whileUsage->getBody());
                     auto done = Translate::makeDoneExp();
                     auto whileExp = Translate::makeWhileExp(whileTest.exp, whileBody.exp, done);
                     return ExpTy(whileExp, Type::VOID);
@@ -303,10 +303,10 @@ namespace Semantic
                 auto assignUsage = dynamic_pointer_cast<AST::AssignExp>(exp);
                 // Check assign's var
                 auto assignVar = assignUsage->getVar();
-                auto assignVarResult = transVar(level, breakExp, venv, fenv, assignVar);
+                auto assignVarResult = transVar(level, breakExp, typeEnv, varEnv, assignVar);
                 // Check assign's exp
                 auto assignExp = assignUsage->getExp();
-                auto assignExpResult = transExp(level, breakExp, venv, fenv, assignExp);
+                auto assignExpResult = transExp(level, breakExp, typeEnv, varEnv, assignExp);
                 // Check type
                 try
                 {
@@ -328,7 +328,7 @@ namespace Semantic
                 }
                 else
                 {
-                    return ExpTy(Translate::makeBreakExp(breakExp), Type::VOID)
+                    return ExpTy(Translate::makeBreakExp(breakExp), Type::VOID);
                 }
                 break;
             }
@@ -341,8 +341,8 @@ namespace Semantic
                 auto forHi = forUsage->getHi();
                 try
                 {
-                    auto forLoResult = transExp(<#initializer#>, <#initializer#>, venv, fenv, forLo);
-                    auto forHiResult = transExp(<#initializer#>, <#initializer#>, venv, fenv, forHi);
+                    auto forLoResult = transExp(level, breakExp, typeEnv, varEnv, forLo);
+                    auto forHiResult = transExp(level, breakExp, typeEnv, varEnv, forHi);
                     assertTypeMatch(forLoResult.type, Type::INT, forLo->getLoc());
                     assertTypeMatch(forHiResult.type, Type::INT, forHi->getLoc());
                 }
@@ -350,40 +350,39 @@ namespace Semantic
                 {
                     Tiger::Error err(e.loc, e.what());
                 }
-                fenv.beginScope();
+                varEnv.beginScope();
                 // Check declaration
                 auto forDec = AST::MakeVarDec(defaultLoc, forUsage->getVar(),
                                               Type::getName(Type::INT), forLo);
-                transDec(shared_ptr<Translate::Level>(), shared_ptr<Temporary::Label>(), venv, fenv,
+                transDec(level, breakExp, typeEnv, varEnv,
                          forDec);
                 // Check body
-                auto forBody = transExp(<#initializer#>, <#initializer#>, venv, fenv, forUsage->getBody());
-                fenv.endScope();
+                auto forBody = transExp(level, breakExp, typeEnv, varEnv, forUsage->getBody());
+                varEnv.endScope();
                 return ExpTy(nullptr, Type::VOID);
                 break;
             }
             case AST::LET_EXP:
             {
                 // Begin scope
-                fenv.beginScope();
-                venv.beginScope();
+                varEnv.beginScope();
+                typeEnv.beginScope();
                 // Check each exp decs
                 auto letUsage = dynamic_pointer_cast<AST::LetExp>(exp);
                 auto letDecs = letUsage->getDecs();
                 auto expList = Translate::makeExpList();
                 for (auto dec = letDecs->begin(); dec != letDecs->end(); dec++)
                 {
-                    auto result = transDec(shared_ptr<Translate::Level>(), shared_ptr<Temporary::Label>(), venv, fenv,
-                                           *dec);
+                    auto result = transDec(level, breakExp, typeEnv, varEnv, *dec);
                     expList->push_front(result);
                 }
                 // Check let exp body
                 auto letBody = letUsage->getBody();
-                auto result = transExp(level, breakExp, venv, fenv, letBody);
+                auto result = transExp(level, breakExp, typeEnv, varEnv, letBody);
                 expList->push_front(result.exp);
                 // End scope
-                venv.endScope();
-                fenv.endScope();
+                typeEnv.endScope();
+                varEnv.endScope();
                 return ExpTy(Translate::makeSeqExp(expList), result.type);
                 break;
             }
@@ -391,8 +390,8 @@ namespace Semantic
             {
                 auto opUsage = dynamic_pointer_cast<AST::OpExp>(exp);
                 // Check both side of op exp
-                auto opLeft = transExp(level, breakExp, venv, fenv, opUsage->getLeft());
-                auto opRight = transExp(level, breakExp, venv, fenv, opUsage->getRight());
+                auto opLeft = transExp(level, breakExp, typeEnv, varEnv, opUsage->getLeft());
+                auto opRight = transExp(level, breakExp, typeEnv, varEnv, opUsage->getRight());
                 // Check type
                 try
                 {
@@ -545,15 +544,15 @@ namespace Semantic
                 try
                 {
                     // Check if's test condition
-                    auto ifTest = transExp(level, breakExp, venv, fenv, ifTestPtr);
+                    auto ifTest = transExp(level, breakExp, typeEnv, varEnv, ifTestPtr);
                     assertTypeMatch(ifTest.type, Type::INT, ifTestPtr->getLoc());
                     // Check if's then body
-                    auto ifThen = transExp(level, breakExp, venv, fenv, ifThenPtr);
+                    auto ifThen = transExp(level, breakExp, typeEnv, varEnv, ifThenPtr);
                     // Check if's else body
                     shared_ptr<Translate::Exp> ifExp;
                     if (ifElsePtr != nullptr)
                     {
-                        auto ifElse = transExp(level, breakExp, venv, fenv, ifElsePtr);
+                        auto ifElse = transExp(level, breakExp, typeEnv, varEnv, ifElsePtr);
                         assertTypeMatch(ifThen.type, ifElse.type, ifThenPtr->getLoc());
                         ifExp = Translate::makeIfExp(ifTest.exp, ifThen.exp, ifElse.exp);
                     }
@@ -595,8 +594,8 @@ namespace Semantic
 
     shared_ptr<Translate::Exp> transDec(const shared_ptr<Translate::Level> level,
                                         const shared_ptr<Translate::Exp> breakExp,
-                                        Env::TypeEnv &venv,
-                                        Env::VarEnv &fenv,
+                                        Env::TypeEnv &typeEnv,
+                                        Env::VarEnv &varEnv,
                                         const shared_ptr<AST::Dec> dec)
     {
         // DEBUG
@@ -609,8 +608,7 @@ namespace Semantic
                 auto varUsage = dynamic_pointer_cast<AST::VarDec>(dec);
                 auto varName = varUsage->getVar();
                 // Check var init
-                auto varInit = transExp(level, breakExp, venv, fenv, varUsage->getInit());
-                auto varAlloc = Translate::allocLocal(level, varUsage->isEscape());
+                auto varInit = transExp(level, breakExp, typeEnv, varEnv, varUsage->getInit());
                 // If type name is empty
                 auto varType = make_shared<Type::Type>();
                 if (0 != varUsage->getTyp().size())
@@ -630,9 +628,9 @@ namespace Semantic
                 {
                     try
                     {
-                        auto varResult = fenv.find(varUsage->getTyp());
-                        assertTypeMatch(varResult->getResultType(), varInit.type, defaultLoc);
-                        varType = varResult->getResultType();
+                        auto varResult = typeEnv.find(varUsage->getTyp());
+                        assertTypeMatch(varResult->getType(), varInit.type, defaultLoc);
+                        varType = varResult->getType();
                     }
                     catch (Env::EntryNotFound &e)
                     {
@@ -644,7 +642,8 @@ namespace Semantic
                     }
                 }
                 Env::VarEntry ve(varName, varType, shared_ptr<Translate::Access>());
-                venv.enter(ve);
+                varEnv.enterVar(ve);
+                auto varAlloc = Translate::allocLocal(level, varUsage->isEscape());
                 auto simpleVar = Translate::makeSimpleVar(varAlloc, level);
                 return Translate::makeAssignExp(simpleVar, varInit.exp);
                 break;
@@ -659,16 +658,17 @@ namespace Semantic
                     // Check func return type
                     auto returnTypeName = (*func)->getResult();
                     auto returnType = make_shared<Type::Type>();
-                    // No return type specified, use void instead
                     if (returnTypeName.size() == 0)
                     {
+                        // No return type specified, use void instead
                         returnType = Type::VOID;
                     }
                     else
                     {
+                        // Check func return type
                         try
                         {
-                            returnType = venv.find(returnTypeName)->getType();
+                            returnType = typeEnv.find(returnTypeName)->getType();
                         }
                         catch (Env::EntryNotFound &e)
                         {
@@ -677,47 +677,54 @@ namespace Semantic
                             returnType = Type::VOID;
                         }
                     }
-                    Env::Entry funcEntry(level, Temporary::makeLabel(), (*func)->getName(), returnType);
                     // Check and add args to new function entry
                     auto args = (*func)->getParams();
+                    auto formals = make_shared<BoolList>();
+                    auto argTypeList = Env::makeArgList();
                     for (auto arg = args->begin(); arg != args->end(); arg++)
                     {
-                        auto argType = make_shared<Type::Type>();
+                        shared_ptr<Type::Type> argType = make_shared<Type::Type>();
                         try
                         {
-                            // TODO: getTyp? getName?
-                            argType = venv.find((*arg)->getTyp())->getType();
+                            argType = typeEnv.find((*arg)->getTyp())->getType();
                         }
                         catch (Env::EntryNotFound &e)
                         {
                             Tiger::Error err((*arg)->getLoc(), e.what());
                             argType = Type::INT;
                         }
-                        funcEntry.addArg(argType);
+                        argTypeList->push_back(argType);
+                        formals->push_back(true);
                     }
                     // Add func into func environment
-                    fenv.enter(funcEntry);
+                    auto funcLabel = Temporary::makeLabel();
+                    auto funcLevel = Translate::makeNewLevel(level, funcLabel, formals);
+                    Env::FuncEntry funcEntry(funcLevel, funcLabel, (*func)->getName(), argTypeList, returnType);
+                    varEnv.enterFunc(funcEntry);
                 }
                 // Traverse all functions' body to check `return type`
                 // Need to form function environment first, then traverse their body
                 for (auto func = funcList->begin(); func != funcList->end(); func++)
                 {
-                    fenv.beginScope();
-                    auto funcEntry = fenv.find((*func)->getName());
-                    auto args = funcEntry->getArgs();
+                    varEnv.beginScope();
+                    auto funcEntry = varEnv.findFunc((*func)->getName());
                     // Add args into var environment
-                    for (auto arg = args->begin(); arg != args->end(); arg++)
+                    auto args = funcEntry->getArgs();
+                    auto accessList = funcEntry->getLevel()->getFormals();
+                    auto access = accessList->begin();
+                    for (auto arg = args->begin();
+                         (arg != args->end()) && (access != accessList->end()); arg++, access++)
                     {
                         auto argName = Type::getName(*arg);
                         auto argType = *arg;
-                        Env::VarEntry argEntry(argName, argType, shared_ptr<Translate::Access>());
-                        venv.enter(argEntry);
+                        Env::VarEntry argEntry(argName, argType, (*access));
+                        varEnv.enterVar(argEntry);
                     }
                     // Traverse func body
-                    auto funcExp = transExp(level, breakExp, venv, fenv, (*func)->getBody());
+                    auto funcExp = transExp(funcEntry->getLevel(), breakExp, typeEnv, varEnv, (*func)->getBody());
                     try
                     {
-                        auto returnType = fenv.find((*func)->getName())->getResultType();
+                        auto returnType = varEnv.findFunc((*func)->getName())->getResultType();
                         assertTypeMatch(funcExp.type, returnType, (*func)->getLoc());
                     }
                     catch (Env::EntryNotFound &e)
@@ -726,41 +733,59 @@ namespace Semantic
                     }
                     catch (TypeNotMatchError &e)
                     {
-                        Tiger::Error err((*func)->getLoc(), e.what());
+                        string msg = "Incorrect return type\n";
+                        msg += e.what();
+                        Tiger::Error err((*func)->getLoc(), msg);
                     }
-                    fenv.endScope();
+                    varEnv.endScope();
                 }
-            }
+                return Translate::makeNonValueExp();
                 break;
+            }
             case AST::TYPE_DEC:
             {
                 auto typeUsage = std::dynamic_pointer_cast<AST::TypeDec>(dec);
                 auto types = typeUsage->getType();
                 for (auto t = types->begin(); t != types->end(); t++)
                 {
-                    // TODO: why nullptr?
                     Type::Name n((*t)->getName(), nullptr);
-                    Env::VarEntry nameVarEntry((*t)->getName(), make_shared<Type::Name>(n),
-                                               shared_ptr<Translate::Access>());
-                    venv.enter(nameVarEntry);
+                    Env::TypeEntry nameEntry((*t)->getName(), make_shared<Type::Name>(n));
+                    typeEnv.enterType(nameEntry);
                 }
                 bool isCycle = true;
                 for (auto t = types->begin(); t != types->end(); t++)
                 {
                     // TODO: wild pointer
-                    shared_ptr<Type::Type> result = transTy(venv, (*t)->getTy());
+                    shared_ptr<Type::Type> result = transTy(typeEnv, (*t)->getTy());
+                    if (isCycle)
+                    {
+                        if (!Type::isName(result))
+                        {
+                            isCycle = false;
+                        }
+                    }
+                    if ((t != types->end()) && !Type::isName(result))
+                    {
+                        Tiger::Error err("Actual type should be declared before name type");
+                    }
+                    auto nameTy = typeEnv.find((*t)->getName());
+                    nameTy->type = result;
                 }
+                if (isCycle)
+                {
+                    Tiger::Error err("Illegal type cycle: cycle must contain record, array");
+                }
+                return Translate::makeNonValueExp();
                 break;
             }
             default:
             {
-
-            }
                 break;
+            }
         }
     }
 
-    shared_ptr<Type::Type> transTy(Env::TypeEnv &venv, const shared_ptr<AST::Ty> &ty)
+    shared_ptr<Type::Type> transTy(Env::TypeEnv &typeEnv, const shared_ptr<AST::Ty> &ty)
     {
         // DEBUG
         switch (ty->getClassType())
@@ -770,7 +795,7 @@ namespace Semantic
                 auto nameTy = dynamic_pointer_cast<AST::NameTy>(ty);
                 try
                 {
-                    auto t = venv.find(nameTy->getName());
+                    auto t = typeEnv.find(nameTy->getName());
                     return t->getType();
                 }
                 catch (Env::EntryNotFound &e)
@@ -789,7 +814,7 @@ namespace Semantic
                 {
                     try
                     {
-                        auto fieldType = venv.find((*field)->getTyp());
+                        auto fieldType = typeEnv.find((*field)->getTyp());
                         record->addField((*field)->getName(), fieldType->getType());
                     }
                     catch (Env::EntryNotFound &e)
@@ -809,7 +834,7 @@ namespace Semantic
                 auto arrayTy = dynamic_pointer_cast<AST::ArrayTy>(ty);
                 try
                 {
-                    auto t = venv.find(arrayTy->getArray());
+                    auto t = typeEnv.find(arrayTy->getArray());
                     auto type = t->getType();
                     array->setArray(type);
                 }
@@ -859,10 +884,10 @@ namespace Semantic
 
     void checkRecordEfields(shared_ptr<Translate::Level> level,
                             shared_ptr<Translate::Exp> breakExp,
-                            Env::TypeEnv venv,
-                            Env::VarEnv fenv,
+                            Env::TypeEnv &typeEnv,
+                            Env::VarEnv &varEnv,
                             shared_ptr<AST::RecordExp> usage,
-                            shared_ptr<Env::VarEntry> def)
+                            shared_ptr<Env::TypeEntry> def)
     {
         auto defTypePtr = def->getType();
         auto recordDefine = dynamic_pointer_cast<Type::Record>(defTypePtr);
@@ -883,7 +908,7 @@ namespace Semantic
         for (; (uIter != uEfields->end()) && (dIter != dEfields->end());
                uIter++, dIter++)
         {
-            auto t = transExp(level, breakExp, venv, fenv, (*uIter)->getExp());
+            auto t = transExp(level, breakExp, typeEnv, varEnv, (*uIter)->getExp());
             auto dType = (*dIter)->type;
             auto uType = t.type;
             if (!Type::match(dType, uType))
@@ -899,10 +924,10 @@ namespace Semantic
 
     void checkCallArgs(shared_ptr<Translate::Level> level,
                        shared_ptr<Translate::Exp> breakExp,
-                       Env::TypeEnv &venv,
-                       Env::VarEnv &fenv
+                       Env::TypeEnv &typeEnv,
+                       Env::VarEnv &varEnv,
                        const shared_ptr<AST::CallExp> usage,
-                       const shared_ptr<Env::Entry> def)
+                       const shared_ptr<Env::FuncEntry> def)
     {
         auto uArgs = usage->getArgs();
         auto dArgs = def->getArgs();
@@ -921,7 +946,7 @@ namespace Semantic
         for (; (uIter != uArgs->end()) && (dIter != dArgs->end());
                uIter++, dIter++)
         {
-            auto t = transExp(level, breakExp, venv, fenv, (*uIter));
+            auto t = transExp(level, breakExp, typeEnv, varEnv, (*uIter));
             auto dType = (*dIter);
             auto uType = t.type;
             if (!Type::match(dType, uType))

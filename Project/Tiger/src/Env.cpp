@@ -21,15 +21,25 @@ namespace Env
         Entry::name = name;
     }
 
-    TypeEntry::TypeEntry(const std::string &name, const std::shared_ptr<Type::Type> type)
-            : name(name), type(type)
+    Entry::~Entry()
     {
 
     }
 
+    TypeEntry::TypeEntry(const std::string &name, const std::shared_ptr<Type::Type> type)
+            : Entry(name), type(type)
+    {
+
+    }
+
+    const std::shared_ptr<Type::Type> TypeEntry::getType() const
+    {
+        return type;
+    }
+
     VarEntry::VarEntry()
             : type(std::make_shared<Type::Type>()),
-              access(std::make_shared<Translate::Access>())
+              access(nullptr)
     {}
 
     VarEntry::VarEntry(const std::string &name, const std::shared_ptr<Type::Type> type,
@@ -45,8 +55,8 @@ namespace Env
     FuncEntry::FuncEntry()
             : args(std::make_shared<ArgList>()),
               result(std::make_shared<Type::Type>()),
-              level(std::make_shared<Translate::Level>()),
-              label(std::make_shared<Temporary::Label>())
+              level(nullptr),
+              label(nullptr)
     {}
 
     FuncEntry::FuncEntry(const std::shared_ptr<Translate::Level> level,
@@ -103,6 +113,13 @@ namespace Env
         return label;
     }
 
+    FuncEntry::FuncEntry(const std::shared_ptr<Translate::Level> level, const std::shared_ptr<Temporary::Label> label,
+                         const std::string &name, const std::shared_ptr<ArgList> argTypeList,
+                         const std::shared_ptr<Type::Type> resultType)
+            : Entry(name), args(argTypeList), result(resultType),
+              level(level), label(label)
+    {}
+
     Env::Env()
     {}
 
@@ -135,7 +152,7 @@ namespace Env
         {
             if ((*r_iter)->name == name)
             {
-                return std::make_shared<TypeEntry>(*r_iter);
+                return (*r_iter);
             }
         }
         throw EntryNotFound("Var Entry with name " + name + " not found");
@@ -153,6 +170,12 @@ namespace Env
         bindList.resize(s);
     }
 
+    void TypeEnv::enterType(TypeEntry typeEntry)
+    {
+        auto typePtr = std::make_shared<TypeEntry>(typeEntry);
+        enter(typePtr);
+    }
+
     VarEnv::VarEnv()
     {}
 
@@ -162,52 +185,52 @@ namespace Env
         FuncEntry print(Translate::getGlobalLevel(),
                         Temporary::makeLabel(),
                         "print", Type::STRING, Type::VOID);
-        enter(std::make_shared<FuncEntry>(print));
+        enterFunc(print);
         // flush
         FuncEntry flush(Translate::getGlobalLevel(),
                         Temporary::makeLabel(),
                         "flush", Type::VOID);
-        enter(std::make_shared<FuncEntry>(flush));
+        enterFunc(flush);
         // getchar
         FuncEntry getchar(Translate::getGlobalLevel(),
                           Temporary::makeLabel(),
                           "getchar", Type::VOID);
-        enter(std::make_shared<FuncEntry>(getchar));
+        enterFunc(getchar);
         // ord
         FuncEntry ord(Translate::getGlobalLevel(),
                       Temporary::makeLabel(),
                       "ord", Type::STRING, Type::INT);
-        enter(std::make_shared<FuncEntry>(ord));
+        enterFunc(ord);
         // chr
         FuncEntry chr(Translate::getGlobalLevel(),
                       Temporary::makeLabel(),
                       "chr", Type::INT, Type::STRING);
-        enter(std::make_shared<FuncEntry>(chr));
+        enterFunc(chr);
         // size
         FuncEntry size(Translate::getGlobalLevel(),
                        Temporary::makeLabel(),
                        "size", Type::STRING, Type::INT);
-        enter(std::make_shared<FuncEntry>(size));
+        enterFunc(size);
         // substring
         FuncEntry substring(Translate::getGlobalLevel(),
                             Temporary::makeLabel(),
                             "substring", {Type::STRING, Type::INT, Type::INT}, Type::STRING);
-        enter(std::make_shared<FuncEntry>(substring));
+        enterFunc(substring);
         // concat
         FuncEntry concat(Translate::getGlobalLevel(),
                          Temporary::makeLabel(),
                          "concat", {Type::STRING, Type::STRING}, Type::STRING);
-        enter(std::make_shared<FuncEntry>(concat));
+        enterFunc(concat);
         // not
         FuncEntry notFunc(Translate::getGlobalLevel(),
                           Temporary::makeLabel(),
                           "not", Type::INT, Type::INT);
-        enter(std::make_shared<FuncEntry>(notFunc));
+        enterFunc(notFunc);
         // exit
         FuncEntry exit(Translate::getGlobalLevel(),
                        Temporary::makeLabel(),
                        "exit", Type::INT, Type::VOID);
-        enter(std::make_shared<FuncEntry>(exit));
+        enterFunc(exit);
     }
 
     void VarEnv::enter(std::shared_ptr<Entry> entry)
@@ -265,4 +288,20 @@ namespace Env
         }
     }
 
+    void VarEnv::enterFunc(FuncEntry funcEntry)
+    {
+        auto funcPtr = std::make_shared<FuncEntry>(funcEntry);
+        enter(funcPtr);
+    }
+
+    void VarEnv::enterVar(VarEntry varEntry)
+    {
+        auto varPtr = std::make_shared<VarEntry>(varEntry);
+        enter(varPtr);
+    }
+
+    std::shared_ptr<ArgList> makeArgList()
+    {
+        return std::make_shared<ArgList>();
+    }
 }

@@ -129,7 +129,7 @@ namespace Frame
         const int MAX_REG = 6;
     }
 
-    std::shared_ptr<Frag> makeStringFrag(std::shared_ptr<Temporary::Label> label, std::string &str);
+    std::shared_ptr<Frag> makeStringFrag(std::shared_ptr<Temporary::Label> label, const std::string &str);
 
     std::shared_ptr<Frag> makeProcFrag(std::shared_ptr<IR::Stm> body, std::shared_ptr<Frame> frame);
 

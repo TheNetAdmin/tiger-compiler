@@ -115,39 +115,27 @@ namespace Translate
 
 
     static std::shared_ptr<Level> globalLevel = makeNewLevel(nullptr, Temporary::makeLabel(),
-
                                                              std::make_shared<BoolList>());
-
 
     std::shared_ptr<Level> getGlobalLevel(void)
     {
-
         return globalLevel;
-
     }
 
 
     std::shared_ptr<Level> makeNewLevel(std::shared_ptr<Level> parent, std::shared_ptr<Temporary::Label> name,
-
                                         std::shared_ptr<BoolList> formals)
     {
-
         formals->push_front(true);
-
         auto l = std::make_shared<Level>(parent, name, Frame::makeFrame(name, formals), nullptr);
-
         l->setFormals(makeFormalAccessList(l));
-
         return l;
-
     }
 
 
     std::shared_ptr<Access> allocLocal(std::shared_ptr<Level> level, bool escape)
     {
-
         return std::make_shared<Access>(level, Frame::allocLocalVarible(level->getFrame(), escape));
-
     }
 
 
@@ -525,7 +513,7 @@ namespace Translate
                                                             IR::makeSeq(unEx(then),
                                                                         IR::makeLabel(f)))));
                 default:
-                    Tiger::Error error(nullptr, "something wrong in Translate::IfExp no else");
+                    Tiger::Error error("something wrong in Translate::IfExp no else");
             }
         }
         else
@@ -547,7 +535,7 @@ namespace Translate
                 case CX:
                     thenStm = std::dynamic_pointer_cast<Cx>(then)->getStm();
                 default:
-                    Tiger::Error error(nullptr, "something wrong in Translate::IfExp in else in then");
+                    Tiger::Error error("something wrong in Translate::IfExp in else in then");
             }
 
             std::shared_ptr<IR::Stm> elseeStm;
@@ -562,7 +550,7 @@ namespace Translate
                 case CX:
                     elseeStm = std::dynamic_pointer_cast<Cx>(elsee)->getStm();
                 default:
-                    Tiger::Error error(nullptr, "something wrong in Translate::IfExp in else in elsee");
+                    Tiger::Error error("something wrong in Translate::IfExp in else in elsee");
             }
             result = makeNx(IR::makeSeq(cond->getStm(),
                                         IR::makeSeq(IR::makeLabel(t),

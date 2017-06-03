@@ -25,6 +25,8 @@ namespace Env
 
         Entry(const std::string &name);
 
+        virtual ~Entry();
+
         void setName(const std::string &name);
     };
 
@@ -34,6 +36,8 @@ namespace Env
         std::shared_ptr<Type::Type> type;
 
         TypeEntry(const std::string &name, const std::shared_ptr<Type::Type> type);
+
+        const std::shared_ptr<Type::Type> getType() const;
     };
 
     class VarEntry : public Entry
@@ -88,6 +92,12 @@ namespace Env
                   const std::shared_ptr<Type::Type> argType,
                   const std::shared_ptr<Type::Type> resultType);
 
+        FuncEntry(const std::shared_ptr<Translate::Level> level,
+                  const std::shared_ptr<Temporary::Label> label,
+                  const std::string &name,
+                  const std::shared_ptr<ArgList> argTypeList,
+                  const std::shared_ptr<Type::Type> resultType);
+
         // TODO: use args==nullptr is invalid, replace with args->size() == 0
         // No argument
         // @name:       function name
@@ -137,6 +147,8 @@ namespace Env
 
         void enter(std::shared_ptr<TypeEntry> entry);
 
+        void enterType(TypeEntry typeEntry);
+
         std::shared_ptr<TypeEntry> find(const std::string &name);
 
         void beginScope() override;
@@ -156,6 +168,10 @@ namespace Env
 
         void enter(std::shared_ptr<Entry> entry);
 
+        void enterFunc(FuncEntry funcEntry);
+
+        void enterVar(VarEntry varEntry);
+
         std::shared_ptr<Entry> find(const std::string &entryName);
 
         std::shared_ptr<VarEntry> findVar(const std::string &varName);
@@ -167,6 +183,6 @@ namespace Env
         void endScope() override;
     };
 
-
+    std::shared_ptr<ArgList> makeArgList();
 }
 #endif //SRC_ENV_H
