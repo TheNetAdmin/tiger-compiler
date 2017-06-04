@@ -174,6 +174,8 @@ namespace Translate
         {
             (*iter)->setLabelTrue(trueLabel);
             (*iter)->setLabelFalse(falseLabel);
+            std::cerr << trueLabel->getLabelName() << std::endl;
+            std::cerr << (*iter)->getLabelTrue()->getLabelName() << std::endl;
         }
     }
 
@@ -488,6 +490,7 @@ namespace Translate
         auto t = Temporary::makeLabel();
         auto f = Temporary::makeLabel();
         auto cond = unCx(test);
+        std::cerr << t->getLabelName() << std::endl;
         doPatch(cond->getPatchList(), t, f);
         if (elsee == nullptr)
         {

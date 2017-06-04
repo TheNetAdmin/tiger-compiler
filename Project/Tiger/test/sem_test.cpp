@@ -21,7 +21,7 @@ int main(int argc, char * argv[]){
             auto fragList = Semantic::transProg(result);
             ofstream fo("tiger.txt", ios::out);
             PrintIRTree printer(fragList);
-            printer.printIRTreeInFile(cout);
+            printer.printIRTreeInFile(fo);
         }
     }
     return 0;

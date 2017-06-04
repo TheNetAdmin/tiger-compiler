@@ -3,6 +3,7 @@
 //
 
 #include "Temporary.h"
+#include <sstream>
 
 namespace Temporary
 {
@@ -10,7 +11,11 @@ namespace Temporary
 
     Temp::Temp()
     {
-        tempName = "t" + tempNum;
+        std::stringstream ss;
+        ss << tempNum;
+        std::string tNum;
+        ss >> tNum;
+        tempName = "t" + tNum;
         tempNum += 1;
     }
 
@@ -23,7 +28,11 @@ namespace Temporary
 
     Label::Label()
     {
-        labelName = "L" + labelNum;
+        std::stringstream ss;
+        ss << labelNum;
+        std::string lNum;
+        ss >> lNum;
+        labelName = "L" + lNum;
         labelNum += 1;
     }
 

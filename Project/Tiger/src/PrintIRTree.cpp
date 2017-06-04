@@ -24,7 +24,7 @@ void PrintIRTree::printStm(std::shared_ptr<IR::Stm> stm, std::ostream &outFile, 
             printStm(seq->getLeft(), outFile, i + 1);
             outFile << std::endl;
             printStm(seq->getRight(), outFile, i + 1);
-            outFile << std::string(i, ' ') << ")";
+            outFile << std::endl << std::string(i, ' ') << ")" << std::endl;
             break;
         }
 
