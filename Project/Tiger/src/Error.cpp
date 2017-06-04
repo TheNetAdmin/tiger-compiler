@@ -33,6 +33,6 @@ namespace Tiger
     Error::Error(const std::string &message)
             : message(message)
     {
-        print();
+        std::cerr << "Error: " << message << std::endl;
     }
 }

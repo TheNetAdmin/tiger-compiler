@@ -117,7 +117,7 @@ namespace Type
 
     const std::string getName(const std::shared_ptr<Type> &t)
     {
-        std::string name;
+        std::string name = "Unknown";
         if (isNil(t))
         {
             name = "nil";
@@ -141,6 +141,10 @@ namespace Type
         else if (isName(t))
         {
             name = "name";
+        }
+        else if (isArray(t))
+        {
+            name = "array";
         }
         return name;
     }

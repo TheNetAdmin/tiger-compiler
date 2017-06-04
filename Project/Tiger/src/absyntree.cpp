@@ -206,10 +206,16 @@ namespace AST
 
 // CallExp------------------------------------------
 
-    CallExp::CallExp(Tiger::location loc, const string &func, const shared_ptr<ExpList> &args) : Exp(loc, CALL_EXP),
-                                                                                                 func(func),
-                                                                                                 args(args)
-    {}
+    CallExp::CallExp(Tiger::location loc, const string &func, const shared_ptr<ExpList> &args)
+            : Exp(loc, CALL_EXP),
+              func(func),
+              args(args)
+    {
+        if (args == nullptr)
+        {
+            this->args = make_shared<ExpList>();
+        }
+    }
 
     const string &CallExp::getFunc() const
     {
@@ -332,7 +338,8 @@ namespace AST
     ForExp::ForExp(Tiger::location loc, const string &var, const shared_ptr<Exp> &lo, const shared_ptr<Exp> &hi,
                    const shared_ptr<Exp> &body, bool escape) : Exp(loc, FOR_EXP), var(var), lo(lo), hi(hi),
                                                                body(body), escape(escape)
-    {}
+    {
+    }
 
     const string &ForExp::getVar() const
     {
@@ -369,7 +376,12 @@ namespace AST
 
     LetExp::LetExp(Tiger::location loc, const shared_ptr<DecList> &decs, const shared_ptr<Exp> &body)
             : Exp(loc, LET_EXP), decs(decs), body(body)
-    {}
+    {
+        if (decs == nullptr)
+        {
+            this->decs = make_shared<DecList>();
+        }
+    }
 
     const shared_ptr<DecList> &LetExp::getDecs() const
     {
@@ -494,7 +506,7 @@ namespace AST
 
 // Function used in parser(bison)
 
-    shared_ptr<Var> MakeSimpleVar(Tiger::location loc, string &sym)
+    shared_ptr<Var> MakeSimpleVar(Tiger::location loc, const string &sym)
     {
         return make_shared<SimpleVar>(loc, sym);
     }
@@ -624,7 +636,9 @@ namespace AST
     shared_ptr<FieldList> MakeFieldList(shared_ptr<Field> head, shared_ptr<FieldList> tail)
     {
         if (tail == nullptr)
+        {
             tail = make_shared<FieldList>();
+        }
         tail->push_front(head);
         return tail;
     }
@@ -632,7 +646,9 @@ namespace AST
     shared_ptr<ExpList> MakeExpList(shared_ptr<Exp> head, shared_ptr<ExpList> tail)
     {
         if (tail == nullptr)
+        {
             tail = make_shared<ExpList>();
+        }
         tail->push_front(head);
         return tail;
     }
@@ -646,7 +662,9 @@ namespace AST
     shared_ptr<FunDecList> MakeFunDecList(shared_ptr<FunDec> head, shared_ptr<FunDecList> tail)
     {
         if (tail == nullptr)
+        {
             tail = make_shared<FunDecList>();
+        }
         tail->push_front(head);
         return tail;
     }
@@ -654,7 +672,9 @@ namespace AST
     shared_ptr<DecList> MakeDecList(shared_ptr<Dec> head, shared_ptr<DecList> tail)
     {
         if (tail == nullptr)
+        {
             tail = make_shared<DecList>();
+        }
         tail->push_front(head);
         return tail;
     }
@@ -668,7 +688,9 @@ namespace AST
     shared_ptr<TypeTyList> MakeTypeTyList(shared_ptr<TypeTy> head, shared_ptr<TypeTyList> tail)
     {
         if (tail == nullptr)
+        {
             tail = make_shared<TypeTyList>();
+        }
         tail->push_front(head);
         return tail;
     }
@@ -681,7 +703,9 @@ namespace AST
     shared_ptr<EFieldList> MakeEFieldList(shared_ptr<EField> head, shared_ptr<EFieldList> tail)
     {
         if (tail == nullptr)
+        {
             tail = make_shared<EFieldList>();
+        }
         tail->push_front(head);
         return tail;
     }

@@ -536,7 +536,7 @@ namespace AST
 //===----------------------------------------------------------------------===//
 // Function used in parser(bison)
 // Var::
-    shared_ptr<Var> MakeSimpleVar(Tiger::location loc, string &sym);
+    shared_ptr<Var> MakeSimpleVar(Tiger::location loc, const string &sym);
 
     shared_ptr<Var> MakeFieldVar(Tiger::location loc, shared_ptr<Var> var, string &sym);
 

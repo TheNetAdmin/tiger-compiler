@@ -9,6 +9,11 @@
 void debugStart(const std::string &  msg);
 void debugEnd(const std::string & msg);
 
+namespace
+{
+    bool debugOutput = false;
+}
+
 class Debugger {
 public:
     std::string name;

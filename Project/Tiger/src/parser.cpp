@@ -1038,7 +1038,12 @@ namespace Tiger {
 
   case 51:
 #line 137 "src/bison/parser.yy" // lalr1.cc:859
-    {string s = "DEBUG"; yylhs.value.as< shared_ptr<AST::Dec> > () = MakeVarDec(yylhs.location, yystack_[2].value.as< string > (), s, yystack_[0].value.as< shared_ptr<AST::Exp> > ());}
+              {
+                  string s = "";
+                  yylhs.value.as<shared_ptr<AST::Dec> >() = MakeVarDec(yylhs.location, yystack_[2].value.as<string>(),
+                                                                       s,
+                                                                       yystack_[0].value.as<shared_ptr<AST::Exp> >());
+              }
 #line 1000 "src/parser.cpp" // lalr1.cc:859
     break;
 

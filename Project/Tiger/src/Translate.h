@@ -129,7 +129,8 @@ namespace Translate
     std::shared_ptr<Exp> makeNonValueExp();
 
     std::shared_ptr<Exp>
-    makeCallExp(std::shared_ptr<Temporary::Label> label, std::shared_ptr<Level> fun, std::shared_ptr<Level> call,
+    makeCallExp(std::shared_ptr<Temporary::Label> label, std::shared_ptr<Level> usageLevel,
+                std::shared_ptr<Level> defLevel,
                 std::shared_ptr<ExpList> l);
 
     std::shared_ptr<Exp> makeNilExp();

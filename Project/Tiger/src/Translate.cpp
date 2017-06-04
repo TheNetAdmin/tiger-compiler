@@ -174,8 +174,6 @@ namespace Translate
         {
             (*iter)->setLabelTrue(trueLabel);
             (*iter)->setLabelFalse(falseLabel);
-            std::cerr << trueLabel->getLabelName() << std::endl;
-            std::cerr << (*iter)->getLabelTrue()->getLabelName() << std::endl;
         }
     }
 
@@ -244,7 +242,7 @@ namespace Translate
             }
             default:
             {
-                Tiger::Error error("something wrong in Translate::unCx");
+                Tiger::Error error("In unCx: exp should not be NX");
             }
         }
     }
@@ -341,10 +339,11 @@ namespace Translate
     }
 
     std::shared_ptr<Exp>
-    makeCallExp(std::shared_ptr<Temporary::Label> label, std::shared_ptr<Level> fun, std::shared_ptr<Level> call,
+    makeCallExp(std::shared_ptr<Temporary::Label> label, std::shared_ptr<Level> usageLevel,
+                std::shared_ptr<Level> defLevel,
                 std::shared_ptr<ExpList> l)
     {
-        auto entry = getStaticLink(call, fun);
+        auto entry = getStaticLink(usageLevel, defLevel);
         l->push_front(entry);
         IR::ExpList arglist;
         for (auto exp = l->begin(); exp != l->end(); exp++)
@@ -390,7 +389,9 @@ namespace Translate
     std::shared_ptr<Exp> makeSeqExp(std::shared_ptr<ExpList> l)
     {
         auto resl = unEx(l->front());
-        for (auto exp = l->begin(); exp != l->end(); exp++)
+        auto exp = l->begin();
+        exp++;
+        for (; exp != l->end(); exp++)
         {
             resl = IR::makeEseq(IR::makeExp(unEx(*exp)), resl);
         }
@@ -490,7 +491,6 @@ namespace Translate
         auto t = Temporary::makeLabel();
         auto f = Temporary::makeLabel();
         auto cond = unCx(test);
-        std::cerr << t->getLabelName() << std::endl;
         doPatch(cond->getPatchList(), t, f);
         if (elsee == nullptr)
         {
@@ -515,8 +515,9 @@ namespace Translate
                                                 IR::makeSeq(IR::makeLabel(t),
                                                             IR::makeSeq(unEx(then),
                                                                         IR::makeLabel(f)))));
+                    break;
                 default:
-                    Tiger::Error error("something wrong in Translate::IfExp no else");
+                    Tiger::Error error("something wrong in [Translate::IfExp no else], type of [then] exp error");
             }
         }
         else
@@ -537,6 +538,7 @@ namespace Translate
                     break;
                 case CX:
                     thenStm = std::dynamic_pointer_cast<Cx>(then)->getStm();
+                    break;
                 default:
                     Tiger::Error error("something wrong in Translate::IfExp in else in then");
             }
@@ -552,6 +554,7 @@ namespace Translate
                     break;
                 case CX:
                     elseeStm = std::dynamic_pointer_cast<Cx>(elsee)->getStm();
+                    break;
                 default:
                     Tiger::Error error("something wrong in Translate::IfExp in else in elsee");
             }

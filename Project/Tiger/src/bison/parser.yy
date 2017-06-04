@@ -134,7 +134,7 @@ typefields: id COLON id COMMA typefields {$$ = MakeFieldList(MakeField(@$, $1, $
           | id COLON id {$$ = MakeFieldList(MakeField(@$, $1, $3), nullptr);}
 		  | {$$ = nullptr;}
 
-vardec: VAR id ASSIGN exp {string s = "DEBUG"; $$ = MakeVarDec(@$, $2, s, $4);} 
+vardec: VAR id ASSIGN exp {string s = ""; $$ = MakeVarDec(@$, $2, s, $4);}
       | VAR id COLON id ASSIGN exp {$$ = MakeVarDec(@$, $2, $4, $6);}
 
 fundecs: fundec fundecs {$$ = MakeFunctionDec(@$, MakeFunDecList($1, dynamic_pointer_cast<FunctionDec>($2)->getFunction()));}

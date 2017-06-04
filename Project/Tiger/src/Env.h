@@ -28,6 +28,8 @@ namespace Env
         virtual ~Entry();
 
         void setName(const std::string &name);
+
+        virtual void dumpInfo() = 0;
     };
 
     class TypeEntry : public Entry
@@ -38,6 +40,14 @@ namespace Env
         TypeEntry(const std::string &name, const std::shared_ptr<Type::Type> type);
 
         const std::shared_ptr<Type::Type> getType() const;
+
+        void dumpInfo()
+        {
+            std::cerr << "Type Entry Dump Info" << std::endl;
+            std::cerr << "           Name: " << name << std::endl;
+            std::cerr << "           Type: " << Type::getName(type) << std::endl;
+            std::cerr << std::endl;
+        }
     };
 
     class VarEntry : public Entry
@@ -119,6 +129,7 @@ namespace Env
         {
             std::cerr << "Func Entry Dump Info" << std::endl;
             std::cerr << "Func Name : " << name << std::endl;
+            std::cerr << "Func Label : " << label->getLabelName() << std::endl;
             std::cerr << "Args : ";
             for (auto arg = args->begin(); arg != args->end(); arg++)
             {
@@ -170,6 +181,14 @@ namespace Env
         void beginScope() override;
 
         void endScope() override;
+
+        void dump()
+        {
+            for (auto t : bindList)
+            {
+                t->dumpInfo();
+            }
+        }
     };
 
     class VarEnv : public Env
@@ -197,6 +216,14 @@ namespace Env
         void beginScope() override;
 
         void endScope() override;
+
+        void dump()
+        {
+            for (auto e : bindList)
+            {
+                e->dumpInfo();
+            }
+        }
     };
 
     std::shared_ptr<ArgList> makeArgList();

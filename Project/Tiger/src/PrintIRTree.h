@@ -22,10 +22,17 @@ class PrintIRTree
 
     void printExp(std::shared_ptr<IR::Exp> exp, std::ostream &outFile, int i);
 
+    int printStmDot(std::shared_ptr<IR::Stm> stm, std::ostream &outFile);
+
+    int printExpDot(std::shared_ptr<IR::Exp> exp, std::ostream &outFile);
+
 public:
     PrintIRTree(const std::shared_ptr<Frame::FragList> &fragList);
 
     void printIRTreeInFile(std::ostream &outFile);
+
+    void makeDotFile(std::ostream &outFile);
+
 };
 
 #endif //SRC_PRINTIRTREE_H

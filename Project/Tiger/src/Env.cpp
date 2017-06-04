@@ -3,7 +3,6 @@
 //
 
 #include "Env.h"
-#include "Debug.h"
 
 namespace Env
 {
@@ -148,6 +147,8 @@ namespace Env
         enter(std::make_shared<TypeEntry>(intVar));
         TypeEntry stringVar("string", Type::STRING);
         enter(std::make_shared<TypeEntry>(stringVar));
+        TypeEntry voidVar("void", Type::VOID);
+        enter(std::make_shared<TypeEntry>(voidVar));
     }
 
     void TypeEnv::enter(std::shared_ptr<TypeEntry> entry)
@@ -279,7 +280,6 @@ namespace Env
 
     std::shared_ptr<FuncEntry> VarEnv::findFunc(const std::string &funcName)
     {
-        Debugger d("Env::VarEntry::findFunc: " + funcName);
         auto entry = find(funcName);
         return std::dynamic_pointer_cast<FuncEntry>(entry);
     }
@@ -287,9 +287,7 @@ namespace Env
     void VarEnv::enterFunc(FuncEntry funcEntry)
     {
         auto funcPtr = std::make_shared<FuncEntry>(funcEntry);
-        funcPtr->dumpInfo();
         enter(funcPtr);
-        std::cerr << bindList.back()->name << std::endl << std::endl;
     }
 
     void VarEnv::enterVar(VarEntry varEntry)

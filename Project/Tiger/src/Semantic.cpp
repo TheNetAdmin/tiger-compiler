@@ -23,8 +23,11 @@ namespace Semantic
         return resultList;
     }
 
-    ExpTy transVar(shared_ptr<Translate::Level> level, shared_ptr<Translate::Exp> breakExp, Env::TypeEnv &typeEnv,
-                   Env::VarEnv &varEnv, const shared_ptr<AST::Var> &var) noexcept(true)
+    ExpTy transVar(shared_ptr<Translate::Level> level,
+                   shared_ptr<Translate::Exp> breakExp,
+                   Env::TypeEnv &typeEnv,
+                   Env::VarEnv &varEnv,
+                   const shared_ptr<AST::Var> &var) noexcept(true)
     {
         Debugger d("Trans var");
         if (var == nullptr)
@@ -122,8 +125,11 @@ namespace Semantic
         }
     }
 
-    ExpTy transExp(shared_ptr<Translate::Level> level, shared_ptr<Translate::Exp> breakExp, Env::TypeEnv &typeEnv,
-                   Env::VarEnv &varEnv, shared_ptr<AST::Exp> exp) noexcept(true)
+    ExpTy transExp(shared_ptr<Translate::Level> level,
+                   shared_ptr<Translate::Exp> breakExp,
+                   Env::TypeEnv &typeEnv,
+                   Env::VarEnv &varEnv,
+                   shared_ptr<AST::Exp> exp) noexcept(true)
     {
         // DEBUG
         Debugger d("Trans exp");
@@ -155,19 +161,19 @@ namespace Semantic
                     // Find the definition of the func
                     auto funcDefine = varEnv.findFunc(funcName);
                     // Check if the args used match the defined
-                    checkCallArgs(level, breakExp, typeEnv, varEnv,
-                                  funcUsage, funcDefine);
+                    checkCallArgs(level, breakExp, typeEnv, varEnv, funcUsage, funcDefine);
                     // Form the arg list for translate
                     auto funcArgList = Translate::makeExpList();
                     auto funcArgUsage = funcUsage->getArgs();
+                    // If has args
                     for (auto arg = funcArgUsage->begin(); arg != funcArgUsage->end(); arg++)
                     {
                         auto argTrans = transExp(level, breakExp, typeEnv, varEnv, (*arg));
                         funcArgList->push_front(argTrans.exp);
                     }
                     // Form the call exp for translate
-                    auto func = Translate::makeCallExp(funcDefine->getLabel(),
-                                                       funcDefine->getLevel(), level, funcArgList);
+                    auto func = Translate::makeCallExp(funcDefine->getLabel(), level, funcDefine->getLevel(),
+                                                       funcArgList);
                     return ExpTy(func, funcDefine->getResultType());
                 }
                 catch (Env::EntryNotFound &e)
@@ -261,7 +267,7 @@ namespace Semantic
                 // TODO: why need a * ?
                 auto expList = exps->getSeq();
                 // Check num of exps
-                if (expList->size() == 0)
+                if ((expList == nullptr) || (expList->size() == 0))
                 {
                     auto nonValue = Translate::makeNonValueExp();
                     return ExpTy(nonValue, Type::VOID);
@@ -294,7 +300,7 @@ namespace Semantic
                 }
                 catch (TypeNotMatchError &e)
                 {
-                    Tiger::Error(e.loc, e.what());
+                    Tiger::Error err(e.loc, e.what());
                 }
                 auto nonValue = Translate::makeNonValueExp();
                 return ExpTy(nonValue, Type::VOID);
@@ -336,32 +342,47 @@ namespace Semantic
             }
             case AST::FOR_EXP:
             {
-                // TODO: convert to while inside a let expression
+                // Convert for exp to a let exp with a  while exp
                 auto forUsage = dynamic_pointer_cast<AST::ForExp>(exp);
-                // Check low and high range
-                auto forLo = forUsage->getLo();
-                auto forHi = forUsage->getHi();
-                try
-                {
-                    auto forLoResult = transExp(level, breakExp, typeEnv, varEnv, forLo);
-                    auto forHiResult = transExp(level, breakExp, typeEnv, varEnv, forHi);
-                    assertTypeMatch(forLoResult.type, Type::INT, forLo->getLoc());
-                    assertTypeMatch(forHiResult.type, Type::INT, forHi->getLoc());
-                }
-                catch (TypeNotMatchError &e)
-                {
-                    Tiger::Error err(e.loc, e.what());
-                }
-                varEnv.beginScope();
-                // Check declaration
-                auto forDec = AST::MakeVarDec(defaultLoc, forUsage->getVar(),
-                                              Type::getName(Type::INT), forLo);
-                transDec(level, breakExp, typeEnv, varEnv,
-                         forDec);
-                // Check body
-                auto forBody = transExp(level, breakExp, typeEnv, varEnv, forUsage->getBody());
-                varEnv.endScope();
-                return ExpTy(nullptr, Type::VOID);
+                string defaultType = "";
+                auto loc = forUsage->getLoc();
+                auto i = AST::MakeVarDec(loc, forUsage->getVar(), defaultType, forUsage->getLo());
+                auto limit = AST::MakeVarDec(loc, "limit", defaultType, forUsage->getHi());
+                auto test = AST::MakeVarDec(loc, "test", defaultType, AST::MakeIntExp(loc, 1));
+                auto testExp = AST::MakeVarExp(loc, AST::MakeSimpleVar(loc, "test"));
+                auto iExp = AST::MakeVarExp(loc, AST::MakeSimpleVar(loc, forUsage->getVar()));
+                auto limitExp = AST::MakeVarExp(loc, AST::MakeSimpleVar(loc, "limit"));
+                auto increment = AST::MakeAssignExp(loc,
+                                                    AST::MakeSimpleVar(loc, forUsage->getVar()),
+                                                    AST::MakeOpExp(loc, AST::PLUS, iExp, AST::MakeIntExp(loc, 1)));
+                auto setFalse = AST::MakeAssignExp(loc,
+                                                   AST::MakeSimpleVar(loc, "test"),
+                                                   AST::MakeIntExp(loc, 0));
+                // Make let exp
+                auto decList = AST::MakeDecList(i, AST::MakeDecList(limit, AST::MakeDecList(test, nullptr)));
+                auto whileExp = AST::MakeWhileExp(loc, testExp,
+                                                  AST::MakeSeqExp(
+                                                          loc,
+                                                          AST::MakeExpList(
+                                                                  forUsage->getBody(),
+                                                                  AST::MakeExpList(
+                                                                          AST::MakeIfExp(
+                                                                                  loc,
+                                                                                  AST::MakeOpExp(
+                                                                                          loc,
+                                                                                          AST::LT,
+                                                                                          iExp,
+                                                                                          limitExp),
+                                                                                  increment,
+                                                                                  setFalse),
+                                                                          nullptr))));
+                auto opExp = AST::MakeOpExp(loc, AST::LE, forUsage->getLo(), forUsage->getHi());
+                auto seqExp = AST::MakeSeqExp(loc,
+                                              AST::MakeExpList(AST::MakeIfExp(loc, opExp, whileExp, nullptr),
+                                                               nullptr));
+                auto letExp = AST::MakeLetExp(loc, decList, seqExp);
+                auto expTy = transExp(level, breakExp, typeEnv, varEnv, letExp);
+                return expTy;
                 break;
             }
             case AST::LET_EXP:
@@ -556,6 +577,11 @@ namespace Semantic
                     {
                         auto ifElse = transExp(level, breakExp, typeEnv, varEnv, ifElsePtr);
                         assertTypeMatch(ifThen.type, ifElse.type, ifThenPtr->getLoc());
+                        // TODO: ifTest.exp could be NX
+                        if (ifTest.exp->getKind() == Translate::NX)
+                        {
+                            auto deb = dynamic_pointer_cast<Translate::Nx>(ifTest.exp);
+                        }
                         ifExp = Translate::makeIfExp(ifTest.exp, ifThen.exp, ifElse.exp);
                     }
                     else
@@ -568,7 +594,7 @@ namespace Semantic
                 {
                     Tiger::Error err(e.loc, e.what());
                 }
-                return ExpTy(nullptr, Type::VOID);
+                return ExpTy(Translate::makeNonValueExp(), Type::VOID);
             }
                 break;
             case AST::STRING_EXP:
@@ -611,10 +637,10 @@ namespace Semantic
                 auto varName = varUsage->getVar();
                 // Check var init
                 auto varInit = transExp(level, breakExp, typeEnv, varEnv, varUsage->getInit());
-                // If type name is empty
                 auto varType = make_shared<Type::Type>();
-                if (0 != varUsage->getTyp().size())
+                if (0 == varUsage->getTyp().size())
                 {
+                    // If type name is empty
                     try
                     {
                         assertTypeNotMatch(varInit.type, Type::NIL, defaultLoc);
@@ -643,10 +669,10 @@ namespace Semantic
                         Tiger::Error err(e.loc, e.what());
                     }
                 }
-                Env::VarEntry ve(varName, varType, shared_ptr<Translate::Access>());
-                varEnv.enterVar(ve);
                 auto varAlloc = Translate::allocLocal(level, varUsage->isEscape());
                 auto simpleVar = Translate::makeSimpleVar(varAlloc, level);
+                Env::VarEntry ve(varName, varType, varAlloc);
+                varEnv.enterVar(ve);
                 return Translate::makeAssignExp(simpleVar, varInit.exp);
                 break;
             }
@@ -654,7 +680,6 @@ namespace Semantic
             {
                 auto funcUsage = dynamic_pointer_cast<AST::FunctionDec>(dec);
                 auto funcList = funcUsage->getFunction();
-                cout << funcList->front()->getName() << endl;
                 // Add functions' declaration
                 for (auto func = funcList->begin(); func != funcList->end(); func++)
                 {
@@ -671,7 +696,8 @@ namespace Semantic
                         // Check func return type
                         try
                         {
-                            returnType = typeEnv.find(returnTypeName)->getType();
+                            auto entry = typeEnv.find(returnTypeName);
+                            returnType = entry->getType();
                         }
                         catch (Env::EntryNotFound &e)
                         {
@@ -684,26 +710,29 @@ namespace Semantic
                     auto args = (*func)->getParams();
                     auto formals = make_shared<BoolList>();
                     auto argTypeList = Env::makeArgList();
-                    for (auto arg = args->begin(); arg != args->end(); arg++)
+                    if (args != nullptr)
                     {
-                        shared_ptr<Type::Type> argType = make_shared<Type::Type>();
-                        try
+                        // If args is not 0
+                        for (auto arg = args->begin(); arg != args->end(); arg++)
                         {
-                            argType = typeEnv.find((*arg)->getTyp())->getType();
+                            shared_ptr<Type::Type> argType = make_shared<Type::Type>();
+                            try
+                            {
+                                argType = typeEnv.find((*arg)->getTyp())->getType();
+                            }
+                            catch (Env::EntryNotFound &e)
+                            {
+                                Tiger::Error err((*arg)->getLoc(), e.what());
+                                argType = Type::INT;
+                            }
+                            argTypeList->push_back(argType);
+                            formals->push_back(true);
                         }
-                        catch (Env::EntryNotFound &e)
-                        {
-                            Tiger::Error err((*arg)->getLoc(), e.what());
-                            argType = Type::INT;
-                        }
-                        argTypeList->push_back(argType);
-                        formals->push_back(true);
                     }
                     // Add func into func environment
                     auto funcLabel = Temporary::makeLabel();
                     auto funcLevel = Translate::makeNewLevel(level, funcLabel, formals);
                     Env::FuncEntry funcEntry(funcLevel, funcLabel, (*func)->getName(), argTypeList, returnType);
-                    funcEntry.dumpInfo();
                     varEnv.enterFunc(funcEntry);
                 }
                 // Traverse all functions' body to check `return type`
@@ -714,7 +743,6 @@ namespace Semantic
                     std::shared_ptr<Env::FuncEntry> funcEntry;
                     try
                     {
-                        std::cerr << (*func)->getName() << endl;
                         auto funcName = (*func)->getName();
                         funcEntry = varEnv.findFunc(funcName);
                     }
@@ -726,14 +754,16 @@ namespace Semantic
                     auto args = (*func)->getParams();
                     auto accessList = funcEntry->getLevel()->getFormals();
                     auto access = accessList->begin();
-                    for (auto arg = args->begin();
-                         (arg != args->end()) && (access != accessList->end()); arg++, access++)
+                    if (args != nullptr)
                     {
-                        auto argName = (*arg)->getName();
-                        auto argType = typeEnv.find((*arg)->getTyp())->getType();
-                        Env::VarEntry argEntry(argName, Type::INT, (*access));
-                        argEntry.dumpInfo();
-                        varEnv.enterVar(argEntry);
+                        for (auto arg = args->begin();
+                             (arg != args->end()) && (access != accessList->end()); arg++, access++)
+                        {
+                            auto argName = (*arg)->getName();
+                            auto argType = typeEnv.find((*arg)->getTyp())->getType();
+                            Env::VarEntry argEntry(argName, Type::INT, (*access));
+                            varEnv.enterVar(argEntry);
+                        }
                     }
                     // Traverse func body
                     auto funcExp = transExp(funcEntry->getLevel(), breakExp, typeEnv, varEnv, (*func)->getBody());
@@ -780,10 +810,12 @@ namespace Semantic
                             isCycle = false;
                         }
                     }
-                    if ((t != types->end()) && !Type::isName(result))
-                    {
-                        Tiger::Error err("Actual type should be declared before name type");
-                    }
+                    //TODO: remove this warnning?
+//                    if ((t != types->end()) && !Type::isName(result))
+//                    {
+//                        std::cerr << Type::isArray(result) << std::endl;
+//                        Tiger::Error err("Actual type should be declared before name type");
+//                    }
                     auto nameTy = typeEnv.find((*t)->getName());
                     nameTy->type = result;
                 }
@@ -871,7 +903,7 @@ namespace Semantic
                             const shared_ptr<Type::Type> assertType,
                             const Tiger::location &loc)
     {
-        if (typeid(actualType) == typeid(assertType))
+        if (typeid(*actualType) == typeid(*assertType))
         {
             throw TypeMatchError(Type::getName(actualType), loc);
         }
@@ -947,6 +979,12 @@ namespace Semantic
     {
         auto uArgs = usage->getArgs();
         auto dArgs = def->getArgs();
+
+        // Check if usage's args is nullptr
+        if (uArgs == nullptr)
+        {
+            uArgs = make_shared<AST::ExpList>();
+        }
 
         // Check if arg num matches
         auto uSize = uArgs->size();
