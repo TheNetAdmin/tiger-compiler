@@ -342,7 +342,7 @@ int PrintIRTree::printExpDot(std::shared_ptr<IR::Exp> exp, std::ostream &outFile
                     outFile << "\"node" << rightNum << "\":f2 -> \"node" << childnode << "\":f1" << std::endl;
                 }
                 else {
-                    outFile << "\"node" << rightNum << "\":f4 -> \"node" << childnode << "\":f1" << std::endl;
+                    outFile << "\"node" << rightNum << "\":f1 -> \"node" << childnode << "\":f1" << std::endl;
                 }
                 rightNum = childnode;
             }

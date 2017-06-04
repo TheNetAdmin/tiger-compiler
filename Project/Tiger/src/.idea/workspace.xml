@@ -49,12 +49,13 @@
         <entry file="file://$PROJECT_DIR$/PrintIRTree.cpp">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="366">
-              <caret line="363" column="9" lean-forward="true" selection-start-line="363" selection-start-column="9" selection-end-line="363" selection-end-column="9" />
+              <caret line="336" column="0" lean-forward="true" selection-start-line="336" selection-start-column="0" selection-end-line="336" selection-end-column="0" />
               <folding>
                 <element signature="e#403#3172#0" expanded="false" />
                 <element signature="e#3174#5840#0" expanded="false" />
                 <element signature="e#5843#6927#0" expanded="false" />
                 <element signature="e#6953#10260#0" expanded="false" />
+                <element signature="e#13984#15278#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -165,8 +166,8 @@
   </component>
   <component name="OCFindUsagesOptions" text="false" ivars="false" properties="true" derivedClasses="false" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="-2" />
-    <option name="y" value="34" />
+    <option name="x" value="325" />
+    <option name="y" value="39" />
     <option name="width" value="1566" />
     <option name="height" value="1047" />
   </component>
@@ -492,7 +493,7 @@
       <workItem from="1496505836878" duration="9578000" />
       <workItem from="1496552687001" duration="682000" />
       <workItem from="1496553730011" duration="4004000" />
-      <workItem from="1496559280655" duration="7771000" />
+      <workItem from="1496559280655" duration="9076000" />
     </task>
     <task id="LOCAL-00001" summary="Remove Type::FieldList">
       <created>1496219984705</created>
@@ -582,7 +583,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="161657000" />
+    <option name="totallyTimeSpent" value="162962000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -594,7 +595,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-2" y="34" width="1566" height="1047" extended-state="0" />
+    <frame x="325" y="39" width="1566" height="1047" extended-state="1" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14741036" sideWeight="0.49583334" order="0" side_tool="false" content_ui="combo" />
@@ -983,12 +984,13 @@
     <entry file="file://$PROJECT_DIR$/PrintIRTree.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="366">
-          <caret line="363" column="9" lean-forward="true" selection-start-line="363" selection-start-column="9" selection-end-line="363" selection-end-column="9" />
+          <caret line="336" column="0" lean-forward="true" selection-start-line="336" selection-start-column="0" selection-end-line="336" selection-end-column="0" />
           <folding>
             <element signature="e#403#3172#0" expanded="false" />
             <element signature="e#3174#5840#0" expanded="false" />
             <element signature="e#5843#6927#0" expanded="false" />
             <element signature="e#6953#10260#0" expanded="false" />
+            <element signature="e#13984#15278#0" expanded="false" />
           </folding>
         </state>
       </provider>
