@@ -1,0 +1,19 @@
+let
+	var x:int := 0
+	
+	function add(i1: int, i2: int): int = 
+	let
+		var a:int := 0
+	in
+		a := i1 + i2
+	end
+	
+	function sub(il: int, i2: int): int =
+	let
+		var a:int := 0
+	in
+		a := i1 - i2
+	end
+in
+	x := add(2, 3) + sub(7, 2)
+end
