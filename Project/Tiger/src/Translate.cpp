@@ -135,7 +135,7 @@ namespace Translate
 
     std::shared_ptr<Access> allocLocal(std::shared_ptr<Level> level, bool escape)
     {
-        return std::make_shared<Access>(level, Frame::allocLocalVarible(level->getFrame(), escape));
+        return std::make_shared<Access>(level, Frame::allocLocalVariable(level->getFrame(), escape));
     }
 
 

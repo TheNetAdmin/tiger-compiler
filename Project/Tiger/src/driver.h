@@ -16,6 +16,7 @@ namespace Tiger
 class Driver
 {
   public:
+    bool syntaxError;
     bool trace_parsing;
     bool trace_scanning;
     std::string filename;

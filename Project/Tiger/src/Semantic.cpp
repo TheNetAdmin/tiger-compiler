@@ -42,12 +42,14 @@ namespace Semantic
                 /*
                  * Format: var var-id (a);
                  */
+                // TODO : problem
                 auto nonValue = Translate::makeNonValueExp();
                 try
                 {
                     auto simpleVar = dynamic_pointer_cast<AST::SimpleVar>(var);
                     auto queryResult = varEnv.findVar(simpleVar->getSimple());
-                    return ExpTy(nonValue, queryResult->type);
+                    auto transSimpleVar = Translate::makeSimpleVar(queryResult->access, level);
+                    return ExpTy(transSimpleVar, queryResult->type);
                 }
                 catch (Env::EntryNotFound &e)
                 {
@@ -64,10 +66,11 @@ namespace Semantic
                 auto nonValue = Translate::makeNonValueExp();
                 auto fieldVar = dynamic_pointer_cast<AST::FieldVar>(var);
                 ExpTy resultTransField = transVar(level, breakExp, typeEnv, varEnv, fieldVar->getVar());
+                // TODO: if not record, then error?
                 if (!Type::isRecord(resultTransField.type))
                 {
-                    Tiger::Error err(var->getLoc(), "Not a record variable");
-                    return ExpTy(nonValue, Type::RECORD);
+                    //Tiger::Error err(var->getLoc(), "Not a record variable: "+fieldVar->getSym());
+                    return ExpTy(nonValue, resultTransField.type);
                 }
                 else
                 {
@@ -426,10 +429,10 @@ namespace Semantic
                     if (Type::isInt(opLeft.type))
                     {
                         /*
-                         * Op exp type
-                         * 0 : Arithmetic exp
-                         * 1 : Comparison exp
-                         */
+                                 * Op exp type
+                                 * 0 : Arithmetic exp
+                                 * 1 : Comparison exp
+                                 */
                         int expType = 0;
                         switch (opUsage->getOp())
                         {
@@ -577,11 +580,6 @@ namespace Semantic
                     {
                         auto ifElse = transExp(level, breakExp, typeEnv, varEnv, ifElsePtr);
                         assertTypeMatch(ifThen.type, ifElse.type, ifThenPtr->getLoc());
-                        // TODO: ifTest.exp could be NX
-                        if (ifTest.exp->getKind() == Translate::NX)
-                        {
-                            auto deb = dynamic_pointer_cast<Translate::Nx>(ifTest.exp);
-                        }
                         ifExp = Translate::makeIfExp(ifTest.exp, ifThen.exp, ifElse.exp);
                     }
                     else
@@ -618,7 +616,6 @@ namespace Semantic
 
         return ExpTy(nullptr, Type::VOID);
     }
-
 
     shared_ptr<Translate::Exp> transDec(const shared_ptr<Translate::Level> level,
                                         const shared_ptr<Translate::Exp> breakExp,
@@ -811,11 +808,11 @@ namespace Semantic
                         }
                     }
                     //TODO: remove this warnning?
-//                    if ((t != types->end()) && !Type::isName(result))
-//                    {
-//                        std::cerr << Type::isArray(result) << std::endl;
-//                        Tiger::Error err("Actual type should be declared before name type");
-//                    }
+                    //                    if ((t != types->end()) && !Type::isName(result))
+                    //                    {
+                    //                        std::cerr << Type::isArray(result) << std::endl;
+                    //                        Tiger::Error err("Actual type should be declared before name type");
+                    //                    }
                     auto nameTy = typeEnv.find((*t)->getName());
                     nameTy->type = result;
                 }
@@ -870,8 +867,6 @@ namespace Semantic
                         Tiger::Error err(recordTy->getLoc(), e.what());
                         record->addField((*field)->getName(), Type::NIL);
                     }
-
-
                 }
                 return record;
             }
@@ -897,7 +892,6 @@ namespace Semantic
                 break;
         }
     }
-
 
     void assertTypeNotMatch(const shared_ptr<Type::Type> actualType,
                             const shared_ptr<Type::Type> assertType,
@@ -969,7 +963,6 @@ namespace Semantic
         // Check pass
     }
 
-
     void checkCallArgs(shared_ptr<Translate::Level> level,
                        shared_ptr<Translate::Exp> breakExp,
                        Env::TypeEnv &typeEnv,
@@ -1015,11 +1008,13 @@ namespace Semantic
     }
 
     ExpTy::ExpTy()
-    {}
+    {
+    }
 
     ExpTy::ExpTy(const shared_ptr<Translate::Exp> &exp, const shared_ptr<Type::Type> &type)
             : exp(exp), type(type)
-    {}
+    {
+    }
 
     void ExpTy::setExp(const shared_ptr<Translate::Exp> &exp)
     {
@@ -1033,68 +1028,74 @@ namespace Semantic
 
     SemanticError::SemanticError(const Tiger::location &loc, const string &msg)
             : std::runtime_error(msg), loc(loc)
-    {}
+    {
+    }
 
     TypeError::TypeError(const Tiger::location &loc, const string &msg)
             : SemanticError(loc, msg)
-    {}
+    {
+    }
 
     TypeNotMatchError::TypeNotMatchError(const string &etName, const string &atName, const string &declareName,
                                          const Tiger::location &loc)
             : TypeError(loc,
-                        "Type mismatch : " + declareName
-                        + " . Except " + etName
-                        + " , but get " + atName)
+                        "Type mismatch : " + declareName + " . Except " + etName + " , but get " + atName)
     {
     }
 
     TypeNotMatchError::TypeNotMatchError(const string &etName, const string &atName, const Tiger::location &loc)
             : TypeError(loc,
-                        "Type mismatch. Except " + etName
-                        + " , but get " + atName)
-    {}
+                        "Type mismatch. Except " + etName + " , but get " + atName)
+    {
+    }
 
     TypeMatchError::TypeMatchError(const string &actualTypeName, const Tiger::location &loc)
             : TypeError(loc,
                         "Type should not be " + actualTypeName)
-    {}
+    {
+    }
 
     MatchError::MatchError(const Tiger::location &loc, const string &msg)
             : SemanticError(loc, msg)
-    {}
+    {
+    }
 
     ArgMatchError::ArgMatchError(const Tiger::location &loc, const string &msg)
             : MatchError(loc, msg)
-    {}
+    {
+    }
 
     ArgTypeNotMatch::ArgTypeNotMatch(const Tiger::location &loc, const string &expectArgType,
                                      const string &usageArgType)
             : ArgMatchError(loc,
-                            "Unmatched argument type. Expected " + expectArgType
-                            + " but get " + usageArgType)
-    {}
+                            "Unmatched argument type. Expected " + expectArgType + " but get " + usageArgType)
+    {
+    }
 
     ArgNumNotMatch::ArgNumNotMatch(const Tiger::location &loc, const int &expectArgNum, const int &usageArgNum)
             : ArgMatchError(loc,
-                            "Unmatched argument num. Expected " + std::to_string(expectArgNum)
-                            + " but get " + std::to_string(usageArgNum))
-    {}
+                            "Unmatched argument num. Expected " + std::to_string(expectArgNum) + " but get " +
+                            std::to_string(usageArgNum))
+    {
+    }
 
     RecordMatchError::RecordMatchError(const Tiger::location &loc, const string &msg)
             : MatchError(loc, msg)
-    {}
+    {
+    }
 
     RecordFieldNumNotMatch::RecordFieldNumNotMatch(const Tiger::location &loc, const int &expectFieldNum,
                                                    const int &usageFieldNum)
             : RecordMatchError(loc,
-                               "Unmatched field num. Expected " + std::to_string(expectFieldNum)
-                               + " but get " + std::to_string(usageFieldNum))
-    {}
+                               "Unmatched field num. Expected " + std::to_string(expectFieldNum) + " but get " +
+                               std::to_string(usageFieldNum))
+    {
+    }
 
     RecordTypeNotMatch::RecordTypeNotMatch(const Tiger::location &loc, const std::string &expectType,
                                            const std::string &usageType)
             : RecordMatchError(loc,
-                               "Unmatched field type. Expected " + expectType
-                               + " but get " + usageType)
-    {}
+                               "Unmatched field type. Expected " + expectType + " but get " + usageType)
+    {
+    }
 }

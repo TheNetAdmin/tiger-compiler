@@ -18,6 +18,10 @@ int main(int argc, char * argv[]){
             std::cout << "Openning file: " << argv[i] << std::endl;
             driver.parse(argv[i]);
             auto result = driver.result;
+            if(driver.syntaxError == true){
+                std::cerr << "Tiger compiler exit with syntax error." << std::endl;
+                exit(1);
+            }
             auto fragList = Semantic::transProg(result);
             ofstream fo("tiger.txt", ios::out);
             PrintIRTree printer(fragList);

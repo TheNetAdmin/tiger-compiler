@@ -16,7 +16,7 @@ set(SOURCE_FILES
         stack.hh Semantic.h Semantic.cpp Semantic.h Types.cpp Types.h Translate.cpp Translate.h Env.cpp Env.h Error.cpp Error.h
         Debug.cpp Debug.h
         BoolList.h Frame.cpp Frame.h IR.cpp IR.h Translate.cpp Translate.h Temporary.cpp Temporary.h
-        ../test/sem_test.cpp
-        PrintIRTree.cpp PrintIRTree.h)
+        ../Tiger.cpp
+        PrintIRTree.cpp PrintIRTree.h cmdline.h)
 
 add_executable(src ${SOURCE_FILES})

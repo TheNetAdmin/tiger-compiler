@@ -9,7 +9,7 @@ extern FILE* yyin;
 extern int yy_flex_debug;
 
 Tiger::Driver::Driver()
-    : trace_scanning(false), trace_parsing(false)
+    : trace_scanning(false), trace_parsing(false), syntaxError(false)
 {
 }
 

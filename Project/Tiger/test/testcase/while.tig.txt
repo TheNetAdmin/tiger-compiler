@@ -1,0 +1,21 @@
+let
+    var i:int := 0
+    function test(num:int): int = (
+        if i = num
+        then 1
+        else 0
+    )
+    function inc() = (
+        i := i + 1
+    )
+    function f() = (
+        while test(2)
+    do (
+        print("a");
+        inc()
+    )
+    )
+in
+    f()
+    
+end

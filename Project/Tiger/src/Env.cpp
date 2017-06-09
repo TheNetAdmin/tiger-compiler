@@ -204,7 +204,7 @@ namespace Env
         // getchar
         FuncEntry getchar(Translate::getGlobalLevel(),
                           Temporary::makeLabel(),
-                          "getchar", Type::VOID);
+                          "getchar", Type::STRING);
         enterFunc(getchar);
         // ord
         FuncEntry ord(Translate::getGlobalLevel(),

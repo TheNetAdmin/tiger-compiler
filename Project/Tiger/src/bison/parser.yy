@@ -37,7 +37,6 @@
 %token <string> STRING
 %token <int> INT
 
-/*%nonassoc LOW*/
 %right ASSIGN
 %left AND OR
 %nonassoc EQ NEQ LT LE GT GE
@@ -66,7 +65,6 @@
 %type <shared_ptr<AST::EFieldList>> refields
 %type <shared_ptr<AST::Ty>> ty
 %type <shared_ptr<AST::FieldList>> typefields
-/* et cetera */
 
 %start program
 
@@ -164,4 +162,5 @@ id: ID {$$ =$1;}
 void Tiger::Parser::error (const location_type & l, const string & m)
 {
     driver.error(l, m);
+    driver.syntaxError = true;
 }

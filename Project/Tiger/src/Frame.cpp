@@ -47,7 +47,7 @@ namespace Frame
 
 
     AccessFrame::AccessFrame(int offset)
-            : Access(INFRAME), offset(offset)
+            : Access(IN_FRAME), offset(offset)
     {}
 
     int AccessFrame::getOffset() const
@@ -56,7 +56,7 @@ namespace Frame
     }
 
     AccessReg::AccessReg(const std::shared_ptr<Temporary::Temp> &reg)
-            : Access(INREG), reg(reg)
+            : Access(IN_REG), reg(reg)
     {}
 
     const std::shared_ptr<Temporary::Temp> AccessReg::getReg() const
@@ -103,7 +103,7 @@ namespace Frame
         return std::make_shared<Frame>(name, MakeFormalAccessList(formals), 0);
     }
 
-    std::shared_ptr<Access> allocLocalVarible(std::shared_ptr<Frame> f, bool escape)
+    std::shared_ptr<Access> allocLocalVariable(std::shared_ptr<Frame> f, bool escape)
     {
         f->increaseLocalCount();
         if (escape)
@@ -149,7 +149,7 @@ namespace Frame
 
     std::shared_ptr<IR::Exp> getVariable(std::shared_ptr<Access> access, std::shared_ptr<IR::Exp> framePtr)
     {
-        if (access->getAccessType() == INFRAME)
+        if (access->getAccessType() == IN_FRAME)
         {
             return IR::makeMem(
                     IR::makeBinop(
@@ -185,7 +185,7 @@ namespace Frame
     }
 
     StringFrag::StringFrag(const std::shared_ptr<Temporary::Label> &label, const std::string &str)
-            : Frag(F_STRING_FRAG), label(label), str(str)
+            : Frag(STRING_FRAG), label(label), str(str)
     {}
 
     const std::shared_ptr<Temporary::Label> StringFrag::getLabel() const
@@ -199,7 +199,7 @@ namespace Frame
     }
 
     ProcFrag::ProcFrag(const std::shared_ptr<IR::Stm> &body, const std::shared_ptr<Frame> &frame)
-            : Frag(F_PROC_FRAG), body(body), frame(frame)
+            : Frag(PROC_FRAG), body(body), frame(frame)
     {}
 
     const std::shared_ptr<IR::Stm> ProcFrag::getBody() const

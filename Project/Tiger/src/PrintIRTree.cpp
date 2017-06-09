@@ -203,14 +203,14 @@ void PrintIRTree::printIRTreeInFile(std::ostream &outFile)
         {
             switch ((*iter)->getKind())
             {
-                case Frame::F_STRING_FRAG:
+                case Frame::STRING_FRAG:
                 {
                     auto stringFrag = std::dynamic_pointer_cast<Frame::StringFrag>((*iter));
                     printExp(IR::makeName(stringFrag->getLabel()), outFile, 0);
                     outFile << std::endl;
                     break;
                 }
-                case Frame::F_PROC_FRAG:
+                case Frame::PROC_FRAG:
                 {
                     auto procFrag = std::dynamic_pointer_cast<Frame::ProcFrag>((*iter));
                     printStm(procFrag->getBody(), outFile, 0);
@@ -404,18 +404,16 @@ void PrintIRTree::makeDotFile(std::ostream &outFile)
             outFile << "node [shape = record, height = .1]" << std::endl;
             switch ((*iter)->getKind())
             {
-                case Frame::F_STRING_FRAG:
+                case Frame::STRING_FRAG:
                 {
                     auto stringFrag = std::dynamic_pointer_cast<Frame::StringFrag>((*iter));
                     printExpDot(IR::makeName(stringFrag->getLabel()), outFile);
-                    outFile << std::endl;
                     break;
                 }
-                case Frame::F_PROC_FRAG:
+                case Frame::PROC_FRAG:
                 {
                     auto procFrag = std::dynamic_pointer_cast<Frame::ProcFrag>((*iter));
                     printStmDot(procFrag->getBody(), outFile);
-                    outFile << std::endl;
                     break;
                 }
                 default:
@@ -423,7 +421,8 @@ void PrintIRTree::makeDotFile(std::ostream &outFile)
                     Tiger::Error error("frag-kind is error");
                 }
             }
-            outFile << std::endl << "}" << std::endl;
+            outFile << "}" << std::endl;
+            outFile << "---" << std::endl;
         }
     }
 }

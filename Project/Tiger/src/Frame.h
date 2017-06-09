@@ -40,7 +40,7 @@ namespace Frame
 
     enum AccessType
     {
-        INFRAME, INREG
+        IN_FRAME, IN_REG
     };
 
     class Access
@@ -77,12 +77,12 @@ namespace Frame
 
     std::shared_ptr<Frame> makeFrame(std::shared_ptr<Temporary::Label> name, std::shared_ptr<BoolList> formals);
 
-    std::shared_ptr<Access> allocLocalVarible(std::shared_ptr<Frame> f, bool escape);
+    std::shared_ptr<Access> allocLocalVariable(std::shared_ptr<Frame> f, bool escape);
 
     /* IR */
     enum FragType
     {
-        F_STRING_FRAG, F_PROC_FRAG
+        STRING_FRAG, PROC_FRAG
     };
 
     class Frag
