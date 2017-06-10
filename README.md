@@ -1,7 +1,7 @@
 # Tiger compiler
 
 ## Introduction
-This is a C++ implementation of Tiger Compiler, described in *Modern Compiler Implementation in C".
+This is a C++ implementation of Tiger Compiler, described in *Modern Compiler Implementation in C*.
 
 
 ## How to make
